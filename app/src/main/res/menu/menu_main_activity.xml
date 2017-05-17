@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mivas.myharmonicasongs.MainActivity">
+    <item
+        android:id="@+id/add_song_action"
+        android:icon="@mipmap/icon_plus"
+        android:title="@string/menu_add_song"
+        app:showAsAction="always" />
+</menu>

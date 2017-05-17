@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="bu0_25">3dp</dimen>
+    <dimen name="bu0_33">4dp</dimen>
+    <dimen name="bu0_33_negative">-4dp</dimen>
+    <dimen name="bu0_5">6dp</dimen>
+    <dimen name="bu0_66">8dp</dimen>
+    <dimen name="bu0_75">9dp</dimen>
+    <dimen name="bu1">12dp</dimen>
+    <dimen name="bu1_negative">-12dp</dimen>
+    <dimen name="bu1_33">16dp</dimen>
+    <dimen name="bu1_5">18dp</dimen>
+    <dimen name="bu1_75">21dp</dimen>
+    <dimen name="bu2">24dp</dimen>
+    <dimen name="bu2_25">27dp</dimen>
+    <dimen name="bu2_5">30dp</dimen>
+    <dimen name="bu2_75">33dp</dimen>
+    <dimen name="bu3">36dp</dimen>
+    <dimen name="bu3_33">40dp</dimen>
+    <dimen name="bu3_5">42dp</dimen>
+    <dimen name="bu3_66">44dp</dimen>
+    <dimen name="bu4">48dp</dimen>
+    <dimen name="bu4_25">51dp</dimen>
+    <dimen name="bu4_5">54dp</dimen>
+    <dimen name="bu5">60dp</dimen>
+    <dimen name="bu6">72dp</dimen>
+    <dimen name="bu6_5">78dp</dimen>
+    <dimen name="bu7">84dp</dimen>
+    <dimen name="bu7_5">90dp</dimen>
+    <dimen name="bu7_75">93dp</dimen>
+    <dimen name="bu8">96dp</dimen>
+    <dimen name="bu8_5">102dp</dimen>
+    <dimen name="bu9">108dp</dimen>
+    <dimen name="bu9_5">114dp</dimen>
+    <dimen name="bu9_75">117dp</dimen>
+    <dimen name="bu10">120dp</dimen>
+    <dimen name="bu10_5">126dp</dimen>
+    <dimen name="bu11">132dp</dimen>
+    <dimen name="bu12">144dp</dimen>
+    <dimen name="bu13">156dp</dimen>
+    <dimen name="bu14">168dp</dimen>
+    <dimen name="bu15">180dp</dimen>
+    <dimen name="bu15_5">186dp</dimen>
+    <dimen name="bu16">192dp</dimen>
+    <dimen name="bu18">216dp</dimen>
+    <dimen name="bu19">228dp</dimen>
+    <dimen name="bu20">240dp</dimen>
+    <dimen name="bu22">264dp</dimen>
+    <dimen name="bu24">288dp</dimen>
+    <dimen name="bu33">396dp</dimen>
+    <dimen name="bu34">408dp</dimen>
+    <dimen name="text_size_20px">10sp</dimen>
+    <dimen name="text_size_22px">11sp</dimen>
+    <dimen name="text_size_24px">12sp</dimen>
+    <dimen name="text_size_26px">13sp</dimen>
+    <dimen name="text_size_28px">14sp</dimen>
+    <dimen name="text_size_30px">15sp</dimen>
+    <dimen name="text_size_36px">18sp</dimen>
+    <dimen name="text_size_40px">20sp</dimen>
+    <dimen name="text_size_42px">21sp</dimen>
+    <dimen name="text_size_43px">21sp</dimen>
+    <dimen name="text_size_48px">24sp</dimen>
+    <dimen name="text_size_63px">31sp</dimen>
+    <dimen name="text_size_70px">35sp</dimen>
+    <dimen name="text_size_80px">40sp</dimen>
+    <dimen name="text_size_100px">50sp</dimen>
+    <dimen name="text_size_150px">75sp</dimen>
+    <dimen name="text_size_180px">90sp</dimen>
+    <dimen name="text_size_280px">140sp</dimen>
+    <dimen name="text_size_msg_notification">8sp</dimen>
+    <dimen name="divider_height">2px</dimen>
+    <dimen name="situation_actions_divider">1dp</dimen>
+    <!-- this is bu10_5_negative - 3 * situation_actions_devider -->
+    <dimen name="bu10_5_negative_added_divider">-129dp</dimen>
+    <dimen name="bu8_negative">-96dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
+         https://developer.android.com/design/patterns/navigation-drawer.html -->
+    <dimen name="navigation_drawer_width">240dp</dimen>
+
+    <dimen name="dateTitlePaddingBottom">5dp</dimen>
+    <dimen name="dateTitleTextSize">18sp</dimen>
+    <dimen name="dayOfMonthImageMarginTop">20dp</dimen>
+    <dimen name="dayOfMonthIndicatorSize">3dp</dimen>
+    <dimen name="dayOfWeekTextSize">16sp</dimen>
+    <dimen name="day_of_month_background_size">32dp</dimen>
+    <dimen name="padding">8dp</dimen>
+    <dimen name="underline_height">2dp</dimen>
+    <dimen name="underline_weight">6dp</dimen>
+    <dimen name="week_bottom_padding">5dp</dimen>
+
+</resources>

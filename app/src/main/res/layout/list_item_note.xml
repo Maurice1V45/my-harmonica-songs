@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/view_note"
+        android:layout_width="@dimen/bu4"
+        android:layout_height="@dimen/bu6"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/white_bordered_rounded_shape"
+        android:clickable="true">
+
+            <TextView
+                android:id="@+id/text_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_48px" />
+
+            <TextView
+                android:id="@+id/text_word"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="every"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_20px" />
+    </LinearLayout>
+
+</RelativeLayout>

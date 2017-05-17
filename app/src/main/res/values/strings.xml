@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">My Harmonica Songs</string>
+
+    <!--Main Activity-->
+    <string name="menu_add_song">Add Song</string>
+
+    <string name="hint_title">Title</string>
+    <string name="hint_author">Author</string>
+    <string name="button_ok">OK</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+    <string name="error_no_title">Please type in a title</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_delete">Delete</string>
+    <string name="delete_song_message">Are you sure you want to delete</string>
+</resources>
