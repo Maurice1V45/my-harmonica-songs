@@ -113,12 +113,27 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         return null;
     }
 
-    private void addNoteToMatrix(DbNote dbNote, LinearLayout parent) {
+    private void addNoteToMatrix(final DbNote dbNote, LinearLayout parent) {
         View noteView = getLayoutInflater().inflate(R.layout.list_item_note, null);
         TextView noteText = (TextView) noteView.findViewById(R.id.text_note);
         noteText.setText(dbNote.isBlow() ? String.valueOf(dbNote.getHole()) : "-" + String.valueOf(dbNote.getHole()));
         TextView wordText = (TextView) noteView.findViewById(R.id.text_word);
-        wordText.setText(dbNote.getWord());
+        if (dbNote.getWord().isEmpty()) {
+            wordText.setVisibility(View.GONE);
+        } else {
+            wordText.setVisibility(View.VISIBLE);
+            wordText.setText(dbNote.getWord());
+        }
+        noteView.setClickable(true);
+        noteView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HarmonicaNotesDialog dialog = new HarmonicaNotesDialog();
+                dialog.setDbNote(dbNote);
+                dialog.setListener(SongActivity.this);
+                dialog.show(getFragmentManager(), Constants.TAG_HARMONICA_NOTES_DIALOG);
+            }
+        });
         parent.addView(noteView);
     }
 

@@ -30,6 +30,7 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
 
     private RecyclerView notesList;
     private DbNote dbNote;
+    private EditText wordField;
     private SongActivityListener listener;
 
     /**
@@ -45,6 +46,8 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
      * @param rootView
      */
     private void initViews(View rootView) {
+        wordField = (EditText) rootView.findViewById(R.id.word_field);
+        wordField.setText(dbNote.getWord());
         notesList = (RecyclerView) rootView.findViewById(R.id.list_harmonica_notes);
         notesList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL, false));
         notesList.setAdapter(new HarmonicaNotesAdapter(getActivity(), HarmonicaNotesDialog.this));
@@ -79,6 +82,7 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
     public void onNoteSelected(int note, boolean blow) {
         dbNote.setHole(note);
         dbNote.setBlow(blow);
+        dbNote.setWord(wordField.getText().toString());
         listener.onNoteAdded(dbNote);
         dismiss();
     }

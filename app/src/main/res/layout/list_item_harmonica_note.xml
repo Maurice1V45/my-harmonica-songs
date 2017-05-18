@@ -14,27 +14,40 @@
             android:id="@+id/text_upper_note"
             android:layout_width="@dimen/bu3"
             android:layout_height="@dimen/bu3"
-            android:background="@drawable/white_bordered_rounded_shape"
+            android:layout_marginTop="@dimen/bu0_5"
+            android:background="@drawable/white_bordered_sounded_shape_selector"
             android:clickable="true"
             android:gravity="center"
             android:text="4"
-            android:textColor="@color/red"
+            android:textColor="@color/black"
             android:textSize="@dimen/text_size_48px" />
 
-        <View
-            android:layout_width="@dimen/bu2"
-            android:layout_height="@dimen/bu2"
-            android:background="@color/black" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bu2_5"
+            android:layout_marginBottom="@dimen/bu0_5"
+            android:layout_marginTop="@dimen/bu0_5"
+            android:background="@color/greyAA">
+
+            <View
+                android:layout_width="@dimen/bu2"
+                android:layout_height="@dimen/bu2"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="@dimen/bu0_5"
+                android:layout_marginTop="@dimen/bu0_5"
+                android:background="@color/black" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/text_lower_note"
             android:layout_width="@dimen/bu3"
             android:layout_height="@dimen/bu3"
-            android:background="@drawable/white_bordered_rounded_shape"
+            android:layout_marginBottom="@dimen/bu0_5"
+            android:background="@drawable/white_bordered_sounded_shape_selector"
             android:clickable="true"
             android:gravity="center"
             android:text="-4"
-            android:textColor="@color/blue"
+            android:textColor="@color/black"
             android:textSize="@dimen/text_size_48px" />
 
     </LinearLayout>

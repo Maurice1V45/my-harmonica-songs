@@ -64,4 +64,16 @@ public class NoteDbHandler {
                 .execute();
     }
 
+    /**
+     * Deletes all notes that belong to a song.
+     *
+     * @param songId The song id.
+     */
+    public static void deleteNotesBySongId(long songId) {
+        new Delete()
+                .from(DbNote.class)
+                .where("song_id = ?", songId)
+                .execute();
+    }
+
 }

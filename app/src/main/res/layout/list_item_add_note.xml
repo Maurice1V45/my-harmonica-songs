@@ -2,29 +2,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/view_note"
         android:layout_width="@dimen/bu4"
-        android:layout_height="@dimen/bu6"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:background="@drawable/white_bordered_rounded_shape">
+        android:layout_height="@dimen/bu5_5"
+        android:layout_margin="@dimen/bu0_25">
 
         <ImageView
-            android:layout_width="@dimen/bu4"
-            android:src="@mipmap/ic_launcher"
+            android:layout_width="@dimen/bu3_5"
+            android:layout_height="@dimen/bu3_5"
+            android:layout_centerInParent="true"
             android:scaleType="fitXY"
-            android:layout_height="@dimen/bu4" />
+            android:src="@drawable/rounded_plus_selector" />
 
-            <TextView
-                android:id="@+id/text_author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Add Note"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_20px" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

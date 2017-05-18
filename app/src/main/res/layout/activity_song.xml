@@ -3,16 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/greyDD"
     tools:context="com.mivas.myharmonicasongs.SongActivity">
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/bu0_25"
+        android:paddingTop="@dimen/bu0_25"
         android:scrollbars="none">
 
         <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingLeft="@dimen/bu0_25"
+            android:paddingRight="@dimen/bu0_25"
             android:scrollbars="none">
 
             <LinearLayout

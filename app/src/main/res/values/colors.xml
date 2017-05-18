@@ -11,4 +11,7 @@
     <color name="dark_purple">#642589</color>
     <color name="red">#FF0000</color>
     <color name="blue">#0000FF</color>
+    <color name="greyDD">#DDDDDD</color>
+    <color name="greyEE">#EEEEEE</color>
+    <color name="greyAA">#AAAAAA</color>
 </resources>

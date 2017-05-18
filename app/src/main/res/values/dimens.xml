@@ -24,6 +24,7 @@
     <dimen name="bu4_25">51dp</dimen>
     <dimen name="bu4_5">54dp</dimen>
     <dimen name="bu5">60dp</dimen>
+    <dimen name="bu5_5">66dp</dimen>
     <dimen name="bu6">72dp</dimen>
     <dimen name="bu6_5">78dp</dimen>
     <dimen name="bu7">84dp</dimen>

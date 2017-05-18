@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import com.mivas.myharmonicasongs.adapter.SongsListAdapter;
+import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.dialog.DeleteSongDialog;
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
 
     @Override
     public void onSongDeleteConfirmed(DbSong dbSong) {
+        NoteDbHandler.deleteNotesBySongId(dbSong.getId());
         SongDbHandler.deleteSongById(dbSong.getId());
         refreshSongsList();
     }
