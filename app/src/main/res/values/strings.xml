@@ -9,7 +9,8 @@
     <string name="button_ok">OK</string>
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
-    <string name="hint_word">word</string>
+    <string name="button_delete">Delete Note</string>
+    <string name="text_syllable">Syllable:</string>
     <string name="error_no_title">Please type in a title</string>
     <string name="menu_edit">Edit</string>
     <string name="menu_delete">Delete</string>

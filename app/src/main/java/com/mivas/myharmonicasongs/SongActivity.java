@@ -28,11 +28,10 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song);
-
         initViews();
+
         dbSong = SongDbHandler.getSongById(getIntent().getLongExtra(Constants.EXTRA_SONG_ID, 0));
         notes = NoteDbHandler.getNotesBySongId(dbSong.getId());
-        //setDummyNotes();
         refreshMatrix();
 
     }
@@ -66,42 +65,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             }
             i++;
         } while (!matrixEnd);
-        notesLayout.invalidate();
-    }
-
-    private void setDummyNotes() {
-        DbNote note1 = new DbNote();
-        note1.setHole(4);
-        note1.setBlow(true);
-        note1.setRow(0);
-        note1.setColumn(0);
-        note1.setWord("When");
-        note1.setSongId(dbSong.getId());
-        DbNote note2 = new DbNote();
-        note2.setHole(5);
-        note2.setBlow(true);
-        note2.setRow(0);
-        note2.setColumn(1);
-        note2.setWord("I");
-        note2.setSongId(dbSong.getId());
-        DbNote note3 = new DbNote();
-        note3.setHole(6);
-        note3.setBlow(true);
-        note3.setRow(0);
-        note3.setColumn(2);
-        note3.setWord("am");
-        note3.setSongId(dbSong.getId());
-        DbNote note4 = new DbNote();
-        note4.setHole(4);
-        note4.setBlow(false);
-        note4.setRow(1);
-        note4.setColumn(0);
-        note4.setWord("down");
-        note4.setSongId(dbSong.getId());
-        notes.add(note1);
-        notes.add(note2);
-        notes.add(note3);
-        notes.add(note4);
     }
 
     private DbNote findNote(int row, int column) {
@@ -131,6 +94,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 HarmonicaNotesDialog dialog = new HarmonicaNotesDialog();
                 dialog.setDbNote(dbNote);
                 dialog.setListener(SongActivity.this);
+                dialog.setEditMode(true);
                 dialog.show(getFragmentManager(), Constants.TAG_HARMONICA_NOTES_DIALOG);
             }
         });
@@ -150,6 +114,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 HarmonicaNotesDialog dialog = new HarmonicaNotesDialog();
                 dialog.setDbNote(dbNote);
                 dialog.setListener(SongActivity.this);
+                dialog.setEditMode(false);
                 dialog.show(getFragmentManager(), Constants.TAG_HARMONICA_NOTES_DIALOG);
             }
         });
@@ -158,8 +123,21 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
     @Override
     public void onNoteAdded(DbNote dbNote) {
-        NoteDbHandler.insertNote(dbNote);
         notes.add(dbNote);
+        NoteDbHandler.insertNote(dbNote);
+        refreshMatrix();
+    }
+
+    @Override
+    public void onNoteEdited(DbNote dbNote) {
+        NoteDbHandler.insertNote(dbNote);
+        refreshMatrix();
+    }
+
+    @Override
+    public void onNoteDeleted(DbNote dbNote) {
+        notes.remove(dbNote);
+        NoteDbHandler.deleteNote(dbNote);
         refreshMatrix();
     }
 }

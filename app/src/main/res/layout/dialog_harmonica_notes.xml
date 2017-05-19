@@ -4,12 +4,29 @@
     android:background="@color/white"
     android:padding="@dimen/bu1">
 
+    <TextView
+        android:id="@+id/text_syllable"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/bu4"
+        android:gravity="center_vertical"
+        android:text="@string/text_syllable"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_30px" />
+
+    <Button
+        android:id="@+id/button_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/bu4"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:text="@string/button_delete" />
+
     <EditText
         android:id="@+id/word_field"
-        android:layout_width="@dimen/bu10"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:hint="@string/hint_word"
+        android:layout_width="@dimen/bu6"
+        android:layout_height="@dimen/bu4"
+        android:layout_marginLeft="@dimen/bu0_5"
+        android:layout_toRightOf="@+id/text_syllable"
         android:imeOptions="actionDone"
         android:inputType="text"
         android:textColor="@color/black"
@@ -18,12 +35,11 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_harmonica_notes"
         android:layout_width="wrap_content"
-        android:paddingLeft="1dp"
-        android:paddingRight="1dp"
-        android:background="@drawable/grey_bordered_rounded_shape"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/word_field"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/bu4" />
+        android:layout_marginTop="@dimen/bu5"
+        android:background="@drawable/grey_bordered_rounded_shape"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp" />
 
 </RelativeLayout>

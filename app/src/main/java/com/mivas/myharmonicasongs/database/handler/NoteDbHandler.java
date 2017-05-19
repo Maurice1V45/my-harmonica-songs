@@ -65,6 +65,15 @@ public class NoteDbHandler {
     }
 
     /**
+     * Deletes a note.
+     *
+     * @param dbNote The note to be deleted.
+     */
+    public static void deleteNote(DbNote dbNote) {
+        dbNote.delete();
+    }
+
+    /**
      * Deletes all notes that belong to a song.
      *
      * @param songId The song id.

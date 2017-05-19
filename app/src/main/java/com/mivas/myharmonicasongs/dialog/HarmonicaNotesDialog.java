@@ -32,6 +32,8 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
     private DbNote dbNote;
     private EditText wordField;
     private SongActivityListener listener;
+    private boolean editMode;
+    private Button deleteButton;
 
     /**
      * Default constructor
@@ -51,12 +53,22 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
         notesList = (RecyclerView) rootView.findViewById(R.id.list_harmonica_notes);
         notesList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL, false));
         notesList.setAdapter(new HarmonicaNotesAdapter(getActivity(), HarmonicaNotesDialog.this));
+        deleteButton = (Button) rootView.findViewById(R.id.button_delete);
+        deleteButton.setVisibility(editMode ? View.VISIBLE : View.GONE);
     }
 
     /**
      * Listeners initializer
      */
     private void initListeners() {
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                listener.onNoteDeleted(dbNote);
+                dismiss();
+            }
+        });
     }
 
     @Override
@@ -64,6 +76,7 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
         View view = inflater.inflate(R.layout.dialog_harmonica_notes, container);
         initViews(view);
         initListeners();
+        setRetainInstance(true);
         return view;
     }
 
@@ -83,7 +96,11 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
         dbNote.setHole(note);
         dbNote.setBlow(blow);
         dbNote.setWord(wordField.getText().toString());
-        listener.onNoteAdded(dbNote);
+        if (editMode) {
+            listener.onNoteEdited(dbNote);
+        } else {
+            listener.onNoteAdded(dbNote);
+        }
         dismiss();
     }
 
@@ -93,5 +110,18 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
 
     public void setListener(SongActivityListener listener) {
         this.listener = listener;
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
+    }
+
+    @Override
+    public void onDestroyView() {
+        Dialog dialog = getDialog();
+        if (dialog != null && getRetainInstance()) {
+            dialog.setDismissMessage(null);
+        }
+        super.onDestroyView();
     }
 }
