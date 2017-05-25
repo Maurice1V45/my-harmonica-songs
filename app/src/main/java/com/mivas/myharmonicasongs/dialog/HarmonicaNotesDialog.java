@@ -1,6 +1,5 @@
 package com.mivas.myharmonicasongs.dialog;
 
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +28,7 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
     private SongActivityListener listener;
     private boolean editMode;
     private Button deleteButton;
+    private boolean newRow;
 
     /**
      * Default constructor
@@ -67,6 +67,11 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_harmonica_notes, container);
         initViews(view);
@@ -79,9 +84,8 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
         super.onStart();
 
         // set width to match parent
-        Dialog dialog = getDialog();
-        if (dialog != null) {
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (getDialog() != null) {
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
 
@@ -93,7 +97,7 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
         if (editMode) {
             listener.onNoteEdited(dbNote);
         } else {
-            listener.onNoteAdded(dbNote);
+            listener.onNoteAdded(dbNote, newRow);
         }
         dismiss();
     }
@@ -110,4 +114,7 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
         this.editMode = editMode;
     }
 
+    public void setNewRow(boolean newRow) {
+        this.newRow = newRow;
+    }
 }

@@ -28,6 +28,19 @@ public class DbNote extends Model {
     @Column(name = "song_id")
     private long songId;
 
+    public DbNote() {
+    }
+
+    public DbNote(DbNote dbNote) {
+        this.hole = dbNote.getHole();
+        this.blow = dbNote.isBlow();
+        this.word = dbNote.getWord();
+        this.row = dbNote.getRow();
+        this.column = dbNote.getColumn();
+        this.bend = dbNote.getBend();
+        this.songId = dbNote.getSongId();
+    }
+
     public int getHole() {
         return hole;
     }

@@ -10,16 +10,19 @@
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
     <string name="no_songs">Tap the \"+\" button above to add a song</string>
-    <string name="no_notes">Press \"+\" to add a note to your song</string>
+    <string name="no_notes">Press \"+\" to add a note.\nLong press \"+\" for more options.</string>
     <string name="button_delete">Delete</string>
     <string name="text_syllable">Syllable:</string>
     <string name="error_no_title">Please type in a title</string>
     <string name="menu_edit">Edit</string>
     <string name="menu_delete">Delete</string>
     <string name="menu_add_note">Add note</string>
-    <string name="menu_insert_row">Insert row</string>
+    <string name="menu_insert_row">Insert row after</string>
     <string name="menu_delete_row">Delete row</string>
     <string name="menu_copy_row">Copy row</string>
     <string name="menu_paste_row">Paste row</string>
     <string name="delete_song_message">Are you sure you want to delete</string>
+    <string name="toast_note_copied">note copied</string>
+    <string name="toast_notes_copied">notes copied</string>
+    <string name="toast_no_notes_copied">No notes copied</string>
 </resources>
