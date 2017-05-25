@@ -4,6 +4,9 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
+/**
+ * Db model for Note
+ */
 @Table(name = "notes", id = "_id")
 public class DbNote extends Model {
 

@@ -2,10 +2,12 @@ package com.mivas.myharmonicasongs.dialog;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,7 +19,7 @@ import com.mivas.myharmonicasongs.listener.MainActivityListener;
 import com.mivas.myharmonicasongs.util.CustomToast;
 
 /**
- * Dialog for adding a song.
+ * Dialog for adding and editing a song.
  */
 public class SongDialog extends DialogFragment {
 
@@ -62,11 +64,15 @@ public class SongDialog extends DialogFragment {
                     CustomToast.makeText(getActivity(), R.string.error_no_title, Toast.LENGTH_SHORT).show();
                 } else {
                     if (dbSong == null) {
+
+                        // add a song
                         DbSong dbSong = new DbSong();
                         dbSong.setTitle(titleField.getText().toString());
                         dbSong.setAuthor(authorField.getText().toString());
                         listener.onSongAdded(dbSong);
                     } else {
+
+                        // edit a song
                         dbSong.setTitle(titleField.getText().toString());
                         dbSong.setAuthor(authorField.getText().toString());
                         listener.onSongEditConfirmed(dbSong);
@@ -90,9 +96,8 @@ public class SongDialog extends DialogFragment {
         super.onStart();
 
         // set width to match parent
-        Dialog dialog = getDialog();
-        if (dialog != null) {
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (getDialog() != null) {
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
 

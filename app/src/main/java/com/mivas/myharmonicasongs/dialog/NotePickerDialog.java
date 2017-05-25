@@ -14,26 +14,25 @@ import android.widget.LinearLayout;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.adapter.HarmonicaNotesAdapter;
 import com.mivas.myharmonicasongs.database.model.DbNote;
-import com.mivas.myharmonicasongs.listener.HarmonicaNotesDialogListener;
+import com.mivas.myharmonicasongs.listener.NotePickerDialogListener;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
 
 /**
- * Dialog for selecting a harmonica note.
+ * Dialog for choosing a harmonica note.
  */
-public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNotesDialogListener {
+public class NotePickerDialog extends DialogFragment implements NotePickerDialogListener {
 
-    private RecyclerView notesList;
     private DbNote dbNote;
     private EditText wordField;
     private SongActivityListener listener;
-    private boolean editMode;
     private Button deleteButton;
+    private boolean editMode;
     private boolean newRow;
 
     /**
      * Default constructor
      */
-    public HarmonicaNotesDialog() {
+    public NotePickerDialog() {
         // empty constructor
     }
 
@@ -43,13 +42,13 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
      * @param rootView
      */
     private void initViews(View rootView) {
-        wordField = (EditText) rootView.findViewById(R.id.word_field);
+        wordField = (EditText) rootView.findViewById(R.id.field_word);
         wordField.setText(dbNote.getWord());
-        notesList = (RecyclerView) rootView.findViewById(R.id.list_harmonica_notes);
-        notesList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL, false));
-        notesList.setAdapter(new HarmonicaNotesAdapter(getActivity(), HarmonicaNotesDialog.this, dbNote));
         deleteButton = (Button) rootView.findViewById(R.id.button_delete);
         deleteButton.setVisibility(editMode ? View.VISIBLE : View.GONE);
+        RecyclerView notesList = (RecyclerView) rootView.findViewById(R.id.list_harmonica_notes);
+        notesList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL, false));
+        notesList.setAdapter(new HarmonicaNotesAdapter(getActivity(), NotePickerDialog.this, dbNote));
     }
 
     /**
@@ -67,13 +66,8 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_harmonica_notes, container);
+        View view = inflater.inflate(R.layout.dialog_note_picker, container);
         initViews(view);
         initListeners();
         return view;

@@ -14,7 +14,7 @@ import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.database.model.DbSong;
-import com.mivas.myharmonicasongs.dialog.HarmonicaNotesDialog;
+import com.mivas.myharmonicasongs.dialog.NotePickerDialog;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
@@ -26,7 +26,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-
+/**
+ * Activity that displays notes.
+ */
 public class SongActivity extends AppCompatActivity implements SongActivityListener {
 
     private LinearLayout notesLayout;
@@ -46,24 +48,30 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         initComparator();
 
         dbSong = SongDbHandler.getSongById(getIntent().getLongExtra(Constants.EXTRA_SONG_ID, 0));
-        getSupportActionBar().setTitle(dbSong.getTitle());
         notes = NoteDbHandler.getNotesBySongId(dbSong.getId());
-        refreshMatrix();
+        getSupportActionBar().setTitle(dbSong.getTitle());
+        refreshNotesView();
 
     }
 
+    /**
+     * Views initializer.
+     */
     private void initViews() {
         notesLayout = (LinearLayout) findViewById(R.id.list_notes);
         noNotesText = (TextView) findViewById(R.id.text_no_notes);
     }
 
-    private void refreshMatrix() {
+    /**
+     * Redraws the whole view of notes.
+     */
+    private void refreshNotesView() {
         notesLayout.removeAllViews();
         if (notes.size() == 0) {
             LinearLayout rowLayout = new LinearLayout(SongActivity.this);
             rowLayout.setOrientation(LinearLayout.HORIZONTAL);
             notesLayout.addView(rowLayout);
-            addAddNoteToMatrix(0, 0, rowLayout);
+            addPlusToNotesView(0, 0, rowLayout);
         } else {
             int i = 0;
             DbNote thisNote = notes.get(i);
@@ -72,9 +80,9 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             rowLayout.setOrientation(LinearLayout.HORIZONTAL);
             notesLayout.addView(rowLayout);
             while (i < notes.size()) {
-                addNoteToMatrix(thisNote, rowLayout);
+                addNoteToNotesView(thisNote, rowLayout);
                 if (nextNote == null || (nextNote.getRow() != thisNote.getRow())) {
-                    addAddNoteToMatrix(thisNote.getRow(), thisNote.getColumn() + 1, rowLayout);
+                    addPlusToNotesView(thisNote.getRow(), thisNote.getColumn() + 1, rowLayout);
                     rowLayout = new LinearLayout(SongActivity.this);
                     rowLayout.setOrientation(LinearLayout.HORIZONTAL);
                     notesLayout.addView(rowLayout);
@@ -82,7 +90,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                         rowLayout = new LinearLayout(SongActivity.this);
                         rowLayout.setOrientation(LinearLayout.HORIZONTAL);
                         notesLayout.addView(rowLayout);
-                        addAddNoteToMatrix(thisNote.getRow() + 1, 0, rowLayout);
+                        addPlusToNotesView(thisNote.getRow() + 1, 0, rowLayout);
                     }
                 }
                 i++;
@@ -93,7 +101,13 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         toggleNoNotesText();
     }
 
-    private void addNoteToMatrix(final DbNote dbNote, LinearLayout parent) {
+    /**
+     * Adds a note to the notes view.
+     *
+     * @param dbNote
+     * @param parent
+     */
+    private void addNoteToNotesView(final DbNote dbNote, LinearLayout parent) {
         View noteView = getLayoutInflater().inflate(R.layout.list_item_note, null);
         TextView noteText = (TextView) noteView.findViewById(R.id.text_note);
         noteText.setText(dbNote.isBlow() ? String.valueOf(dbNote.getHole()) : "-" + String.valueOf(dbNote.getHole()));
@@ -108,7 +122,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         noteView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HarmonicaNotesDialog dialog = new HarmonicaNotesDialog();
+                NotePickerDialog dialog = new NotePickerDialog();
                 dialog.setDbNote(dbNote);
                 dialog.setListener(SongActivity.this);
                 dialog.setEditMode(true);
@@ -118,13 +132,22 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         parent.addView(noteView);
     }
 
-    private void addAddNoteToMatrix(final int row, final int column, LinearLayout parent) {
+    /**
+     * Adds a plus button to the notes view.
+     *
+     * @param row
+     * @param column
+     * @param parent
+     */
+    private void addPlusToNotesView(final int row, final int column, LinearLayout parent) {
         View addNoteView = getLayoutInflater().inflate(R.layout.list_item_add_note, null);
         addNoteView.setClickable(true);
         boolean displayInsertRow = false;
         if (row < (getNumberOfRows() - 1)) {
             displayInsertRow = true;
         }
+
+        // set long press listener with options menu
         final NoteRowOptionsMenu optionsMenu = new NoteRowOptionsMenu(SongActivity.this, addNoteView, column, copiedNotes.size(), displayInsertRow);
         optionsMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -159,6 +182,8 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 return true;
             }
         });
+
+        // set click listener
         addNoteView.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -169,12 +194,18 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         parent.addView(addNoteView);
     }
 
+    /**
+     * Adds a note to the position of the plus button.
+     *
+     * @param row
+     * @param column
+     */
     private void onAddNoteCommand(int row, int column) {
         DbNote dbNote = new DbNote();
         dbNote.setRow(row);
         dbNote.setColumn(column);
         dbNote.setSongId(dbSong.getId());
-        HarmonicaNotesDialog dialog = new HarmonicaNotesDialog();
+        NotePickerDialog dialog = new NotePickerDialog();
         dialog.setDbNote(dbNote);
         dialog.setListener(SongActivity.this);
         dialog.setEditMode(false);
@@ -182,12 +213,17 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         dialog.show(getFragmentManager(), Constants.TAG_HARMONICA_NOTES_DIALOG);
     }
 
+    /**
+     * Adds a note to the row after the clicked plus button.
+     *
+     * @param row
+     */
     private void onNewRowCommand(int row) {
         DbNote dbNote = new DbNote();
         dbNote.setRow(row + 1);
         dbNote.setColumn(0);
         dbNote.setSongId(dbSong.getId());
-        HarmonicaNotesDialog dialog = new HarmonicaNotesDialog();
+        NotePickerDialog dialog = new NotePickerDialog();
         dialog.setDbNote(dbNote);
         dialog.setListener(SongActivity.this);
         dialog.setEditMode(false);
@@ -195,6 +231,11 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         dialog.show(getFragmentManager(), Constants.TAG_HARMONICA_NOTES_DIALOG);
     }
 
+    /**
+     * Deletes the current row.
+     *
+     * @param row
+     */
     private void onDeleteRowCommand(int row) {
         Iterator<DbNote> iterator = notes.iterator();
         while (iterator.hasNext()) {
@@ -205,9 +246,14 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             }
         }
         decrementRows(row);
-        refreshMatrix();
+        refreshNotesView();
     }
 
+    /**
+     * Copies the current row into a temporary list.
+     *
+     * @param row
+     */
     private void onCopyRowCommand(int row) {
         copiedNotes.clear();
         for (DbNote note : notes) {
@@ -221,9 +267,15 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         } else {
             CustomToast.makeText(SongActivity.this, copedNotesNr + " " + getString(R.string.toast_notes_copied), Toast.LENGTH_SHORT).show();
         }
-        refreshMatrix();
+        refreshNotesView();
     }
 
+    /**
+     * Pastes the copied notes to the current position.
+     *
+     * @param row
+     * @param column
+     */
     private void onPasteRowCommand(int row, int column) {
         if (copiedNotes.isEmpty()) {
             Toast.makeText(SongActivity.this, R.string.toast_no_notes_copied, Toast.LENGTH_SHORT).show();
@@ -238,7 +290,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 currentColumn++;
             }
             Collections.sort(notes, notesComparator);
-            refreshMatrix();
+            refreshNotesView();
         }
     }
 
@@ -250,13 +302,13 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         notes.add(dbNote);
         NoteDbHandler.insertNote(dbNote);
         Collections.sort(notes, notesComparator);
-        refreshMatrix();
+        refreshNotesView();
     }
 
     @Override
     public void onNoteEdited(DbNote dbNote) {
         NoteDbHandler.insertNote(dbNote);
-        refreshMatrix();
+        refreshNotesView();
     }
 
     @Override
@@ -287,9 +339,12 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 }
             }
         }
-        refreshMatrix();
+        refreshNotesView();
     }
 
+    /**
+     * Initializes the comparator which sorts the notes ascendantly.
+     */
     private void initComparator() {
         notesComparator = new Comparator() {
 
@@ -313,6 +368,9 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         };
     }
 
+    /**
+     * Displays the No Notes text if there are currently no notes.
+     */
     private void toggleNoNotesText() {
         if (notes.isEmpty()) {
             noNotesText.setVisibility(View.VISIBLE);
@@ -321,6 +379,11 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         }
     }
 
+    /**
+     * Increments rows by 1, starting with the specified row and going up.
+     *
+     * @param row The row from where to start the incrementation.
+     */
     private void incrementRows(int row) {
         for (DbNote note : notes) {
             int noteRow = note.getRow();
@@ -331,6 +394,11 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         }
     }
 
+    /**
+     * Decrements rows by 1, starting with the specified row and going up.
+     *
+     * @param row The row from where to start the decrementation.
+     */
     private void decrementRows(int row) {
         for (DbNote note : notes) {
             int noteRow = note.getRow();
@@ -341,6 +409,11 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         }
     }
 
+    /**
+     * Retrieves the current number of rows.
+     *
+     * @return The number of rows.
+     */
     private int getNumberOfRows() {
         if (notes.isEmpty()) {
             return 0;

@@ -6,7 +6,9 @@ import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.widget.Toast;
 
-
+/**
+ * Custom Toast class.
+ */
 public class CustomToast {
 
     private volatile static CustomToast	globalToast	= null;

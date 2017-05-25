@@ -7,6 +7,9 @@ import android.widget.PopupMenu;
 
 import com.mivas.myharmonicasongs.R;
 
+/**
+ * Options menu for notes.
+ */
 public class NoteRowOptionsMenu extends PopupMenu {
     public NoteRowOptionsMenu(Context context, View anchor, int notesOnRow, int copiedNotes, boolean insertRow) {
         super(context, anchor);

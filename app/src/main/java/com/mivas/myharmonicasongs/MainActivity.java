@@ -23,7 +23,9 @@ import com.mivas.myharmonicasongs.util.Constants;
 
 import java.util.List;
 
-
+/**
+ * Main Activity.
+ */
 public class MainActivity extends AppCompatActivity implements MainActivityListener {
 
     private RecyclerView songsListView;

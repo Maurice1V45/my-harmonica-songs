@@ -18,7 +18,7 @@
             android:textSize="@dimen/text_size_30px" />
 
         <EditText
-            android:id="@+id/word_field"
+            android:id="@+id/field_word"
             android:layout_width="@dimen/bu6"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

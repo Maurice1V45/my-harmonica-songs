@@ -4,6 +4,9 @@ import android.app.Application;
 
 import com.activeandroid.ActiveAndroid;
 
+/**
+ * Application class.
+ */
 public class MHSApplication extends Application {
 
     private static MHSApplication instance;

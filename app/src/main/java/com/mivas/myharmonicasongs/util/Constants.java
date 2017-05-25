@@ -8,9 +8,6 @@ public class Constants {
     /* Preferences */
     public static final String PREFERENCES = "prefs";
 
-    /* User Preferences */
-    public static final String PREF_USER_ID = "pref_user_id";
-
     /* Dialog tags */
     public static final String TAG_SONG_DIALOG = "tag_song_dialog";
     public static final String TAG_DELETE_SONG_DIALOG = "tag_delete_song_dialog";

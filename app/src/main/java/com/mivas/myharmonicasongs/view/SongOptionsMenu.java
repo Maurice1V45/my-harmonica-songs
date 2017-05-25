@@ -7,6 +7,9 @@ import android.widget.PopupMenu;
 
 import com.mivas.myharmonicasongs.R;
 
+/**
+ * Options menu for songs.
+ */
 public class SongOptionsMenu extends PopupMenu {
     public SongOptionsMenu(Context context, View anchor) {
         super(context, anchor);

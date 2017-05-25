@@ -16,7 +16,9 @@ import com.mivas.myharmonicasongs.view.SongOptionsMenu;
 
 import java.util.List;
 
-
+/**
+ * Adapter for songs list.
+ */
 public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.SongViewHolder> {
 
     private List<DbSong> songs;
@@ -40,6 +42,8 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
     @Override
     public void onBindViewHolder(final SongViewHolder holder, int position) {
         final DbSong dbSong = songs.get(position);
+
+        // set song title and author
         holder.titleText.setText(dbSong.getTitle());
         if (dbSong.getAuthor().isEmpty()) {
             holder.authorText.setVisibility(View.GONE);
@@ -47,6 +51,8 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
             holder.authorText.setVisibility(View.VISIBLE);
             holder.authorText.setText("by " + dbSong.getAuthor());
         }
+
+        // add song options menu
         final SongOptionsMenu optionsMenu = new SongOptionsMenu(context, holder.moreButton);
         optionsMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -70,6 +76,8 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
                 optionsMenu.show();
             }
         });
+
+        // add click listener
         holder.songView.setOnClickListener(new View.OnClickListener() {
 
             @Override

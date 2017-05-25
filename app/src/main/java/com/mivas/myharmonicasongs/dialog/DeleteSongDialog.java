@@ -12,7 +12,9 @@ import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.listener.MainActivityListener;
 
-
+/**
+ * Dialog for delete song confirmation.
+ */
 public class DeleteSongDialog extends DialogFragment {
 
     private MainActivityListener listener;
@@ -29,10 +31,12 @@ public class DeleteSongDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
         // set title
         builder.setTitle(getString(R.string.delete_song_message) + " " + dbSong.getTitle() + "?");
+
+        // set buttons listeners
         builder.setPositiveButton(R.string.button_yes, new OnClickListener() {
 
             @Override
@@ -42,16 +46,15 @@ public class DeleteSongDialog extends DialogFragment {
             }
         });
 
-            builder.setNegativeButton(R.string.button_no, new OnClickListener() {
+        builder.setNegativeButton(R.string.button_no, new OnClickListener() {
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                        getDialog().dismiss();
-                }
-            });
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getDialog().dismiss();
+            }
+        });
         return builder.create();
     }
-
 
 
     public void setListener(MainActivityListener listener) {
