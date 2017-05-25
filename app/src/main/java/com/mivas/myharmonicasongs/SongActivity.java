@@ -2,8 +2,11 @@ package com.mivas.myharmonicasongs;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
@@ -13,8 +16,12 @@ import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.dialog.HarmonicaNotesDialog;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
+import com.mivas.myharmonicasongs.view.NoteRowOptionsMenu;
+import com.mivas.myharmonicasongs.view.SongOptionsMenu;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -23,14 +30,19 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private LinearLayout notesLayout;
     private DbSong dbSong;
     private List<DbNote> notes = new ArrayList<DbNote>();
+    private Comparator notesComparator;
+    private TextView noNotesText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         initViews();
+        initComparator();
 
         dbSong = SongDbHandler.getSongById(getIntent().getLongExtra(Constants.EXTRA_SONG_ID, 0));
+        getSupportActionBar().setTitle(dbSong.getTitle());
         notes = NoteDbHandler.getNotesBySongId(dbSong.getId());
         refreshMatrix();
 
@@ -38,42 +50,43 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
     private void initViews() {
         notesLayout = (LinearLayout) findViewById(R.id.list_notes);
+        noNotesText = (TextView) findViewById(R.id.text_no_notes);
     }
 
     private void refreshMatrix() {
         notesLayout.removeAllViews();
-        int i = 0;
-        boolean matrixEnd = false;
-        do {
+        if (notes.size() == 0) {
             LinearLayout rowLayout = new LinearLayout(SongActivity.this);
             rowLayout.setOrientation(LinearLayout.HORIZONTAL);
             notesLayout.addView(rowLayout);
-            int j = 0;
-            boolean rowEnd = false;
-            do {
-                DbNote dbNote = findNote(i, j);
-                if (dbNote != null) {
-                    addNoteToMatrix(dbNote, rowLayout);
-                    j++;
-                } else {
-                    addAddNoteToMatrix(i, j, rowLayout);
-                    rowEnd = true;
+            addAddNoteToMatrix(0, 0, rowLayout);
+        } else {
+            int i = 0;
+            DbNote thisNote = notes.get(i);
+            DbNote nextNote = notes.size() < 2 ? null : notes.get(i + 1);
+            LinearLayout rowLayout = new LinearLayout(SongActivity.this);
+            rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+            notesLayout.addView(rowLayout);
+            while (i < notes.size()) {
+                addNoteToMatrix(thisNote, rowLayout);
+                if (nextNote == null || (nextNote.getRow() != thisNote.getRow())) {
+                    addAddNoteToMatrix(thisNote.getRow(), thisNote.getColumn() + 1, rowLayout);
+                    rowLayout = new LinearLayout(SongActivity.this);
+                    rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    notesLayout.addView(rowLayout);
+                    if (i == notes.size() - 1) {
+                        rowLayout = new LinearLayout(SongActivity.this);
+                        rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+                        notesLayout.addView(rowLayout);
+                        addAddNoteToMatrix(thisNote.getRow() + 1, 0, rowLayout);
+                    }
                 }
-            } while (!rowEnd);
-            if (rowLayout.getChildCount() == 1) {
-                matrixEnd = true;
-            }
-            i++;
-        } while (!matrixEnd);
-    }
-
-    private DbNote findNote(int row, int column) {
-        for (DbNote dbNote : notes) {
-            if (dbNote.getRow() == row && dbNote.getColumn() == column) {
-                return dbNote;
+                i++;
+                thisNote = i < (notes.size()) ? notes.get(i) : null;
+                nextNote = i < (notes.size() - 1) ? notes.get(i + 1) : null;
             }
         }
-        return null;
+        toggleNoNotesText();
     }
 
     private void addNoteToMatrix(final DbNote dbNote, LinearLayout parent) {
@@ -118,12 +131,39 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 dialog.show(getFragmentManager(), Constants.TAG_HARMONICA_NOTES_DIALOG);
             }
         });
+        final NoteRowOptionsMenu optionsMenu = new NoteRowOptionsMenu(SongActivity.this, addNoteView);
+        optionsMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case 0:
+                        //listener.onSongEdit(dbSong);
+                        break;
+                    case 1:
+                        //listener.onSongDelete(dbSong);
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
+
+        /*addNoteView.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                optionsMenu.show();
+                return false;
+            }
+        });*/
         parent.addView(addNoteView);
     }
 
     @Override
     public void onNoteAdded(DbNote dbNote) {
         notes.add(dbNote);
+        Collections.sort(notes, notesComparator);
         NoteDbHandler.insertNote(dbNote);
         refreshMatrix();
     }
@@ -136,8 +176,64 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
     @Override
     public void onNoteDeleted(DbNote dbNote) {
+        int position = notes.indexOf(dbNote);
         notes.remove(dbNote);
         NoteDbHandler.deleteNote(dbNote);
+        int rowCount = 0;
+        for (int i=0; i < notes.size(); i++) {
+            if (notes.get(i).getRow() == dbNote.getRow()) {
+                rowCount++;
+            }
+        }
+        if (rowCount > 0) {
+            for (int i = position; i < notes.size(); i++) {
+                if (notes.get(i).getRow() == dbNote.getRow()) {
+                    DbNote note = notes.get(i);
+                    note.setColumn(note.getColumn() - 1);
+                    NoteDbHandler.insertNote(note);
+                }
+            }
+        } else {
+            for (int i = position; i < notes.size(); i++) {
+                if (notes.get(i).getRow() > dbNote.getRow()) {
+                    DbNote note = notes.get(i);
+                    note.setRow(note.getRow() - 1);
+                    NoteDbHandler.insertNote(note);
+                }
+            }
+        }
         refreshMatrix();
     }
+
+    private void initComparator() {
+        notesComparator = new Comparator() {
+
+            @Override
+            public int compare(Object o1, Object o2) {
+                DbNote note1 = (DbNote) o1;
+                DbNote note2 = (DbNote) o2;
+                if (note1.getRow() < note2.getRow()) {
+                    return -1;
+                } else if (note1.getRow() > note2.getRow()) {
+                    return 1;
+                } else {
+                    if (note1.getColumn() < note2.getColumn()) {
+                        return -1;
+                    } else if (note1.getColumn() > note2.getColumn()) {
+                        return 1;
+                    }
+                }
+                return 0;
+            }
+        };
+    }
+
+    private void toggleNoNotesText() {
+        if (notes.isEmpty()) {
+            noNotesText.setVisibility(View.VISIBLE);
+        } else {
+            noNotesText.setVisibility(View.GONE);
+        }
+    }
+
 }

@@ -28,8 +28,10 @@
     <Button
         android:id="@+id/button_ok"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/bu1"
+        android:layout_height="@dimen/bu4"
         android:text="@string/button_ok"
+        android:background="@drawable/selector_button_generic"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_40px" />
 

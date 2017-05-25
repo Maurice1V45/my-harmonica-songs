@@ -103,4 +103,5 @@ public class SongDialog extends DialogFragment {
     public void setListener(MainActivityListener listener) {
         this.listener = listener;
     }
+
 }

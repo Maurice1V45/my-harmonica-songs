@@ -8,7 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.mivas.myharmonicasongs.adapter.SongsListAdapter;
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
@@ -19,11 +21,15 @@ import com.mivas.myharmonicasongs.dialog.SongDialog;
 import com.mivas.myharmonicasongs.listener.MainActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
 
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity implements MainActivityListener {
 
-    private RecyclerView songsList;
+    private RecyclerView songsListView;
     private SongsListAdapter songsListAdapter;
+    private List<DbSong> songs;
+    private TextView noSongsText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +37,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         setContentView(R.layout.activity_main);
 
         initViews();
-        songsListAdapter = new SongsListAdapter(MainActivity.this, SongDbHandler.getSongs(), MainActivity.this);
-        songsList.setAdapter(songsListAdapter);
+        songs = SongDbHandler.getSongs();
+        songsListAdapter = new SongsListAdapter(MainActivity.this, songs , MainActivity.this);
+        songsListView.setAdapter(songsListAdapter);
+        toggleNoSongsText();
     }
 
     private void initViews() {
-        songsList = (RecyclerView) findViewById(R.id.list_songs);
-        songsList.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayout.VERTICAL, false));
+        songsListView = (RecyclerView) findViewById(R.id.list_songs);
+        songsListView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayout.VERTICAL, false));
+        noSongsText = (TextView) findViewById(R.id.text_no_songs);
     }
 
     @Override
@@ -105,8 +114,20 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     }
 
     private void refreshSongsList() {
-        songsListAdapter.setSongs(SongDbHandler.getSongs());
+        songs = SongDbHandler.getSongs();
+        songsListAdapter.setSongs(songs);
         songsListAdapter.notifyDataSetChanged();
+        toggleNoSongsText();
+    }
+
+    private void toggleNoSongsText() {
+        if (songs.isEmpty()) {
+            songsListView.setVisibility(View.GONE);
+            noSongsText.setVisibility(View.VISIBLE);
+        } else {
+            songsListView.setVisibility(View.VISIBLE);
+            noSongsText.setVisibility(View.GONE);
+        }
     }
 
 }

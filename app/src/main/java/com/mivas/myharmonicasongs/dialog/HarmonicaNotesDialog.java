@@ -11,17 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.mivas.myharmonicasongs.MainActivity;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.adapter.HarmonicaNotesAdapter;
 import com.mivas.myharmonicasongs.database.model.DbNote;
-import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.listener.HarmonicaNotesDialogListener;
-import com.mivas.myharmonicasongs.listener.MainActivityListener;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
-import com.mivas.myharmonicasongs.util.CustomToast;
 
 /**
  * Dialog for selecting a harmonica note.
@@ -52,7 +47,7 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
         wordField.setText(dbNote.getWord());
         notesList = (RecyclerView) rootView.findViewById(R.id.list_harmonica_notes);
         notesList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL, false));
-        notesList.setAdapter(new HarmonicaNotesAdapter(getActivity(), HarmonicaNotesDialog.this));
+        notesList.setAdapter(new HarmonicaNotesAdapter(getActivity(), HarmonicaNotesDialog.this, dbNote));
         deleteButton = (Button) rootView.findViewById(R.id.button_delete);
         deleteButton.setVisibility(editMode ? View.VISIBLE : View.GONE);
     }
@@ -76,7 +71,6 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
         View view = inflater.inflate(R.layout.dialog_harmonica_notes, container);
         initViews(view);
         initListeners();
-        setRetainInstance(true);
         return view;
     }
 
@@ -116,12 +110,4 @@ public class HarmonicaNotesDialog extends DialogFragment implements HarmonicaNot
         this.editMode = editMode;
     }
 
-    @Override
-    public void onDestroyView() {
-        Dialog dialog = getDialog();
-        if (dialog != null && getRetainInstance()) {
-            dialog.setDismissMessage(null);
-        }
-        super.onDestroyView();
-    }
 }

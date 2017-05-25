@@ -41,7 +41,12 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
     public void onBindViewHolder(final SongViewHolder holder, int position) {
         final DbSong dbSong = songs.get(position);
         holder.titleText.setText(dbSong.getTitle());
-        holder.authorText.setText(dbSong.getAuthor());
+        if (dbSong.getAuthor().isEmpty()) {
+            holder.authorText.setVisibility(View.GONE);
+        } else {
+            holder.authorText.setVisibility(View.VISIBLE);
+            holder.authorText.setText("by " + dbSong.getAuthor());
+        }
         final SongOptionsMenu optionsMenu = new SongOptionsMenu(context, holder.moreButton);
         optionsMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override

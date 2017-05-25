@@ -1,17 +1,35 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@mipmap/image_background"
     android:padding="@dimen/bu1">
 
-    <TextView
-        android:id="@+id/text_syllable"
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/bu4"
-        android:gravity="center_vertical"
-        android:text="@string/text_syllable"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_30px" />
+        android:layout_height="@dimen/bu4">
+
+        <TextView
+            android:id="@+id/text_syllable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/text_syllable"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_30px" />
+
+        <EditText
+            android:id="@+id/word_field"
+            android:layout_width="@dimen/bu6"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/bu0_5"
+            android:layout_toRightOf="@+id/text_syllable"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_30px" />
+    </RelativeLayout>
+
 
     <Button
         android:id="@+id/button_delete"
@@ -19,17 +37,11 @@
         android:layout_height="@dimen/bu4"
         android:layout_alignParentRight="true"
         android:layout_gravity="right"
-        android:text="@string/button_delete" />
-
-    <EditText
-        android:id="@+id/word_field"
-        android:layout_width="@dimen/bu6"
-        android:layout_height="@dimen/bu4"
-        android:layout_marginLeft="@dimen/bu0_5"
-        android:layout_toRightOf="@+id/text_syllable"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:textColor="@color/black"
+        android:background="@drawable/selector_button_generic"
+        android:paddingLeft="@dimen/bu1"
+        android:paddingRight="@dimen/bu1"
+        android:text="@string/button_delete"
+        android:textColor="@color/white"
         android:textSize="@dimen/text_size_30px" />
 
     <android.support.v7.widget.RecyclerView
@@ -38,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/bu5"
-        android:background="@drawable/grey_bordered_rounded_shape"
+        android:background="@drawable/shape_harmonica"
         android:paddingLeft="1dp"
         android:paddingRight="1dp" />
 

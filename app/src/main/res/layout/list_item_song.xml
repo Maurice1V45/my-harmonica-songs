@@ -10,7 +10,7 @@
         android:layout_marginLeft="@dimen/bu1"
         android:layout_marginRight="@dimen/bu1"
         android:layout_marginTop="@dimen/bu0_5"
-        android:background="@drawable/white_bordered_rounded_shape"
+        android:background="@drawable/selector_song_list_item"
         android:clickable="true">
 
         <RelativeLayout
@@ -46,11 +46,12 @@
             <TextView
                 android:id="@+id/text_author"
                 android:layout_width="wrap_content"
+                android:textStyle="italic"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_30px" />
+                android:textColor="@color/grey77"
+                android:textSize="@dimen/text_size_26px" />
         </LinearLayout>
 
         <RelativeLayout
@@ -61,11 +62,11 @@
             android:clickable="true">
 
             <ImageView
-                android:layout_width="@dimen/bu3"
-                android:layout_height="@dimen/bu3"
+                android:layout_width="@dimen/bu2"
+                android:layout_height="@dimen/bu2"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@mipmap/icon_dots" />
+                android:src="@drawable/selector_dots" />
         </RelativeLayout>
 
     </RelativeLayout>

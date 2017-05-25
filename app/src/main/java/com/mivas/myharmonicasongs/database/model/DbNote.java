@@ -22,6 +22,9 @@ public class DbNote extends Model {
     @Column(name = "column")
     private int column;
 
+    @Column(name = "bend")
+    private float bend;
+
     @Column(name = "song_id")
     private long songId;
 
@@ -71,5 +74,13 @@ public class DbNote extends Model {
 
     public void setSongId(long songId) {
         this.songId = songId;
+    }
+
+    public float getBend() {
+        return bend;
+    }
+
+    public void setBend(float bend) {
+        this.bend = bend;
     }
 }

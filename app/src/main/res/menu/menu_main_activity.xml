@@ -4,7 +4,7 @@
     tools:context="com.mivas.myharmonicasongs.MainActivity">
     <item
         android:id="@+id/add_song_action"
-        android:icon="@mipmap/icon_plus"
+        android:icon="@drawable/selector_plus"
         android:title="@string/menu_add_song"
         app:showAsAction="always" />
 </menu>

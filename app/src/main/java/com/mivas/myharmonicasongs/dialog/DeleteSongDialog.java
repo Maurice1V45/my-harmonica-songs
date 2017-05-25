@@ -49,7 +49,6 @@ public class DeleteSongDialog extends DialogFragment {
                         getDialog().dismiss();
                 }
             });
-
         return builder.create();
     }
 
@@ -62,4 +61,5 @@ public class DeleteSongDialog extends DialogFragment {
     public void setSong(DbSong dbSong) {
         this.dbSong = dbSong;
     }
+
 }

@@ -52,6 +52,7 @@ public class NoteDbHandler {
         return new Select()
                 .from(DbNote.class)
                 .where("song_id = ?", songId)
+                .orderBy("row ASC, column ASC")
                 .execute();
     }
 

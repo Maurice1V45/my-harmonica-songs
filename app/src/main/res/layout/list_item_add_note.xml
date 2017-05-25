@@ -13,7 +13,7 @@
             android:layout_height="@dimen/bu3_5"
             android:layout_centerInParent="true"
             android:scaleType="fitXY"
-            android:src="@drawable/rounded_plus_selector" />
+            android:src="@drawable/selector_round_plus" />
 
     </RelativeLayout>
 

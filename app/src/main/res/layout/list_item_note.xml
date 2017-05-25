@@ -7,7 +7,7 @@
         android:layout_width="@dimen/bu4"
         android:layout_height="@dimen/bu5_5"
         android:layout_margin="@dimen/bu0_25"
-        android:background="@drawable/white_rounded_shape_selector"
+        android:background="@drawable/selector_note"
         android:gravity="center"
         android:orientation="vertical">
 
