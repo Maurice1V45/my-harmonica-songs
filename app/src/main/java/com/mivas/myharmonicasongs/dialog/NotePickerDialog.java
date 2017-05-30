@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.mivas.myharmonicasongs.R;
-import com.mivas.myharmonicasongs.adapter.HarmonicaNotesAdapter;
+import com.mivas.myharmonicasongs.adapter.NotePickerAdapter;
 import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.listener.NotePickerDialogListener;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
@@ -44,11 +45,14 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
     private void initViews(View rootView) {
         wordField = (EditText) rootView.findViewById(R.id.field_word);
         wordField.setText(dbNote.getWord());
+        if (dbNote.getColumn() == 0) {
+            wordField.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        }
         deleteButton = (Button) rootView.findViewById(R.id.button_delete);
         deleteButton.setVisibility(editMode ? View.VISIBLE : View.GONE);
         RecyclerView notesList = (RecyclerView) rootView.findViewById(R.id.list_harmonica_notes);
         notesList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL, false));
-        notesList.setAdapter(new HarmonicaNotesAdapter(getActivity(), NotePickerDialog.this, dbNote));
+        notesList.setAdapter(new NotePickerAdapter(getActivity(), NotePickerDialog.this, dbNote));
     }
 
     /**

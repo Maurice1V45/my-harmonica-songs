@@ -7,8 +7,10 @@
     <string name="hint_title">Title</string>
     <string name="hint_author">Author</string>
     <string name="button_ok">OK</string>
+    <string name="button_cancel">Cancel</string>
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
+    <string name="button_export">Export</string>
     <string name="no_songs">Tap the \"+\" button above to add a song</string>
     <string name="no_notes">Press \"+\" to add a note.\nLong press \"+\" for more options.</string>
     <string name="button_delete">Delete</string>
@@ -22,7 +24,19 @@
     <string name="menu_copy_row">Copy row</string>
     <string name="menu_paste_row">Paste row</string>
     <string name="delete_song_message">Are you sure you want to delete</string>
+    <string name="select_songs_export">Select the songs to export</string>
     <string name="toast_note_copied">note copied</string>
     <string name="toast_notes_copied">notes copied</string>
     <string name="toast_no_notes_copied">No notes copied</string>
+    <string name="menu_export_song">Export song</string>
+    <string name="menu_export_songs">Export songs</string>
+    <string name="menu_import_songs">Import songs</string>
+    <string name="export_to">Export to…</string>
+    <string name="error_exporting_song">Error exporting song</string>
+    <string name="error_importing_song">Error importing song</string>
+    <string name="no_song_imported">No songs imported</string>
+    <string name="song_imported">song imported</string>
+    <string name="songs_imported">songs imported</string>
+    <string name="permission_needed">Permission needed to import songs</string>
+    <string name="no_songs_selected_export">No songs selected</string>
 </resources>

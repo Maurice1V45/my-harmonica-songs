@@ -3,6 +3,8 @@ package com.mivas.myharmonicasongs.listener;
 
 import com.mivas.myharmonicasongs.database.model.DbSong;
 
+import java.util.List;
+
 /**
  * Listener for {@link com.mivas.myharmonicasongs.MainActivity}.
  */
@@ -49,4 +51,11 @@ public interface MainActivityListener {
      * @param dbSong
      */
     void onSongSelected(DbSong dbSong);
+
+    /**
+     * Triggered when songs were selected for exporting.
+     *
+     * @param dbSongs
+     */
+    void onExportSongs(List<DbSong> dbSongs);
 }

@@ -10,6 +10,7 @@ public class Constants {
 
     /* Dialog tags */
     public static final String TAG_SONG_DIALOG = "tag_song_dialog";
+    public static final String TAG_EXPORT_SONG_DIALOG = "tag_export_song_dialog";
     public static final String TAG_DELETE_SONG_DIALOG = "tag_delete_song_dialog";
     public static final String TAG_HARMONICA_NOTES_DIALOG = "tag_harmonica_notes_dialog";
 

@@ -1,26 +1,43 @@
 package com.mivas.myharmonicasongs;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.CharStreams;
 import com.mivas.myharmonicasongs.adapter.SongsListAdapter;
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.dialog.DeleteSongDialog;
+import com.mivas.myharmonicasongs.dialog.ExportSongsDialog;
 import com.mivas.myharmonicasongs.dialog.SongDialog;
 import com.mivas.myharmonicasongs.listener.MainActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
+import com.mivas.myharmonicasongs.util.CustomToast;
+import com.mivas.myharmonicasongs.util.ExportHelper;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 /**
@@ -30,8 +47,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
 
     private RecyclerView songsListView;
     private SongsListAdapter songsListAdapter;
-    private List<DbSong> songs;
+    private List<DbSong> dbSongs;
     private TextView noSongsText;
+
+    private static final int REQUEST_CODE_IMPORT_SONG = 1;
+    private static final int REQUEST_CODE_STORAGE_PERMISSION = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +59,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         setContentView(R.layout.activity_main);
 
         initViews();
-        songs = SongDbHandler.getSongs();
-        songsListAdapter = new SongsListAdapter(MainActivity.this, songs , MainActivity.this);
+        dbSongs = SongDbHandler.getSongs();
+        songsListAdapter = new SongsListAdapter(MainActivity.this, dbSongs, MainActivity.this);
         songsListView.setAdapter(songsListAdapter);
         toggleNoSongsText();
     }
 
     private void initViews() {
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
         songsListView = (RecyclerView) findViewById(R.id.list_songs);
         songsListView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayout.VERTICAL, false));
         noSongsText = (TextView) findViewById(R.id.text_no_songs);
@@ -68,8 +90,70 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
                 songDialog.setListener(MainActivity.this);
                 songDialog.show(getFragmentManager(), Constants.TAG_SONG_DIALOG);
                 return true;
+            case R.id.action_import_songs:
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
+                } else {
+                    launchImportSongsActivity();
+                }
+                return true;
+            case R.id.action_export_songs:
+                ExportSongsDialog exportSongsDialog = new ExportSongsDialog();
+                exportSongsDialog.setDbSongs(dbSongs);
+                exportSongsDialog.setListener(MainActivity.this);
+                exportSongsDialog.show(getFragmentManager(), Constants.TAG_EXPORT_SONG_DIALOG);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void launchImportSongsActivity() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("file/*");
+        startActivityForResult(intent, REQUEST_CODE_IMPORT_SONG);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_IMPORT_SONG && resultCode == RESULT_OK) {
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(data.getData());
+                String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
+                List<DbSong> importedSongs = ExportHelper.getInstance().saveJsonSongsToDb(fileJson);
+                dbSongs.addAll(importedSongs);
+                refreshSongsList();
+                if (importedSongs.size() == 0) {
+                    CustomToast.makeText(MainActivity.this, importedSongs.size() + " " + getString(R.string.no_song_imported), Toast.LENGTH_SHORT).show();
+                } else if (importedSongs.size() == 1) {
+                    CustomToast.makeText(MainActivity.this, importedSongs.size() + " " + getString(R.string.song_imported), Toast.LENGTH_SHORT).show();
+                } else {
+                    CustomToast.makeText(MainActivity.this, importedSongs.size() + " " + getString(R.string.songs_imported), Toast.LENGTH_SHORT).show();
+                }
+            } catch (FileNotFoundException e) {
+                CustomToast.makeText(MainActivity.this, R.string.error_importing_song, Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                CustomToast.makeText(MainActivity.this, R.string.error_importing_song, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_STORAGE_PERMISSION: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    launchImportSongsActivity();
+                } else {
+                    CustomToast.makeText(MainActivity.this, R.string.permission_needed, Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+            default:
+                break;
         }
     }
 
@@ -115,21 +199,39 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         startActivity(intent);
     }
 
+    @Override
+    public void onExportSongs(List<DbSong> dbSongs) {
+        String fileName = (dbSongs.size() == 1) ? dbSongs.size() + " song.mhs" : dbSongs.size() + " songs.mhs";
+        ExportHelper.getInstance().launchExportIntent(MainActivity.this, dbSongs, fileName);
+    }
+
     private void refreshSongsList() {
-        songs = SongDbHandler.getSongs();
-        songsListAdapter.setSongs(songs);
+        dbSongs = SongDbHandler.getSongs();
+        songsListAdapter.setSongs(dbSongs);
         songsListAdapter.notifyDataSetChanged();
         toggleNoSongsText();
     }
 
     private void toggleNoSongsText() {
-        if (songs.isEmpty()) {
+        if (dbSongs.isEmpty()) {
             songsListView.setVisibility(View.GONE);
             noSongsText.setVisibility(View.VISIBLE);
         } else {
             songsListView.setVisibility(View.VISIBLE);
             noSongsText.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        try {
+            File exportDir = new File(getFilesDir(), "Songs");
+            for (File file : exportDir.listFiles()) {
+                file.delete();
+            }
+        } catch (NullPointerException e) {
+        }
+        super.onDestroy();
     }
 
 }

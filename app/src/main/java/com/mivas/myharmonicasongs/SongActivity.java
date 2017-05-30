@@ -1,7 +1,12 @@
 package com.mivas.myharmonicasongs;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -18,8 +23,10 @@ import com.mivas.myharmonicasongs.dialog.NotePickerDialog;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
+import com.mivas.myharmonicasongs.util.ExportHelper;
 import com.mivas.myharmonicasongs.view.NoteRowOptionsMenu;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -58,6 +65,8 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
      * Views initializer.
      */
     private void initViews() {
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
         notesLayout = (LinearLayout) findViewById(R.id.list_notes);
         noNotesText = (TextView) findViewById(R.id.text_no_notes);
     }
@@ -340,6 +349,26 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             }
         }
         refreshNotesView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_song_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_export_song:
+                List<DbSong> dbSongs = new ArrayList<DbSong>();
+                dbSongs.add(dbSong);
+                ExportHelper.getInstance().launchExportIntent(SongActivity.this, dbSongs, dbSong.getTitle() + ".mhs");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     /**

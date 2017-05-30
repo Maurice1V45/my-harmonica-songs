@@ -11,14 +11,16 @@ import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.listener.NotePickerDialogListener;
 
-
-public class HarmonicaNotesAdapter extends RecyclerView.Adapter<HarmonicaNotesAdapter.SongViewHolder> {
+/**
+ * Adapter for note picker.
+ */
+public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.SongViewHolder> {
 
     private Context context;
     private NotePickerDialogListener listener;
     private DbNote selectedNote;
 
-    public HarmonicaNotesAdapter(Context context, NotePickerDialogListener listener, DbNote selectedNote) {
+    public NotePickerAdapter(Context context, NotePickerDialogListener listener, DbNote selectedNote) {
         this.context = context;
         this.listener = listener;
         this.selectedNote = selectedNote;
@@ -27,7 +29,7 @@ public class HarmonicaNotesAdapter extends RecyclerView.Adapter<HarmonicaNotesAd
     @Override
     public SongViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_harmonica_note, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_note_picker, parent, false);
         SongViewHolder viewHolder = new SongViewHolder(view);
         return viewHolder;
     }
