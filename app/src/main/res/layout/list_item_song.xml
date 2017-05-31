@@ -6,10 +6,8 @@
         android:id="@+id/view_song"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/bu0_5"
-        android:layout_marginLeft="@dimen/bu1"
-        android:layout_marginRight="@dimen/bu1"
-        android:layout_marginTop="@dimen/bu0_5"
+        android:layout_marginBottom="@dimen/bu0_33"
+        android:layout_marginTop="@dimen/bu0_33"
         android:background="@drawable/selector_song_list_item"
         android:clickable="true">
 
@@ -40,8 +38,8 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_40px" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_36px" />
 
             <TextView
                 android:id="@+id/text_author"
@@ -49,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/grey77"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_size_26px"
                 android:textStyle="italic" />
         </LinearLayout>
