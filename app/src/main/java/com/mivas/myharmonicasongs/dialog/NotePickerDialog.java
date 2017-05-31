@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -24,9 +26,12 @@ import com.mivas.myharmonicasongs.listener.SongActivityListener;
 public class NotePickerDialog extends DialogFragment implements NotePickerDialogListener {
 
     private DbNote dbNote;
+    private RecyclerView notesList;
     private EditText wordField;
     private SongActivityListener listener;
     private Button deleteButton;
+    private CheckBox showBendingsCheckbox;
+    private NotePickerAdapter adapter;
     private boolean editMode;
     private boolean newRow;
 
@@ -48,11 +53,14 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
         if (dbNote.getColumn() == 0) {
             wordField.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         }
+        showBendingsCheckbox = (CheckBox) rootView.findViewById(R.id.checkbox_show_bendings);
+        showBendingsCheckbox.setChecked(dbNote.getBend() != 0);
         deleteButton = (Button) rootView.findViewById(R.id.button_delete);
         deleteButton.setVisibility(editMode ? View.VISIBLE : View.GONE);
-        RecyclerView notesList = (RecyclerView) rootView.findViewById(R.id.list_harmonica_notes);
+        notesList = (RecyclerView) rootView.findViewById(R.id.list_harmonica_notes);
         notesList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL, false));
-        notesList.setAdapter(new NotePickerAdapter(getActivity(), NotePickerDialog.this, dbNote));
+        adapter = new NotePickerAdapter(getActivity(), NotePickerDialog.this, dbNote, dbNote.getBend() != 0);
+        notesList.setAdapter(adapter);
     }
 
     /**
@@ -65,6 +73,14 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
             public void onClick(View v) {
                 listener.onNoteDeleted(dbNote);
                 dismiss();
+            }
+        });
+        showBendingsCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                adapter.setShowBendings(isChecked);
+                adapter.notifyDataSetChanged();
             }
         });
     }
@@ -88,9 +104,10 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
     }
 
     @Override
-    public void onNoteSelected(int note, boolean blow) {
+    public void onNoteSelected(int note, boolean blow, float bend) {
         dbNote.setHole(note);
         dbNote.setBlow(blow);
+        dbNote.setBend(bend);
         dbNote.setWord(wordField.getText().toString());
         if (editMode) {
             listener.onNoteEdited(dbNote);

@@ -14,6 +14,7 @@ import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.database.model.DbSong;
+import com.mivas.myharmonicasongs.listener.MainActivityListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -100,37 +101,44 @@ public class ExportHelper {
         return jsonObject;
     }
 
-    public List<DbSong> saveJsonSongsToDb(String jsonString) {
-        List<DbSong> dbSongs = new ArrayList<DbSong>();
-        try {
-            JSONObject jsonObject = new JSONObject(jsonString);
-            JSONArray songsArray = jsonObject.getJSONArray("songs");
-            for (int i = 0; i < songsArray.length(); i++) {
-                JSONObject songJson = songsArray.getJSONObject(i);
-                DbSong dbSong = new DbSong();
-                dbSong.setTitle(songJson.getString("title"));
-                dbSong.setAuthor(songJson.getString("author"));
-                dbSong.setFavourite(songJson.getBoolean("favorite"));
-                SongDbHandler.insertSong(dbSong);
-                dbSongs.add(dbSong);
-                JSONArray notesArray = songJson.getJSONArray("notes");
-                for (int j = 0; j < notesArray.length(); j++) {
-                    JSONObject noteJson = notesArray.getJSONObject(j);
-                    DbNote dbNote = new DbNote();
-                    dbNote.setHole(noteJson.getInt("hole"));
-                    dbNote.setBlow(noteJson.getBoolean("blow"));
-                    dbNote.setWord(noteJson.getString("word"));
-                    dbNote.setRow(noteJson.getInt("row"));
-                    dbNote.setColumn(noteJson.getInt("column"));
-                    dbNote.setBend((float) noteJson.getDouble("bend"));
-                    dbNote.setSongId(dbSong.getId());
-                    NoteDbHandler.insertNote(dbNote);
+    public void saveJsonSongsToDb(final String jsonString, final MainActivityListener listener) {
+        Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+                List<DbSong> dbSongs = new ArrayList<DbSong>();
+                try {
+                    JSONObject jsonObject = new JSONObject(jsonString);
+                    JSONArray songsArray = jsonObject.getJSONArray("songs");
+                    for (int i = 0; i < songsArray.length(); i++) {
+                        JSONObject songJson = songsArray.getJSONObject(i);
+                        DbSong dbSong = new DbSong();
+                        dbSong.setTitle(songJson.getString("title"));
+                        dbSong.setAuthor(songJson.getString("author"));
+                        dbSong.setFavourite(songJson.getBoolean("favorite"));
+                        SongDbHandler.insertSong(dbSong);
+                        dbSongs.add(dbSong);
+                        JSONArray notesArray = songJson.getJSONArray("notes");
+                        for (int j = 0; j < notesArray.length(); j++) {
+                            JSONObject noteJson = notesArray.getJSONObject(j);
+                            DbNote dbNote = new DbNote();
+                            dbNote.setHole(noteJson.getInt("hole"));
+                            dbNote.setBlow(noteJson.getBoolean("blow"));
+                            dbNote.setWord(noteJson.getString("word"));
+                            dbNote.setRow(noteJson.getInt("row"));
+                            dbNote.setColumn(noteJson.getInt("column"));
+                            dbNote.setBend((float) noteJson.getDouble("bend"));
+                            dbNote.setSongId(dbSong.getId());
+                            NoteDbHandler.insertNote(dbNote);
+                        }
+                    }
+                    listener.onSongsImported(dbSongs);
+                } catch (JSONException e) {
+                    listener.onSongsImportedError();
                 }
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return dbSongs;
+        };
+        thread.start();
     }
 
     public void launchExportIntent(Context context, List<DbSong> dbSongs, String fileName) {

@@ -10,6 +10,7 @@ public interface NotePickerDialogListener {
      *
      * @param note
      * @param blow
+     * @param bend
      */
-    void onNoteSelected(int note, boolean blow);
+    void onNoteSelected(int note, boolean blow, float bend);
 }

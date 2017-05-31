@@ -119,7 +119,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private void addNoteToNotesView(final DbNote dbNote, LinearLayout parent) {
         View noteView = getLayoutInflater().inflate(R.layout.list_item_note, null);
         TextView noteText = (TextView) noteView.findViewById(R.id.text_note);
-        noteText.setText(dbNote.isBlow() ? String.valueOf(dbNote.getHole()) : "-" + String.valueOf(dbNote.getHole()));
+        noteText.setText(getNoteText(dbNote.getHole(), dbNote.isBlow(), dbNote.getBend()));
         TextView wordText = (TextView) noteView.findViewById(R.id.text_word);
         if (dbNote.getWord().isEmpty()) {
             wordText.setVisibility(View.GONE);
@@ -449,6 +449,29 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         } else {
             return notes.get(notes.size() - 1).getRow() + 1;
         }
+    }
+
+    private String getNoteText(int hole, boolean blow, float bending) {
+        if (blow) {
+            if (bending == 0f) {
+                return String.format("%s", hole);
+            } else if (bending == 0.5f) {
+                return String.format("%s'", hole);
+            } else if (bending == 1f) {
+                return String.format("%s''", hole);
+            }
+        } else {
+            if (bending == 0f) {
+                return String.format("-%s", hole);
+            } else if (bending == -0.5f) {
+                return String.format("-%s'", hole);
+            } else if (bending == -1f) {
+                return String.format("-%s''", hole);
+            } else if (bending == -1.5f) {
+                return String.format("-%s'''", hole);
+            }
+        }
+        return "";
     }
 
 }

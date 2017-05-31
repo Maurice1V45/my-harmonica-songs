@@ -119,20 +119,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_IMPORT_SONG && resultCode == RESULT_OK) {
             try {
+                CustomToast.makeText(MainActivity.this, R.string.importing_songs, Toast.LENGTH_SHORT).show();
                 InputStream inputStream = getContentResolver().openInputStream(data.getData());
                 String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
-                List<DbSong> importedSongs = ExportHelper.getInstance().saveJsonSongsToDb(fileJson);
-                dbSongs.addAll(importedSongs);
-                refreshSongsList();
-                if (importedSongs.size() == 0) {
-                    CustomToast.makeText(MainActivity.this, importedSongs.size() + " " + getString(R.string.no_song_imported), Toast.LENGTH_SHORT).show();
-                } else if (importedSongs.size() == 1) {
-                    CustomToast.makeText(MainActivity.this, importedSongs.size() + " " + getString(R.string.song_imported), Toast.LENGTH_SHORT).show();
-                } else {
-                    CustomToast.makeText(MainActivity.this, importedSongs.size() + " " + getString(R.string.songs_imported), Toast.LENGTH_SHORT).show();
-                }
-            } catch (FileNotFoundException e) {
-                CustomToast.makeText(MainActivity.this, R.string.error_importing_song, Toast.LENGTH_SHORT).show();
+                ExportHelper.getInstance().saveJsonSongsToDb(fileJson, MainActivity.this);
             } catch (IOException e) {
                 CustomToast.makeText(MainActivity.this, R.string.error_importing_song, Toast.LENGTH_SHORT).show();
             }
@@ -203,6 +193,34 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     public void onExportSongs(List<DbSong> dbSongs) {
         String fileName = (dbSongs.size() == 1) ? dbSongs.size() + " song.mhs" : dbSongs.size() + " songs.mhs";
         ExportHelper.getInstance().launchExportIntent(MainActivity.this, dbSongs, fileName);
+    }
+
+    @Override
+    public void onSongsImported(final List<DbSong> dbSongs) {
+        this.dbSongs.addAll(dbSongs);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                refreshSongsList();
+                if (dbSongs.size() == 0) {
+                    CustomToast.makeText(MainActivity.this, dbSongs.size() + " " + getString(R.string.no_song_imported), Toast.LENGTH_SHORT).show();
+                } else if (dbSongs.size() == 1) {
+                    CustomToast.makeText(MainActivity.this, dbSongs.size() + " " + getString(R.string.song_imported), Toast.LENGTH_SHORT).show();
+                } else {
+                    CustomToast.makeText(MainActivity.this, dbSongs.size() + " " + getString(R.string.songs_imported), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onSongsImportedError() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                CustomToast.makeText(MainActivity.this, R.string.error_importing_song, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void refreshSongsList() {

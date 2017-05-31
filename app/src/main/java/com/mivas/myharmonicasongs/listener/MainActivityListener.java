@@ -58,4 +58,16 @@ public interface MainActivityListener {
      * @param dbSongs
      */
     void onExportSongs(List<DbSong> dbSongs);
+
+    /**
+     * Triggered after the songs have been imported and added to db.
+     *
+     * @param dbSongs
+     */
+    void onSongsImported(List<DbSong> dbSongs);
+
+    /**
+     * Triggered if there was an error importing songs.
+     */
+    void onSongsImportedError();
 }

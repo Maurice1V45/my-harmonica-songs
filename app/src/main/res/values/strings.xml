@@ -34,9 +34,11 @@
     <string name="export_to">Export to…</string>
     <string name="error_exporting_song">Error exporting song</string>
     <string name="error_importing_song">Error importing song</string>
+    <string name="importing_songs">Importing songs…</string>
     <string name="no_song_imported">No songs imported</string>
     <string name="song_imported">song imported</string>
     <string name="songs_imported">songs imported</string>
     <string name="permission_needed">Permission needed to import songs</string>
     <string name="no_songs_selected_export">No songs selected</string>
+    <string name="checkbox_show_bendings">Bend notes</string>
 </resources>
