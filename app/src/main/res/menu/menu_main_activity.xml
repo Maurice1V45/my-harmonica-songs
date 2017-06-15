@@ -9,10 +9,17 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/action_import_songs"
+        android:icon="@drawable/icon_import"
         android:title="@string/menu_import_songs"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_export_songs"
+        android:icon="@drawable/icon_export"
         android:title="@string/menu_export_songs"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_credits"
+        android:icon="@drawable/icon_credits"
+        android:title="@string/menu_credits"
         app:showAsAction="never" />
 </menu>

@@ -1,6 +1,7 @@
 package com.mivas.myharmonicasongs.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,45 +60,59 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
         holder.upperNote.setText(String.format("%s", note));
         if (selectedNote != null && selectedNote.getHole() == position + 1 && selectedNote.isBlow() && selectedNote.getBend() == 0f) {
             holder.upperNote.setBackgroundResource(R.drawable.shape_harmonica_note_pressed);
+            holder.upperNote.setTextColor(ContextCompat.getColor(context, R.color.white));
         } else {
             holder.upperNote.setBackgroundResource(R.drawable.selector_harmonica_note);
+            holder.upperNote.setTextColor(ContextCompat.getColorStateList(context, R.color.selector_harmonica_note_text));
         }
         holder.lowerNote.setText(String.format("-%s", note));
         if (selectedNote != null && selectedNote.getHole() == position + 1 && !selectedNote.isBlow() && selectedNote.getBend() == 0f) {
             holder.lowerNote.setBackgroundResource(R.drawable.shape_harmonica_note_pressed);
+            holder.lowerNote.setTextColor(ContextCompat.getColor(context, R.color.white));
         } else {
             holder.lowerNote.setBackgroundResource(R.drawable.selector_harmonica_note);
+            holder.lowerNote.setTextColor(ContextCompat.getColorStateList(context, R.color.selector_harmonica_note_text));
         }
         if (showBendings) {
             holder.upperNoteBend2.setText(String.format("%s''", note));
             if (selectedNote != null && selectedNote.getHole() == position + 1 && selectedNote.isBlow() && selectedNote.getBend() == 1f) {
                 holder.upperNoteBend2.setBackgroundResource(R.drawable.shape_harmonica_note_pressed);
+                holder.upperNoteBend2.setTextColor(ContextCompat.getColor(context, R.color.white));
             } else {
                 holder.upperNoteBend2.setBackgroundResource(R.drawable.selector_harmonica_note);
+                holder.upperNoteBend2.setTextColor(ContextCompat.getColorStateList(context, R.color.selector_harmonica_note_text));
             }
             holder.upperNoteBend1.setText(String.format("%s'", note));
             if (selectedNote != null && selectedNote.getHole() == position + 1 && selectedNote.isBlow() && selectedNote.getBend() == 0.5f) {
                 holder.upperNoteBend1.setBackgroundResource(R.drawable.shape_harmonica_note_pressed);
+                holder.upperNoteBend1.setTextColor(ContextCompat.getColor(context, R.color.white));
             } else {
                 holder.upperNoteBend1.setBackgroundResource(R.drawable.selector_harmonica_note);
+                holder.upperNoteBend1.setTextColor(ContextCompat.getColorStateList(context, R.color.selector_harmonica_note_text));
             }
             holder.lowerNoteBend1.setText(String.format("-%s'", note));
             if (selectedNote != null && selectedNote.getHole() == position + 1 && !selectedNote.isBlow() && selectedNote.getBend() == -0.5f) {
                 holder.lowerNoteBend1.setBackgroundResource(R.drawable.shape_harmonica_note_pressed);
+                holder.lowerNoteBend1.setTextColor(ContextCompat.getColor(context, R.color.white));
             } else {
                 holder.lowerNoteBend1.setBackgroundResource(R.drawable.selector_harmonica_note);
+                holder.lowerNoteBend1.setTextColor(ContextCompat.getColorStateList(context, R.color.selector_harmonica_note_text));
             }
             holder.lowerNoteBend2.setText(String.format("-%s''", note));
             if (selectedNote != null && selectedNote.getHole() == position + 1 && !selectedNote.isBlow() && selectedNote.getBend() == -1f) {
                 holder.lowerNoteBend2.setBackgroundResource(R.drawable.shape_harmonica_note_pressed);
+                holder.lowerNoteBend2.setTextColor(ContextCompat.getColor(context, R.color.white));
             } else {
                 holder.lowerNoteBend2.setBackgroundResource(R.drawable.selector_harmonica_note);
+                holder.lowerNoteBend2.setTextColor(ContextCompat.getColorStateList(context, R.color.selector_harmonica_note_text));
             }
             holder.lowerNoteBend3.setText(String.format("-%s'''", note));
             if (selectedNote != null && selectedNote.getHole() == position + 1 && !selectedNote.isBlow() && selectedNote.getBend() == -1.5f) {
                 holder.lowerNoteBend3.setBackgroundResource(R.drawable.shape_harmonica_note_pressed);
+                holder.lowerNoteBend3.setTextColor(ContextCompat.getColor(context, R.color.white));
             } else {
                 holder.lowerNoteBend3.setBackgroundResource(R.drawable.selector_harmonica_note);
+                holder.lowerNoteBend3.setTextColor(ContextCompat.getColorStateList(context, R.color.selector_harmonica_note_text));
             }
         }
 

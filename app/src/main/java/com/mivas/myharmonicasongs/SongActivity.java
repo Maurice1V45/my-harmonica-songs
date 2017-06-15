@@ -3,6 +3,7 @@ package com.mivas.myharmonicasongs;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +25,7 @@ import com.mivas.myharmonicasongs.listener.SongActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.ExportHelper;
+import com.mivas.myharmonicasongs.util.PreferencesUtils;
 import com.mivas.myharmonicasongs.view.NoteRowOptionsMenu;
 
 import java.io.File;
@@ -43,7 +45,10 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private List<DbNote> notes = new ArrayList<DbNote>();
     private Comparator notesComparator;
     private TextView noNotesText;
+    private View backgroundView;
     private List<DbNote> copiedNotes = new ArrayList<DbNote>();
+    private MenuItem showBackgroundMenuItem;
+    private MenuItem hideBackgroundMenuItem;
 
 
     @Override
@@ -69,6 +74,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         setSupportActionBar(myToolbar);
         notesLayout = (LinearLayout) findViewById(R.id.list_notes);
         noNotesText = (TextView) findViewById(R.id.text_no_notes);
+        backgroundView = findViewById(R.id.view_background);
     }
 
     /**
@@ -354,12 +360,23 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_song_activity, menu);
+        showBackgroundMenuItem = menu.findItem(R.id.action_show_background);
+        hideBackgroundMenuItem = menu.findItem(R.id.action_hide_background);
+        initShowBackgroundButton();
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_show_background:
+                backgroundView.setBackgroundColor(ContextCompat.getColor(SongActivity.this, android.R.color.transparent));
+                PreferencesUtils.storePreference(Constants.PREF_SHOW_SONG_BACKGROUND, true);
+                return true;
+            case R.id.action_hide_background:
+                backgroundView.setBackgroundColor(ContextCompat.getColor(SongActivity.this, R.color.greyDD));
+                PreferencesUtils.storePreference(Constants.PREF_SHOW_SONG_BACKGROUND, false);
+                return true;
             case R.id.action_export_song:
                 List<DbSong> dbSongs = new ArrayList<DbSong>();
                 dbSongs.add(dbSong);
@@ -472,6 +489,21 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             }
         }
         return "";
+    }
+
+    private void initShowBackgroundButton() {
+        invalidateOptionsMenu();
+        if (PreferencesUtils.getPreferences().getBoolean(Constants.PREF_SHOW_SONG_BACKGROUND, true)) {
+            showBackgroundMenuItem.setVisible(false);
+            hideBackgroundMenuItem.setVisible(true);
+            backgroundView.setBackgroundColor(ContextCompat.getColor(SongActivity.this, android.R.color.transparent));
+            noNotesText.setTextColor(ContextCompat.getColor(SongActivity.this, R.color.white));
+        } else {
+            showBackgroundMenuItem.setVisible(true);
+            hideBackgroundMenuItem.setVisible(false);
+            backgroundView.setBackgroundColor(ContextCompat.getColor(SongActivity.this, R.color.greyDD));
+            noNotesText.setTextColor(ContextCompat.getColor(SongActivity.this, R.color.black));
+        }
     }
 
 }

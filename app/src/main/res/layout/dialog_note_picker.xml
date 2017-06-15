@@ -5,66 +5,72 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/image_background"
-        android:padding="@dimen/bu1">
+        android:background="@color/white">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/bu4">
-
-            <TextView
-                android:id="@+id/text_syllable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="@string/text_syllable"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_30px" />
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bu5"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/bu0_5"
+            android:paddingTop="@dimen/bu0_5">
 
             <EditText
                 android:id="@+id/field_word"
-                android:layout_width="@dimen/bu6"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:textCursorDrawable="@null"
+                android:backgroundTint="@color/white"
                 android:layout_marginLeft="@dimen/bu0_5"
-                android:layout_toRightOf="@+id/text_syllable"
+                android:layout_marginRight="@dimen/bu0_25"
+                android:layout_weight="1"
+                android:hint="@string/text_syllable"
                 android:imeOptions="actionDone"
-                android:inputType="text"
-                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:inputType="textVisiblePassword"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
                 android:textSize="@dimen/text_size_30px" />
-        </RelativeLayout>
 
+            <CheckBox
+                android:id="@+id/checkbox_show_bendings"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/bu0_25"
+                android:layout_marginRight="@dimen/bu0_5"
+                android:layout_weight="1"
+                android:background="@drawable/selector_note_picker_button"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/checkbox_show_bendings"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_30px" />
 
-        <Button
-            android:id="@+id/button_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/bu4"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="right"
-            android:background="@drawable/selector_button_generic"
-            android:paddingLeft="@dimen/bu1"
-            android:paddingRight="@dimen/bu1"
-            android:text="@string/button_delete"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_30px" />
-
-        <CheckBox
-            android:id="@+id/checkbox_show_bendings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/bu4"
-            android:text="@string/checkbox_show_bendings"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_30px" />
+            <TextView
+                android:id="@+id/button_delete"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/bu0_5"
+                android:layout_weight="1"
+                android:background="@drawable/selector_note_picker_button"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="@string/button_delete"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_30px" />
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_harmonica_notes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/checkbox_show_bendings"
+            android:clipToPadding="false"
+            android:layout_below="@id/header"
             android:layout_centerHorizontal="true"
-            android:paddingLeft="1dp"
-            android:paddingRight="1dp" />
-
+            android:layout_marginTop="@dimen/bu0_5"
+            android:layout_marginBottom="@dimen/bu0_5"
+            android:paddingLeft="@dimen/bu0_5"
+            android:paddingRight="@dimen/bu0_5" />
     </RelativeLayout>
 </ScrollView>

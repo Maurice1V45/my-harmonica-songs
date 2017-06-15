@@ -2,13 +2,13 @@ package com.mivas.myharmonicasongs.dialog;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -29,7 +29,7 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
     private RecyclerView notesList;
     private EditText wordField;
     private SongActivityListener listener;
-    private Button deleteButton;
+    private View deleteButton;
     private CheckBox showBendingsCheckbox;
     private NotePickerAdapter adapter;
     private boolean editMode;
@@ -50,12 +50,13 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
     private void initViews(View rootView) {
         wordField = (EditText) rootView.findViewById(R.id.field_word);
         wordField.setText(dbNote.getWord());
+        wordField.setHintTextColor(ContextCompat.getColor(getActivity(), R.color.greyDD));
         if (dbNote.getColumn() == 0) {
             wordField.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         }
         showBendingsCheckbox = (CheckBox) rootView.findViewById(R.id.checkbox_show_bendings);
         showBendingsCheckbox.setChecked(dbNote.getBend() != 0);
-        deleteButton = (Button) rootView.findViewById(R.id.button_delete);
+        deleteButton = rootView.findViewById(R.id.button_delete);
         deleteButton.setVisibility(editMode ? View.VISIBLE : View.GONE);
         notesList = (RecyclerView) rootView.findViewById(R.id.list_harmonica_notes);
         notesList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL, false));
@@ -79,6 +80,7 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                showBendingsCheckbox.setText(isChecked ? R.string.checkbox_hide_bendings : R.string.checkbox_show_bendings);
                 adapter.setShowBendings(isChecked);
                 adapter.notifyDataSetChanged();
             }
@@ -132,4 +134,5 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
     public void setNewRow(boolean newRow) {
         this.newRow = newRow;
     }
+
 }

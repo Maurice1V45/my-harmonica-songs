@@ -44,6 +44,7 @@
     <dimen name="bu15">180dp</dimen>
     <dimen name="bu15_5">186dp</dimen>
     <dimen name="bu16">192dp</dimen>
+    <dimen name="bu17">204dp</dimen>
     <dimen name="bu18">216dp</dimen>
     <dimen name="bu19">228dp</dimen>
     <dimen name="bu20">240dp</dimen>

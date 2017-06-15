@@ -1,18 +1,19 @@
 package com.mivas.myharmonicasongs.adapter;
 
 import android.content.Context;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.listener.MainActivityListener;
-import com.mivas.myharmonicasongs.view.SongOptionsMenu;
 
 import java.util.List;
 
@@ -53,21 +54,30 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
         }
 
         // add song options menu
-        final SongOptionsMenu optionsMenu = new SongOptionsMenu(context, holder.moreButton);
-        optionsMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+        final MenuBuilder menuBuilder = new MenuBuilder(context);
+        menuBuilder.setOptionalIconsVisible(true);
+        MenuInflater inflater = new MenuInflater(context);
+        inflater.inflate(R.menu.menu_song_options, menuBuilder);
+        final MenuPopupHelper optionsMenu = new MenuPopupHelper(context, menuBuilder, holder.moreButton);
+        menuBuilder.setCallback(new MenuBuilder.Callback() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
                 switch (item.getItemId()) {
-                    case 0:
+                    case R.id.action_edit:
                         listener.onSongEdit(dbSong);
                         break;
-                    case 1:
+                    case R.id.action_delete:
                         listener.onSongDelete(dbSong);
                         break;
                     default:
                         break;
                 }
                 return false;
+            }
+
+            @Override
+            public void onMenuModeChange(MenuBuilder menu) {
+
             }
         });
         holder.moreButton.setOnClickListener(new View.OnClickListener() {

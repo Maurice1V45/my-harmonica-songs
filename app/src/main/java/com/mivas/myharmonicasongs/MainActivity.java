@@ -8,6 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -77,6 +78,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main_activity, menu);
+        if(menu instanceof MenuBuilder){
+            MenuBuilder menuBuilder = (MenuBuilder) menu;
+            menuBuilder.setOptionalIconsVisible(true);
+        }
         return true;
     }
 
@@ -102,6 +107,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
                 exportSongsDialog.setDbSongs(dbSongs);
                 exportSongsDialog.setListener(MainActivity.this);
                 exportSongsDialog.show(getFragmentManager(), Constants.TAG_EXPORT_SONG_DIALOG);
+                return true;
+            case R.id.action_credits:
+                Intent intent = new Intent(MainActivity.this, CreditsActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

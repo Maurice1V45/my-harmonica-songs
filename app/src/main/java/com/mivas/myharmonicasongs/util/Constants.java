@@ -7,6 +7,7 @@ public class Constants {
 
     /* Preferences */
     public static final String PREFERENCES = "prefs";
+    public static final String PREF_SHOW_SONG_BACKGROUND = "pref_show_song_background";
 
     /* Dialog tags */
     public static final String TAG_SONG_DIALOG = "tag_song_dialog";

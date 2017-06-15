@@ -2,6 +2,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mivas.myharmonicasongs.SongActivity">
+
+    <item
+        android:id="@+id/action_show_background"
+        android:icon="@drawable/icon_eye_crossed"
+        android:title="@string/menu_show_background"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_hide_background"
+        android:icon="@drawable/icon_eye"
+        android:title="@string/menu_hide_background"
+        app:showAsAction="always" />
+
     <item
         android:id="@+id/action_export_song"
         android:title="@string/menu_export_song"

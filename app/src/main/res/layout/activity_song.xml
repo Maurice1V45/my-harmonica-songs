@@ -4,53 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/greyDD"
+    android:background="@drawable/image_background"
     tools:context="com.mivas.myharmonicasongs.SongActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/black_30"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:titleTextColor="@color/white" />
 
-    <TextView
-        android:id="@+id/text_no_notes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="@dimen/bu2"
-        android:layout_marginRight="@dimen/bu2"
-        android:gravity="center"
-        android:text="@string/no_notes"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_42px" />
-
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
+        android:id="@+id/view_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:clipToPadding="false"
-        android:paddingBottom="@dimen/bu0_25"
-        android:paddingTop="@dimen/bu0_25"
-        android:scrollbars="none">
+        android:layout_marginTop="?attr/actionBarSize">
 
-        <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/text_no_notes"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/bu2"
+            android:layout_marginRight="@dimen/bu2"
+            android:gravity="center"
+            android:text="@string/no_notes"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_42px" />
+
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingLeft="@dimen/bu0_25"
-            android:paddingRight="@dimen/bu0_25"
+            android:paddingBottom="@dimen/bu0_25"
+            android:paddingTop="@dimen/bu0_25"
             android:scrollbars="none">
 
-            <LinearLayout
-                android:id="@+id/list_notes"
-                android:layout_width="wrap_content"
+            <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </HorizontalScrollView>
-    </ScrollView>
+                android:clipToPadding="false"
+                android:paddingLeft="@dimen/bu0_25"
+                android:paddingRight="@dimen/bu0_25"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/list_notes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </HorizontalScrollView>
+        </ScrollView>
+    </RelativeLayout>
 </RelativeLayout>
