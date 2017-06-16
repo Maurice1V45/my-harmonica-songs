@@ -9,7 +9,7 @@
         android:id="@+id/field_title"
         android:textSize="@dimen/text_size_30px"
         android:textColor="@color/black"
-        android:inputType="textCapWords"
+        android:inputType="textCapSentences"
         android:hint="@string/hint_title"
         android:paddingLeft="@dimen/bu1"
         android:layout_width="match_parent"
