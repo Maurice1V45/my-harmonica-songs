@@ -1,18 +1,17 @@
 package com.mivas.myharmonicasongs;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,9 +25,7 @@ import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.ExportHelper;
 import com.mivas.myharmonicasongs.util.PreferencesUtils;
-import com.mivas.myharmonicasongs.view.NoteRowOptionsMenu;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -163,30 +160,43 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         }
 
         // set long press listener with options menu
-        final NoteRowOptionsMenu optionsMenu = new NoteRowOptionsMenu(SongActivity.this, addNoteView, column, copiedNotes.size(), displayInsertRow);
-        optionsMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+        final MenuBuilder menuBuilder = new MenuBuilder(SongActivity.this);
+        menuBuilder.setOptionalIconsVisible(true);
+        MenuInflater inflater = new MenuInflater(SongActivity.this);
+        inflater.inflate(R.menu.menu_note_options, menuBuilder);
+        final MenuPopupHelper optionsMenu = new MenuPopupHelper(SongActivity.this, menuBuilder, addNoteView);
+        menuBuilder.findItem(R.id.action_delete_row).setVisible(column != 0);
+        menuBuilder.findItem(R.id.action_insert_row).setVisible(displayInsertRow);
+        menuBuilder.findItem(R.id.action_copy_row).setVisible(column != 0);
+        menuBuilder.findItem(R.id.action_paste_row).setVisible(copiedNotes.size() != 0);
+        menuBuilder.setCallback(new MenuBuilder.Callback() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
                 switch (item.getItemId()) {
-                    case 0:
+                    case R.id.action_add_note:
                         onAddNoteCommand(row, column);
                         break;
-                    case 1:
-                        onNewRowCommand(row);
-                        break;
-                    case 2:
+                    case R.id.action_delete_row:
                         onDeleteRowCommand(row);
                         break;
-                    case 3:
+                    case R.id.action_insert_row:
+                        onNewRowCommand(row);
+                        break;
+                    case R.id.action_copy_row:
                         onCopyRowCommand(row);
                         break;
-                    case 4:
+                    case R.id.action_paste_row:
                         onPasteRowCommand(row, column);
                         break;
                     default:
                         break;
                 }
                 return false;
+            }
+
+            @Override
+            public void onMenuModeChange(MenuBuilder menu) {
+
             }
         });
         addNoteView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -360,9 +370,13 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_song_activity, menu);
-        showBackgroundMenuItem = menu.findItem(R.id.action_show_background);
-        hideBackgroundMenuItem = menu.findItem(R.id.action_hide_background);
-        initShowBackgroundButton();
+        if(menu instanceof MenuBuilder){
+            MenuBuilder menuBuilder = (MenuBuilder) menu;
+            menuBuilder.setOptionalIconsVisible(true);
+            showBackgroundMenuItem = menu.findItem(R.id.action_show_background);
+            hideBackgroundMenuItem = menu.findItem(R.id.action_hide_background);
+            initShowBackgroundButton();
+        }
         return true;
     }
 

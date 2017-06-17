@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -28,6 +29,7 @@ public class SongDialog extends DialogFragment {
     private EditText authorField;
     private Button addSongButton;
     private DbSong dbSong;
+    private TextView dialogTitle;
     private MainActivityListener listener;
 
     /**
@@ -43,12 +45,16 @@ public class SongDialog extends DialogFragment {
      * @param rootView
      */
     private void initViews(View rootView) {
+        dialogTitle = (TextView) rootView.findViewById(R.id.text_title);
         titleField = (EditText) rootView.findViewById(R.id.field_title);
         authorField = (EditText) rootView.findViewById(R.id.field_author);
         addSongButton = (Button) rootView.findViewById(R.id.button_ok);
         if (dbSong != null) {
+            dialogTitle.setText(R.string.dialog_edit_song);
             titleField.setText(dbSong.getTitle());
             authorField.setText(dbSong.getAuthor());
+        } else {
+            dialogTitle.setText(R.string.dialog_add_song);
         }
     }
 

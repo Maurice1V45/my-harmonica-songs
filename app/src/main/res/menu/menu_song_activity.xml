@@ -17,6 +17,7 @@
 
     <item
         android:id="@+id/action_export_song"
+        android:icon="@drawable/icon_export"
         android:title="@string/menu_export_song"
         app:showAsAction="never" />
 </menu>

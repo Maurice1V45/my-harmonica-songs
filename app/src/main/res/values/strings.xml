@@ -13,7 +13,7 @@
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
     <string name="button_export">Export</string>
-    <string name="no_songs">Tap the \"+\" button above to add a song</string>
+    <string name="no_songs">Press \"+\" to add a song</string>
     <string name="no_notes">Press \"+\" to add a note.\nLong press \"+\" for more options.</string>
     <string name="button_delete">Delete</string>
     <string name="text_syllable">Syllable</string>
@@ -21,7 +21,7 @@
     <string name="menu_edit">Edit</string>
     <string name="menu_delete">Delete</string>
     <string name="menu_add_note">Add note</string>
-    <string name="menu_insert_row">Insert row after</string>
+    <string name="menu_insert_row">Insert row</string>
     <string name="menu_delete_row">Delete row</string>
     <string name="menu_copy_row">Copy row</string>
     <string name="menu_paste_row">Paste row</string>
@@ -45,5 +45,7 @@
     <string name="no_songs_selected_export">No songs selected</string>
     <string name="checkbox_show_bendings">Show bendings</string>
     <string name="checkbox_hide_bendings">Hide bendings</string>
+    <string name="dialog_add_song">Add Song</string>
+    <string name="dialog_edit_song">Edit Song</string>
     <string name="credits">Credits</string>
 </resources>

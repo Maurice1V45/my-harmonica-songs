@@ -95,6 +95,34 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_30px" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Balraj Chana"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_30px" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gregor Cresnar"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_30px" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Icomoon"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_30px" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Daniel Bruce"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_30px" />
+
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

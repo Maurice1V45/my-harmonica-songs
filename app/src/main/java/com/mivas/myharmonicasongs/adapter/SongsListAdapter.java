@@ -63,10 +63,10 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
             @Override
             public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.action_edit:
+                    case R.id.action_edit_song:
                         listener.onSongEdit(dbSong);
                         break;
-                    case R.id.action_delete:
+                    case R.id.action_delete_song:
                         listener.onSongDelete(dbSong);
                         break;
                     default:
