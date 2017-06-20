@@ -10,28 +10,27 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.mivas.myharmonicasongs.R;
-import com.mivas.myharmonicasongs.database.model.DbSong;
-import com.mivas.myharmonicasongs.listener.MainActivityListener;
+import com.mivas.myharmonicasongs.database.model.DbSection;
+import com.mivas.myharmonicasongs.listener.SongActivityListener;
 import com.mivas.myharmonicasongs.util.CustomToast;
 
 /**
- * Dialog for adding and editing a song.
+ * Dialog for adding and editing a section.
  */
-public class SongDialog extends DialogFragment {
+public class SectionDialog extends DialogFragment {
 
-    private EditText titleField;
-    private EditText authorField;
+    private EditText sectionNameField;
     private Button okButton;
-    private DbSong dbSong;
+    private DbSection dbSection;
     private TextView dialogTitle;
-    private MainActivityListener listener;
+    private boolean editMode;
+    private SongActivityListener listener;
 
     /**
      * Default constructor
      */
-    public SongDialog() {
+    public SectionDialog() {
         // empty constructor
     }
 
@@ -42,15 +41,13 @@ public class SongDialog extends DialogFragment {
      */
     private void initViews(View rootView) {
         dialogTitle = (TextView) rootView.findViewById(R.id.text_title);
-        titleField = (EditText) rootView.findViewById(R.id.field_title);
-        authorField = (EditText) rootView.findViewById(R.id.field_author);
+        sectionNameField = (EditText) rootView.findViewById(R.id.field_section_name);
         okButton = (Button) rootView.findViewById(R.id.button_ok);
-        if (dbSong != null) {
-            dialogTitle.setText(R.string.dialog_edit_song);
-            titleField.setText(dbSong.getTitle());
-            authorField.setText(dbSong.getAuthor());
+        if (editMode) {
+            dialogTitle.setText(R.string.dialog_edit_section);
+            sectionNameField.setText(dbSection.getName());
         } else {
-            dialogTitle.setText(R.string.dialog_add_song);
+            dialogTitle.setText(R.string.dialog_add_section);
         }
     }
 
@@ -63,22 +60,19 @@ public class SongDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
 
-                if (titleField.getText().toString().isEmpty()) {
-                    CustomToast.makeText(getActivity(), R.string.error_no_title, Toast.LENGTH_SHORT).show();
+                if (sectionNameField.getText().toString().isEmpty()) {
+                    CustomToast.makeText(getActivity(), R.string.error_no_section_name, Toast.LENGTH_SHORT).show();
                 } else {
-                    if (dbSong == null) {
+                    if (!editMode) {
 
                         // add a song
-                        dbSong = new DbSong();
-                        dbSong.setTitle(titleField.getText().toString());
-                        dbSong.setAuthor(authorField.getText().toString());
-                        listener.onSongAdded(dbSong);
+                        dbSection.setName(sectionNameField.getText().toString());
+                        listener.onSectionAdded(dbSection);
                     } else {
 
                         // edit a song
-                        dbSong.setTitle(titleField.getText().toString());
-                        dbSong.setAuthor(authorField.getText().toString());
-                        listener.onSongEditConfirmed(dbSong);
+                        dbSection.setName(sectionNameField.getText().toString());
+                        listener.onSectionEdit(dbSection);
                     }
                     dismiss();
                 }
@@ -88,7 +82,7 @@ public class SongDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_song, container);
+        View view = inflater.inflate(R.layout.dialog_section, container);
         initViews(view);
         initListeners();
         return view;
@@ -104,12 +98,15 @@ public class SongDialog extends DialogFragment {
         }
     }
 
-    public void setSong(DbSong dbSong) {
-        this.dbSong = dbSong;
+    public void setDbSection(DbSection dbSection) {
+        this.dbSection = dbSection;
     }
 
-    public void setListener(MainActivityListener listener) {
+    public void setListener(SongActivityListener listener) {
         this.listener = listener;
     }
 
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
+    }
 }

@@ -1,5 +1,6 @@
 package com.mivas.myharmonicasongs;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,10 +17,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
+import com.mivas.myharmonicasongs.database.handler.SectionDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbNote;
+import com.mivas.myharmonicasongs.database.model.DbSection;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.dialog.NotePickerDialog;
+import com.mivas.myharmonicasongs.dialog.SectionDialog;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
@@ -40,12 +44,14 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private LinearLayout notesLayout;
     private DbSong dbSong;
     private List<DbNote> notes = new ArrayList<DbNote>();
+    private List<DbSection> sections = new ArrayList<DbSection>();
     private Comparator notesComparator;
     private TextView noNotesText;
     private View backgroundView;
     private List<DbNote> copiedNotes = new ArrayList<DbNote>();
     private MenuItem showBackgroundMenuItem;
     private MenuItem hideBackgroundMenuItem;
+    boolean showBackground = PreferencesUtils.getPreferences().getBoolean(Constants.PREF_SHOW_SONG_BACKGROUND, true);
 
 
     @Override
@@ -58,8 +64,9 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
         dbSong = SongDbHandler.getSongById(getIntent().getLongExtra(Constants.EXTRA_SONG_ID, 0));
         notes = NoteDbHandler.getNotesBySongId(dbSong.getId());
+        sections = SectionDbHandler.getSectionsBySongId(dbSong.getId());
         getSupportActionBar().setTitle(dbSong.getTitle());
-        refreshNotesView();
+        drawNotes();
 
     }
 
@@ -77,39 +84,78 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     /**
      * Redraws the whole view of notes.
      */
-    private void refreshNotesView() {
+    private void drawNotes() {
+
+        // clear all views first
         notesLayout.removeAllViews();
         if (notes.size() == 0) {
+
+            // display only 1 plus note
             LinearLayout rowLayout = new LinearLayout(SongActivity.this);
             rowLayout.setOrientation(LinearLayout.HORIZONTAL);
             notesLayout.addView(rowLayout);
             addPlusToNotesView(0, 0, rowLayout);
         } else {
+
+            // i represents the index of the note in the notes list
             int i = 0;
+
+            // store current note and the next note in the list
             DbNote thisNote = notes.get(i);
             DbNote nextNote = notes.size() < 2 ? null : notes.get(i + 1);
+
+            // check if row has a section and display it
+            DbSection rowSection = getSectionByRow(thisNote.getRow());
+            if (rowSection != null) {
+                addSectionToNotesView(rowSection, notesLayout);
+            }
+
+            // init and add a horizontal linear layout for the notes on this row
             LinearLayout rowLayout = new LinearLayout(SongActivity.this);
             rowLayout.setOrientation(LinearLayout.HORIZONTAL);
             notesLayout.addView(rowLayout);
+
             while (i < notes.size()) {
+
+                // add the current note to the horizontal linear layout
                 addNoteToNotesView(thisNote, rowLayout);
+
+                // if there is no next note or if this note is the last on this row
                 if (nextNote == null || (nextNote.getRow() != thisNote.getRow())) {
+
+                    // add a plus note
                     addPlusToNotesView(thisNote.getRow(), thisNote.getColumn() + 1, rowLayout);
+                    if (nextNote != null) {
+                        rowSection = getSectionByRow(nextNote.getRow());
+                        if (rowSection != null) {
+                            addSectionToNotesView(rowSection, notesLayout);
+                        }
+                    }
+
+                    // create a new horizontal linear layout
                     rowLayout = new LinearLayout(SongActivity.this);
                     rowLayout.setOrientation(LinearLayout.HORIZONTAL);
                     notesLayout.addView(rowLayout);
+
+                    // if there are no more notes
                     if (i == notes.size() - 1) {
+
+                        // create a new horizontal linear layout and add a plus note on it
                         rowLayout = new LinearLayout(SongActivity.this);
                         rowLayout.setOrientation(LinearLayout.HORIZONTAL);
                         notesLayout.addView(rowLayout);
                         addPlusToNotesView(thisNote.getRow() + 1, 0, rowLayout);
                     }
                 }
+
+                // increment the current note and the next note
                 i++;
                 thisNote = i < (notes.size()) ? notes.get(i) : null;
                 nextNote = i < (notes.size() - 1) ? notes.get(i + 1) : null;
             }
         }
+
+        // display no notes text if the notes list is empty
         toggleNoNotesText();
     }
 
@@ -154,10 +200,8 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private void addPlusToNotesView(final int row, final int column, LinearLayout parent) {
         View addNoteView = getLayoutInflater().inflate(R.layout.list_item_add_note, null);
         addNoteView.setClickable(true);
-        boolean displayInsertRow = false;
-        if (row < (getNumberOfRows() - 1)) {
-            displayInsertRow = true;
-        }
+        boolean overLastRow = (row > (getNumberOfRows() - 1));
+        DbSection dbSection = getSectionByRow(row);
 
         // set long press listener with options menu
         final MenuBuilder menuBuilder = new MenuBuilder(SongActivity.this);
@@ -166,9 +210,12 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         inflater.inflate(R.menu.menu_note_options, menuBuilder);
         final MenuPopupHelper optionsMenu = new MenuPopupHelper(SongActivity.this, menuBuilder, addNoteView);
         menuBuilder.findItem(R.id.action_delete_row).setVisible(column != 0);
-        menuBuilder.findItem(R.id.action_insert_row).setVisible(displayInsertRow);
+        menuBuilder.findItem(R.id.action_insert_row).setVisible(!overLastRow);
         menuBuilder.findItem(R.id.action_copy_row).setVisible(column != 0);
         menuBuilder.findItem(R.id.action_paste_row).setVisible(copiedNotes.size() != 0);
+        menuBuilder.findItem(R.id.action_add_section).setVisible(dbSection == null && !overLastRow);
+        menuBuilder.findItem(R.id.action_edit_section).setVisible(dbSection != null);
+        menuBuilder.findItem(R.id.action_delete_section).setVisible(dbSection != null);
         menuBuilder.setCallback(new MenuBuilder.Callback() {
             @Override
             public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
@@ -187,6 +234,15 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                         break;
                     case R.id.action_paste_row:
                         onPasteRowCommand(row, column);
+                        break;
+                    case R.id.action_add_section:
+                        onAddSectionCommand(row);
+                        break;
+                    case R.id.action_edit_section:
+                        onEditSectionCommand(row);
+                        break;
+                    case R.id.action_delete_section:
+                        onDeleteSectionCommand(row);
                         break;
                     default:
                         break;
@@ -217,6 +273,18 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             }
         });
         parent.addView(addNoteView);
+    }
+
+    /**
+     * Adds a section to the notes view.
+     *
+     * @param dbSection
+     */
+    private void addSectionToNotesView(DbSection dbSection, LinearLayout parent) {
+        TextView sectionView = (TextView) getLayoutInflater().inflate(R.layout.list_item_section, null);
+        sectionView.setText(dbSection.getName());
+        sectionView.setTextColor(ContextCompat.getColor(SongActivity.this, showBackground ? R.color.white : R.color.black));
+        parent.addView(sectionView);
     }
 
     /**
@@ -262,6 +330,8 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
      * @param row
      */
     private void onDeleteRowCommand(int row) {
+
+        // delete all notes on the row
         Iterator<DbNote> iterator = notes.iterator();
         while (iterator.hasNext()) {
             DbNote note = iterator.next();
@@ -270,8 +340,18 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 NoteDbHandler.deleteNote(note);
             }
         }
+
+        // delete the section if there is one
+        DbSection dbSection = getSectionByRow(row);
+        if (dbSection != null) {
+            sections.remove(dbSection);
+            SectionDbHandler.deleteSection(dbSection);
+        }
+
+        // decrement rows and sections
         decrementRows(row);
-        refreshNotesView();
+        decrementSections(row);
+        drawNotes();
     }
 
     /**
@@ -292,7 +372,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         } else {
             CustomToast.makeText(SongActivity.this, copedNotesNr + " " + getString(R.string.toast_notes_copied), Toast.LENGTH_SHORT).show();
         }
-        refreshNotesView();
+        drawNotes();
     }
 
     /**
@@ -315,39 +395,84 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 currentColumn++;
             }
             Collections.sort(notes, notesComparator);
-            refreshNotesView();
+            drawNotes();
         }
+    }
+
+    /**
+     * Opens the add section dialog.
+     */
+    private void onAddSectionCommand(int row) {
+        SectionDialog sectionDialog = new SectionDialog();
+        DbSection dbSection = new DbSection();
+        dbSection.setRow(row);
+        dbSection.setSongId(dbSong.getId());
+        sectionDialog.setDbSection(dbSection);
+        sectionDialog.setListener(SongActivity.this);
+        sectionDialog.setEditMode(false);
+        sectionDialog.show(getFragmentManager(), Constants.TAG_SECTION_DIALOG);
+    }
+
+    /**
+     * Opens the edit section dialog.
+     */
+    private void onEditSectionCommand(int row) {
+        DbSection dbSection = getSectionByRow(row);
+        if (dbSection != null) {
+            SectionDialog sectionDialog = new SectionDialog();
+            sectionDialog.setDbSection(dbSection);
+            sectionDialog.setListener(SongActivity.this);
+            sectionDialog.setEditMode(true);
+            sectionDialog.show(getFragmentManager(), Constants.TAG_SECTION_DIALOG);
+        }
+    }
+
+    private void onDeleteSectionCommand(int row) {
+        DbSection dbSection = getSectionByRow(row);
+        if (dbSection != null) {
+            sections.remove(dbSection);
+            SectionDbHandler.deleteSection(dbSection);
+        }
+        drawNotes();
     }
 
     @Override
     public void onNoteAdded(DbNote dbNote, boolean newRow) {
         if (newRow) {
             incrementRows(dbNote.getRow());
+            incrementSections(dbNote.getRow());
         }
         notes.add(dbNote);
         NoteDbHandler.insertNote(dbNote);
         Collections.sort(notes, notesComparator);
-        refreshNotesView();
+        drawNotes();
     }
 
     @Override
     public void onNoteEdited(DbNote dbNote) {
         NoteDbHandler.insertNote(dbNote);
-        refreshNotesView();
+        drawNotes();
     }
 
     @Override
     public void onNoteDeleted(DbNote dbNote) {
+
+        // delete the note
         int position = notes.indexOf(dbNote);
         notes.remove(dbNote);
         NoteDbHandler.deleteNote(dbNote);
+
+        // check the remaining notes on the row
         int rowCount = 0;
         for (int i = 0; i < notes.size(); i++) {
             if (notes.get(i).getRow() == dbNote.getRow()) {
                 rowCount++;
             }
         }
+
         if (rowCount > 0) {
+
+            // decrement the column of the notes to the right of the deleted note
             for (int i = position; i < notes.size(); i++) {
                 if (notes.get(i).getRow() == dbNote.getRow()) {
                     DbNote note = notes.get(i);
@@ -356,6 +481,15 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 }
             }
         } else {
+
+            // delete the section on this row
+            DbSection dbSection = getSectionByRow(dbNote.getRow());
+            if (dbSection != null) {
+                sections.remove(dbSection);
+                SectionDbHandler.deleteSection(dbSection);
+            }
+
+            // decrement the row of the notes below the deleted note
             for (int i = position; i < notes.size(); i++) {
                 if (notes.get(i).getRow() > dbNote.getRow()) {
                     DbNote note = notes.get(i);
@@ -363,8 +497,25 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                     NoteDbHandler.insertNote(note);
                 }
             }
+
+            // decrement the row of the sections below the deleted note
+            decrementSections(dbNote.getRow());
         }
-        refreshNotesView();
+
+        drawNotes();
+    }
+
+    @Override
+    public void onSectionAdded(DbSection dbSection) {
+        sections.add(dbSection);
+        SectionDbHandler.insertSection(dbSection);
+        drawNotes();
+    }
+
+    @Override
+    public void onSectionEdit(DbSection dbSection) {
+        SectionDbHandler.insertSection(dbSection);
+        drawNotes();
     }
 
     @Override
@@ -386,10 +537,14 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             case R.id.action_show_background:
                 backgroundView.setBackgroundColor(ContextCompat.getColor(SongActivity.this, android.R.color.transparent));
                 PreferencesUtils.storePreference(Constants.PREF_SHOW_SONG_BACKGROUND, true);
+                showBackground = true;
+                drawNotes();
                 return true;
             case R.id.action_hide_background:
                 backgroundView.setBackgroundColor(ContextCompat.getColor(SongActivity.this, R.color.greyDD));
                 PreferencesUtils.storePreference(Constants.PREF_SHOW_SONG_BACKGROUND, false);
+                showBackground = false;
+                drawNotes();
                 return true;
             case R.id.action_export_song:
                 List<DbSong> dbSongs = new ArrayList<DbSong>();
@@ -469,6 +624,52 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         }
     }
 
+    private void incrementSections(int row) {
+        for (DbSection dbSection : sections) {
+            if (dbSection.getRow() >= row) {
+                dbSection.setRow(dbSection.getRow() + 1);
+                SectionDbHandler.insertSection(dbSection);
+            }
+        }
+    }
+
+    private void decrementSections(int row) {
+        if (notes.isEmpty()) {
+
+            // delete all sections
+            for (DbSection dbSection : sections) {
+                SectionDbHandler.deleteSection(dbSection);
+            }
+            sections.clear();
+
+        } else {
+
+            // decrement sections after the specified row
+            for (DbSection dbSection : sections) {
+                if (dbSection.getRow() > row) {
+                    dbSection.setRow(dbSection.getRow() - 1);
+                    SectionDbHandler.insertSection(dbSection);
+                }
+            }
+
+            // search for possible multiple sections on the same row
+            List<DbSection> duplicateSections = new ArrayList<DbSection>();
+            for (DbSection dbSection : sections) {
+                if (dbSection.getRow() == row) {
+                    duplicateSections.add(dbSection);
+                }
+            }
+
+            // leave only 1 section on the row and delete the others
+            if (duplicateSections.size() > 1) {
+                for (int i = 1; i < duplicateSections.size(); i++) {
+                    sections.remove(duplicateSections.get(i));
+                    SectionDbHandler.deleteSection(duplicateSections.get(i));
+                }
+            }
+        }
+    }
+
     /**
      * Retrieves the current number of rows.
      *
@@ -507,7 +708,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
     private void initShowBackgroundButton() {
         invalidateOptionsMenu();
-        if (PreferencesUtils.getPreferences().getBoolean(Constants.PREF_SHOW_SONG_BACKGROUND, true)) {
+        if (showBackground) {
             showBackgroundMenuItem.setVisible(false);
             hideBackgroundMenuItem.setVisible(true);
             backgroundView.setBackgroundColor(ContextCompat.getColor(SongActivity.this, android.R.color.transparent));
@@ -518,6 +719,21 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             backgroundView.setBackgroundColor(ContextCompat.getColor(SongActivity.this, R.color.greyDD));
             noNotesText.setTextColor(ContextCompat.getColor(SongActivity.this, R.color.black));
         }
+    }
+
+    /**
+     * Searches if there is a section on the specified row and returns it.
+     *
+     * @param row
+     * @return
+     */
+    private DbSection getSectionByRow(int row) {
+        for (DbSection dbSection : sections) {
+            if (dbSection.getRow() == row) {
+                return dbSection;
+            }
+        }
+        return null;
     }
 
 }

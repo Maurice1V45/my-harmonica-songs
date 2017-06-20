@@ -14,22 +14,12 @@
         android:textSize="@dimen/text_size_40px" />
 
     <EditText
-        android:id="@+id/field_title"
+        android:id="@+id/field_section_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/bu1"
-        android:hint="@string/hint_title"
+        android:hint="@string/hint_section_name"
         android:inputType="textCapSentences"
-        android:paddingLeft="@dimen/bu1"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_30px" />
-
-    <EditText
-        android:id="@+id/field_author"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_author"
-        android:inputType="textCapWords"
         android:paddingLeft="@dimen/bu1"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_30px" />

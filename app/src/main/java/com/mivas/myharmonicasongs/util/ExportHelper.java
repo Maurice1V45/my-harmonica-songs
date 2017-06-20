@@ -11,8 +11,10 @@ import com.google.common.io.CharSink;
 import com.google.common.io.Files;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
+import com.mivas.myharmonicasongs.database.handler.SectionDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbNote;
+import com.mivas.myharmonicasongs.database.model.DbSection;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.listener.MainActivityListener;
 
@@ -75,10 +77,14 @@ public class ExportHelper {
         try {
             JSONArray songsArray = new JSONArray();
             for (DbSong dbSong : dbSongs) {
+
+                // add song
                 JSONObject songJson = new JSONObject();
                 songJson.put("title", dbSong.getTitle());
                 songJson.put("author", dbSong.getAuthor());
                 songJson.put("favorite", dbSong.isFavourite());
+
+                // add notes
                 JSONArray notesArray = new JSONArray();
                 List<DbNote> dbNotes = NoteDbHandler.getNotesBySongId(dbSong.getId());
                 for (DbNote dbNote : dbNotes) {
@@ -92,6 +98,17 @@ public class ExportHelper {
                     notesArray.put(noteJson);
                 }
                 songJson.put("notes", notesArray);
+
+                // add sections
+                JSONArray sectionsArray = new JSONArray();
+                List<DbSection> dbSections = SectionDbHandler.getSectionsBySongId(dbSong.getId());
+                for (DbSection dbSection : dbSections) {
+                    JSONObject sectionJson = new JSONObject();
+                    sectionJson.put("name", dbSection.getName());
+                    sectionJson.put("row", dbSection.getRow());
+                    sectionsArray.put(sectionJson);
+                }
+                songJson.put("sections", sectionsArray);
                 songsArray.put(songJson);
                 jsonObject.put("songs", songsArray);
             }
@@ -111,6 +128,8 @@ public class ExportHelper {
                     JSONObject jsonObject = new JSONObject(jsonString);
                     JSONArray songsArray = jsonObject.getJSONArray("songs");
                     for (int i = 0; i < songsArray.length(); i++) {
+
+                        // save song
                         JSONObject songJson = songsArray.getJSONObject(i);
                         DbSong dbSong = new DbSong();
                         dbSong.setTitle(songJson.getString("title"));
@@ -118,6 +137,8 @@ public class ExportHelper {
                         dbSong.setFavourite(songJson.getBoolean("favorite"));
                         SongDbHandler.insertSong(dbSong);
                         dbSongs.add(dbSong);
+
+                        // save notes
                         JSONArray notesArray = songJson.getJSONArray("notes");
                         for (int j = 0; j < notesArray.length(); j++) {
                             JSONObject noteJson = notesArray.getJSONObject(j);
@@ -130,6 +151,17 @@ public class ExportHelper {
                             dbNote.setBend((float) noteJson.getDouble("bend"));
                             dbNote.setSongId(dbSong.getId());
                             NoteDbHandler.insertNote(dbNote);
+                        }
+
+                        // save sections
+                        JSONArray sectionsArray = songJson.getJSONArray("sections");
+                        for (int j = 0; j < sectionsArray.length(); j++) {
+                            JSONObject sectionJson = sectionsArray.getJSONObject(j);
+                            DbSection dbSection = new DbSection();
+                            dbSection.setName(sectionJson.getString("name"));
+                            dbSection.setRow(sectionJson.getInt("row"));
+                            dbSection.setSongId(dbSong.getId());
+                            SectionDbHandler.insertSection(dbSection);
                         }
                     }
                     listener.onSongsImported(dbSongs);

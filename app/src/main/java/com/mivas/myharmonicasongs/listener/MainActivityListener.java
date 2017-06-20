@@ -18,7 +18,7 @@ public interface MainActivityListener {
     void onSongAdded(DbSong dbSong);
 
     /**
-     * Triggered when the Edit option was picked from the {@link com.mivas.myharmonicasongs.view.SongOptionsMenu}.
+     * Triggered when the Edit option was picked from the options menu.
      *
      * @param dbSong
      */
@@ -32,7 +32,7 @@ public interface MainActivityListener {
     void onSongEditConfirmed(DbSong dbSong);
 
     /**
-     * Triggered when the Delete option was picked from the {@link com.mivas.myharmonicasongs.view.SongOptionsMenu}
+     * Triggered when the Delete option was picked from the options menu.
      *
      * @param dbSong
      */
