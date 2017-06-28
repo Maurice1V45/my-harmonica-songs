@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mivas.myharmonicasongs.MainActivity">
     <item
+        android:id="@+id/search_song_action"
+        android:icon="@drawable/icon_search2"
+        android:title="@string/menu_search"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/add_song_action"
         android:icon="@drawable/icon_plus"
         android:title="@string/menu_add_song"

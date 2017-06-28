@@ -39,6 +39,7 @@ public class SongDbHandler {
     public static List<DbSong> getSongs() {
         return new Select()
                 .from(DbSong.class)
+                .orderBy("title ASC")
                 .execute();
     }
 

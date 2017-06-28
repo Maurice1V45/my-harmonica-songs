@@ -3,6 +3,7 @@
 
     <!--Main Activity-->
     <string name="menu_add_song">Add Song</string>
+    <string name="menu_search">Search</string>
     <string name="menu_show_background">Show Background</string>
     <string name="menu_hide_background">Hide Background</string>
 
@@ -55,4 +56,5 @@
     <string name="dialog_add_section">Add Section</string>
     <string name="dialog_edit_section">Edit Section</string>
     <string name="credits">Credits</string>
+    <string name="hint_search">Search song</string>
 </resources>

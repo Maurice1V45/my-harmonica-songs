@@ -12,10 +12,14 @@ import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,12 +38,16 @@ import com.mivas.myharmonicasongs.listener.MainActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.ExportHelper;
+import com.mivas.myharmonicasongs.util.KeyboardUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -50,7 +58,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     private RecyclerView songsListView;
     private SongsListAdapter songsListAdapter;
     private List<DbSong> dbSongs;
+    private List<DbSong> displayedSongs;
     private TextView noSongsText;
+    private View searchView;
+    private EditText searchField;
+    private Comparator<DbSong> songsComparator = new Comparator<DbSong>() {
+
+        @Override
+        public int compare(DbSong song1, DbSong song2) {
+            return song1.getTitle().compareTo(song2.getTitle());
+        }
+    };
 
     private static final int REQUEST_CODE_IMPORT_SONG = 1;
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 2;
@@ -61,7 +79,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         setContentView(R.layout.activity_main);
 
         initViews();
+        initListeners();
         dbSongs = SongDbHandler.getSongs();
+        displayedSongs = new ArrayList<DbSong>();
         songsListAdapter = new SongsListAdapter(MainActivity.this, dbSongs, MainActivity.this);
         songsListView.setAdapter(songsListAdapter);
         toggleNoSongsText();
@@ -73,6 +93,40 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         songsListView = (RecyclerView) findViewById(R.id.list_songs);
         songsListView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayout.VERTICAL, false));
         noSongsText = (TextView) findViewById(R.id.text_no_songs);
+        searchView = findViewById(R.id.view_search);
+        searchField = (EditText) findViewById(R.id.field_search);
+    }
+
+    private void initListeners() {
+        searchField.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                refreshDisplayedSongs();
+                songsListAdapter.setSongs(displayedSongs);
+                songsListAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    private void refreshDisplayedSongs() {
+        String text = searchField.getText().toString();
+        displayedSongs.clear();
+        for (DbSong dbSong : dbSongs) {
+            if (dbSong.getTitle().toLowerCase().contains(text.toLowerCase()) || dbSong.getAuthor().toLowerCase().contains(text.toLowerCase())) {
+                displayedSongs.add(dbSong);
+            }
+        }
     }
 
     @Override
@@ -91,6 +145,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
 
         // handle item selection
         switch (item.getItemId()) {
+            case R.id.search_song_action:
+                if (searchView.getVisibility() == View.GONE) {
+                    searchView.setVisibility(View.VISIBLE);
+                    KeyboardUtils.focusEditText(MainActivity.this, searchField);
+                } else {
+                    KeyboardUtils.closeKeyboard(MainActivity.this);
+                    searchView.setVisibility(View.GONE);
+                }
+                return true;
             case R.id.add_song_action:
                 SongDialog songDialog = new SongDialog();
                 songDialog.setListener(MainActivity.this);
@@ -159,6 +222,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
 
     @Override
     public void onSongAdded(DbSong dbSong) {
+        dbSongs.add(dbSong);
+        Collections.sort(dbSongs, songsComparator);
         SongDbHandler.insertSong(dbSong);
         refreshSongsList();
     }
@@ -174,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     @Override
     public void onSongEditConfirmed(DbSong dbSong) {
         SongDbHandler.insertSong(dbSong);
+        Collections.sort(dbSongs, songsComparator);
         refreshSongsList();
     }
 
@@ -187,6 +253,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
 
     @Override
     public void onSongDeleteConfirmed(DbSong dbSong) {
+        dbSongs.remove(dbSong);
         NoteDbHandler.deleteNotesBySongId(dbSong.getId());
         SectionDbHandler.deleteSectionsBySongId(dbSong.getId());
         SongDbHandler.deleteSongById(dbSong.getId());
@@ -209,6 +276,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     @Override
     public void onSongsImported(final List<DbSong> dbSongs) {
         this.dbSongs.addAll(dbSongs);
+        Collections.sort(dbSongs, songsComparator);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -235,8 +303,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     }
 
     private void refreshSongsList() {
-        dbSongs = SongDbHandler.getSongs();
-        songsListAdapter.setSongs(dbSongs);
+        refreshDisplayedSongs();
+        songsListAdapter.setSongs(displayedSongs);
         songsListAdapter.notifyDataSetChanged();
         toggleNoSongsText();
     }

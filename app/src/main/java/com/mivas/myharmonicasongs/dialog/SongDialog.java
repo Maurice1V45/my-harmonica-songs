@@ -1,6 +1,7 @@
 package com.mivas.myharmonicasongs.dialog;
 
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.listener.MainActivityListener;
 import com.mivas.myharmonicasongs.util.CustomToast;
+import com.mivas.myharmonicasongs.util.KeyboardUtils;
 
 /**
  * Dialog for adding and editing a song.
@@ -112,4 +114,9 @@ public class SongDialog extends DialogFragment {
         this.listener = listener;
     }
 
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        KeyboardUtils.closeKeyboard(getActivity());
+        super.onDismiss(dialog);
+    }
 }
