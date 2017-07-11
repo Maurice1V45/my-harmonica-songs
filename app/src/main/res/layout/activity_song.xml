@@ -20,6 +20,7 @@
     <RelativeLayout
         android:id="@+id/view_background"
         android:layout_width="match_parent"
+        android:background="@color/greyDD"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize">
 
@@ -32,7 +33,7 @@
             android:layout_marginRight="@dimen/bu2"
             android:gravity="center"
             android:text="@string/no_notes"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="@dimen/text_size_42px" />
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"

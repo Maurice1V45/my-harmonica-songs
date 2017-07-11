@@ -34,6 +34,16 @@ public class DbNote extends Model {
     public DbNote() {
     }
 
+    public DbNote(int hole, boolean blow, String word, int row, int column, float bend, long songId) {
+        this.hole = hole;
+        this.blow = blow;
+        this.word = word;
+        this.row = row;
+        this.column = column;
+        this.bend = bend;
+        this.songId = songId;
+    }
+
     public DbNote(DbNote dbNote) {
         this.hole = dbNote.getHole();
         this.blow = dbNote.isBlow();

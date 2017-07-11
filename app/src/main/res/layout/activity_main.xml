@@ -26,12 +26,12 @@
         <RelativeLayout
             android:id="@+id/view_search"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/bu5_5"
+            android:layout_height="wrap_content"
             android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/bu4_5"
                 android:layout_marginBottom="@dimen/bu0_5"
                 android:layout_marginLeft="@dimen/bu0_5"
                 android:layout_marginRight="@dimen/bu0_5"

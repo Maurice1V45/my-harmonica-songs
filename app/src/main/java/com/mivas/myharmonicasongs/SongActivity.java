@@ -1,6 +1,5 @@
 package com.mivas.myharmonicasongs;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -47,11 +46,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private List<DbSection> sections = new ArrayList<DbSection>();
     private Comparator notesComparator;
     private TextView noNotesText;
-    private View backgroundView;
     private List<DbNote> copiedNotes = new ArrayList<DbNote>();
-    private MenuItem showBackgroundMenuItem;
-    private MenuItem hideBackgroundMenuItem;
-    boolean showBackground = PreferencesUtils.getPreferences().getBoolean(Constants.PREF_SHOW_SONG_BACKGROUND, true);
 
 
     @Override
@@ -78,7 +73,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         setSupportActionBar(myToolbar);
         notesLayout = (LinearLayout) findViewById(R.id.list_notes);
         noNotesText = (TextView) findViewById(R.id.text_no_notes);
-        backgroundView = findViewById(R.id.view_background);
     }
 
     /**
@@ -283,7 +277,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private void addSectionToNotesView(DbSection dbSection, LinearLayout parent) {
         TextView sectionView = (TextView) getLayoutInflater().inflate(R.layout.list_item_section, null);
         sectionView.setText(dbSection.getName());
-        sectionView.setTextColor(ContextCompat.getColor(SongActivity.this, showBackground ? R.color.white : R.color.black));
+        sectionView.setTextColor(ContextCompat.getColor(SongActivity.this, R.color.black));
         parent.addView(sectionView);
     }
 
@@ -524,9 +518,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         if(menu instanceof MenuBuilder){
             MenuBuilder menuBuilder = (MenuBuilder) menu;
             menuBuilder.setOptionalIconsVisible(true);
-            showBackgroundMenuItem = menu.findItem(R.id.action_show_background);
-            hideBackgroundMenuItem = menu.findItem(R.id.action_hide_background);
-            initShowBackgroundButton();
         }
         return true;
     }
@@ -534,18 +525,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_show_background:
-                backgroundView.setBackgroundColor(ContextCompat.getColor(SongActivity.this, android.R.color.transparent));
-                PreferencesUtils.storePreference(Constants.PREF_SHOW_SONG_BACKGROUND, true);
-                showBackground = true;
-                drawNotes();
-                return true;
-            case R.id.action_hide_background:
-                backgroundView.setBackgroundColor(ContextCompat.getColor(SongActivity.this, R.color.greyDD));
-                PreferencesUtils.storePreference(Constants.PREF_SHOW_SONG_BACKGROUND, false);
-                showBackground = false;
-                drawNotes();
-                return true;
             case R.id.action_export_song:
                 List<DbSong> dbSongs = new ArrayList<DbSong>();
                 dbSongs.add(dbSong);
@@ -704,21 +683,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             }
         }
         return "";
-    }
-
-    private void initShowBackgroundButton() {
-        invalidateOptionsMenu();
-        if (showBackground) {
-            showBackgroundMenuItem.setVisible(false);
-            hideBackgroundMenuItem.setVisible(true);
-            backgroundView.setBackgroundColor(ContextCompat.getColor(SongActivity.this, android.R.color.transparent));
-            noNotesText.setTextColor(ContextCompat.getColor(SongActivity.this, R.color.white));
-        } else {
-            showBackgroundMenuItem.setVisible(true);
-            hideBackgroundMenuItem.setVisible(false);
-            backgroundView.setBackgroundColor(ContextCompat.getColor(SongActivity.this, R.color.greyDD));
-            noNotesText.setTextColor(ContextCompat.getColor(SongActivity.this, R.color.black));
-        }
     }
 
     /**

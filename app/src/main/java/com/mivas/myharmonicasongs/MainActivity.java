@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import com.mivas.myharmonicasongs.adapter.SongsListAdapter;
+import com.mivas.myharmonicasongs.animation.SlideAnimation;
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SectionDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
@@ -38,10 +40,11 @@ import com.mivas.myharmonicasongs.listener.MainActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.ExportHelper;
+import com.mivas.myharmonicasongs.util.FirstRunUtils;
 import com.mivas.myharmonicasongs.util.KeyboardUtils;
+import com.mivas.myharmonicasongs.util.PreferencesUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     private List<DbSong> displayedSongs;
     private TextView noSongsText;
     private View searchView;
+    private boolean searchMode = false;
     private EditText searchField;
     private Comparator<DbSong> songsComparator = new Comparator<DbSong>() {
 
@@ -80,6 +84,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
 
         initViews();
         initListeners();
+        if (PreferencesUtils.getPreferences().getBoolean(Constants.PREF_FIRST_RUN, true)) {
+            PreferencesUtils.storePreference(Constants.PREF_FIRST_RUN, false);
+            FirstRunUtils.addSampleSong();
+        }
         dbSongs = SongDbHandler.getSongs();
         displayedSongs = new ArrayList<DbSong>();
         songsListAdapter = new SongsListAdapter(MainActivity.this, dbSongs, MainActivity.this);
@@ -146,12 +154,20 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         // handle item selection
         switch (item.getItemId()) {
             case R.id.search_song_action:
-                if (searchView.getVisibility() == View.GONE) {
+                if (!searchMode) {
+                    searchMode = true;
                     searchView.setVisibility(View.VISIBLE);
                     KeyboardUtils.focusEditText(MainActivity.this, searchField);
+                    SlideAnimation slideAnimation = new SlideAnimation(searchView, 200, SlideAnimation.EXPAND);
+                    slideAnimation.setHeight(dpToPx(66));
+                    searchView.startAnimation(slideAnimation);
                 } else {
+                    searchMode = false;
                     KeyboardUtils.closeKeyboard(MainActivity.this);
-                    searchView.setVisibility(View.GONE);
+                    searchField.setText("");
+                    SlideAnimation slideAnimation = new SlideAnimation(searchView, 200, SlideAnimation.COLLAPSE);
+                    searchView.startAnimation(slideAnimation);
+                    refreshSongsList();
                 }
                 return true;
             case R.id.add_song_action:
@@ -316,6 +332,25 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         } else {
             songsListView.setVisibility(View.VISIBLE);
             noSongsText.setVisibility(View.GONE);
+        }
+    }
+
+    private int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (searchMode) {
+            searchMode = false;
+            searchField.setText("");
+            SlideAnimation slideAnimation = new SlideAnimation(searchView, 200, SlideAnimation.COLLAPSE);
+            searchView.startAnimation(slideAnimation);
+            refreshSongsList();
+        } else {
+            super.onBackPressed();
         }
     }
 
