@@ -3,32 +3,40 @@ package com.mivas.myharmonicasongs.dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.mivas.myharmonicasongs.R;
+import com.mivas.myharmonicasongs.adapter.KeyPickerAdapter;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.listener.MainActivityListener;
+import com.mivas.myharmonicasongs.listener.SongDialogListener;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.KeyboardUtils;
 
 /**
  * Dialog for adding and editing a song.
  */
-public class SongDialog extends DialogFragment {
+public class SongDialog extends DialogFragment implements SongDialogListener {
 
     private EditText titleField;
     private EditText authorField;
     private Button okButton;
     private DbSong dbSong;
     private TextView dialogTitle;
+    private RecyclerView keyList;
+    private KeyPickerAdapter keyAdapter;
     private MainActivityListener listener;
+    private int selectedKey;
 
     /**
      * Default constructor
@@ -51,9 +59,15 @@ public class SongDialog extends DialogFragment {
             dialogTitle.setText(R.string.dialog_edit_song);
             titleField.setText(dbSong.getTitle());
             authorField.setText(dbSong.getAuthor());
+            selectedKey = dbSong.getKey();
         } else {
             dialogTitle.setText(R.string.dialog_add_song);
         }
+        keyList = (RecyclerView) rootView.findViewById(R.id.list_keys);
+        keyList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL, false));
+        keyAdapter = new KeyPickerAdapter(getActivity(), SongDialog.this, selectedKey);
+        keyList.setAdapter(keyAdapter);
+        keyList.scrollToPosition(selectedKey);
     }
 
     /**
@@ -72,12 +86,14 @@ public class SongDialog extends DialogFragment {
 
                         // add a song
                         dbSong = new DbSong();
+                        dbSong.setKey(selectedKey);
                         dbSong.setTitle(titleField.getText().toString());
                         dbSong.setAuthor(authorField.getText().toString());
                         listener.onSongAdded(dbSong);
                     } else {
 
                         // edit a song
+                        dbSong.setKey(selectedKey);
                         dbSong.setTitle(titleField.getText().toString());
                         dbSong.setAuthor(authorField.getText().toString());
                         listener.onSongEditConfirmed(dbSong);
@@ -118,5 +134,12 @@ public class SongDialog extends DialogFragment {
     public void onDismiss(DialogInterface dialog) {
         KeyboardUtils.closeKeyboard(getActivity());
         super.onDismiss(dialog);
+    }
+
+    @Override
+    public void onKeySelected(int position) {
+        selectedKey = position;
+        keyAdapter.setSelectedKey(position);
+        keyAdapter.notifyDataSetChanged();
     }
 }

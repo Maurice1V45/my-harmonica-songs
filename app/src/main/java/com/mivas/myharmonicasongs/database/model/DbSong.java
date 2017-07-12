@@ -19,6 +19,9 @@ public class DbSong extends Model {
     @Column(name = "favourite")
     private boolean favourite;
 
+    @Column(name = "song_key")
+    private int key;
+
     public String getTitle() {
         return title;
     }
@@ -41,5 +44,13 @@ public class DbSong extends Model {
 
     public void setFavourite(boolean favourite) {
         this.favourite = favourite;
+    }
+
+    public int getKey() {
+        return key;
+    }
+
+    public void setKey(int key) {
+        this.key = key;
     }
 }

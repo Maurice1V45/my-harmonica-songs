@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.listener.MainActivityListener;
+import com.mivas.myharmonicasongs.util.DimensionUtils;
+import com.mivas.myharmonicasongs.util.SongKeyUtils;
 
 import java.util.List;
 
@@ -36,21 +38,28 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
     public SongViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_song, parent, false);
-        SongViewHolder viewHolder = new SongViewHolder(view);
-        return viewHolder;
+        return new SongViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final SongViewHolder holder, int position) {
         final DbSong dbSong = songs.get(position);
 
-        // set song title and author
+        // set song key, title and author
+        holder.keyText.setText(SongKeyUtils.getKey(dbSong.getKey()));
+        int key = dbSong.getKey();
+        if (key == 1 || key == 3 || key == 6 || key == 8 || key == 10) {
+            holder.keyText.setTextSize(30);
+        } else {
+            holder.keyText.setTextSize(35);
+        }
         holder.titleText.setText(dbSong.getTitle());
         if (dbSong.getAuthor().isEmpty()) {
             holder.authorText.setVisibility(View.GONE);
         } else {
             holder.authorText.setVisibility(View.VISIBLE);
-            holder.authorText.setText("by " + dbSong.getAuthor());
+            String author = "by " + dbSong.getAuthor();
+            holder.authorText.setText(author);
         }
 
         // add song options menu
@@ -105,6 +114,7 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
     public static class SongViewHolder extends RecyclerView.ViewHolder {
         TextView titleText;
         TextView authorText;
+        TextView keyText;
         View moreButton;
         View songView;
 
@@ -112,6 +122,7 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
             super(itemView);
             titleText = (TextView) itemView.findViewById(R.id.text_title);
             authorText = (TextView) itemView.findViewById(R.id.text_author);
+            keyText = (TextView) itemView.findViewById(R.id.text_key);
             moreButton = itemView.findViewById(R.id.button_more);
             songView = itemView.findViewById(R.id.view_song);
         }
