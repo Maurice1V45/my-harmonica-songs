@@ -7,12 +7,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 /**
- * Util class that handles keyboard changes
+ * Util class that handles keyboard changes.
  */
 public class KeyboardUtils {
 
     /**
-     * Closes the keyboard
+     * Closes the keyboard.
      *
      * @param activity
      */
@@ -24,7 +24,7 @@ public class KeyboardUtils {
     }
 
     /**
-     * Focuses an EditText and opens the keyboard
+     * Focuses an EditText and opens the keyboard.
      *
      * @param context
      * @param editText

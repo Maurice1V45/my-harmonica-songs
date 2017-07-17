@@ -3,6 +3,9 @@ package com.mivas.myharmonicasongs.util;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Util class that stores and handles all 12 keys.
+ */
 public class SongKeyUtils {
 
     private static final Map<Integer, String> keysMap = new HashMap<Integer, String>();

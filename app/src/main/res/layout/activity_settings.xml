@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/image_background"
+    android:orientation="vertical"
+    tools:context="com.mivas.myharmonicasongs.SettingsActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/black_30"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="@string/menu_settings"
+        app:titleTextColor="@color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/greyEE">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:scrollbars="none">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/bu1_5"
+                android:layout_marginTop="@dimen/bu2"
+                android:text="@string/settings_backup_restore"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_30px"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="@dimen/bu1"
+                android:layout_marginRight="@dimen/bu1"
+                android:layout_marginTop="@dimen/bu0_25"
+                android:background="@color/greyCC" />
+
+            <RelativeLayout
+                android:id="@+id/view_backup"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu4"
+                android:background="@drawable/selector_settings_item"
+                android:clickable="true">
+
+                <ImageView
+                    android:layout_width="@dimen/bu2"
+                    android:layout_height="@dimen/bu2"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu2"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_export" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu5"
+                    android:text="@string/settings_backup"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_36px" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/bu1"
+                    android:layout_marginRight="@dimen/bu1"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/view_restore"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu4"
+                android:background="@drawable/selector_settings_item"
+                android:clickable="true">
+
+                <ImageView
+                    android:layout_width="@dimen/bu2"
+                    android:layout_height="@dimen/bu2"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu2"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_import" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu5"
+                    android:text="@string/settings_restore"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_36px" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/bu1"
+                    android:layout_marginRight="@dimen/bu1"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/bu1_5"
+                android:layout_marginTop="@dimen/bu2"
+                android:text="@string/settings_general_settings"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_30px"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="@dimen/bu1"
+                android:layout_marginRight="@dimen/bu1"
+                android:layout_marginTop="@dimen/bu0_25"
+                android:background="@color/greyCC" />
+
+            <RelativeLayout
+                android:id="@+id/view_rate_app"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu4"
+                android:background="@drawable/selector_settings_item"
+                android:clickable="true">
+
+                <ImageView
+                    android:layout_width="@dimen/bu2"
+                    android:layout_height="@dimen/bu2"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu2"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_rate_app" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu5"
+                    android:text="@string/settings_rate_app"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_36px" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/bu1"
+                    android:layout_marginRight="@dimen/bu1"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/view_credits"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu4"
+                android:background="@drawable/selector_settings_item"
+                android:clickable="true">
+
+                <ImageView
+                    android:layout_width="@dimen/bu2"
+                    android:layout_height="@dimen/bu2"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu2"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_credits" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu5"
+                    android:text="@string/credits"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_36px" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/bu1"
+                    android:layout_marginRight="@dimen/bu1"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

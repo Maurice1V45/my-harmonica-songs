@@ -8,12 +8,12 @@ import android.content.SharedPreferences.Editor;
 import com.mivas.myharmonicasongs.MHSApplication;
 
 /**
- * Util class that handles shared preferences
+ * Util class that handles shared preferences.
  */
 public class PreferencesUtils {
 
     /**
-     * Retrieves the shared preferences
+     * Retrieves the shared preferences.
      *
      * @return
      */
@@ -25,7 +25,7 @@ public class PreferencesUtils {
 
 
     /**
-     * Stores a value into shared preferences
+     * Stores a value into shared preferences.
      *
      * @param key
      * @param value
@@ -39,7 +39,7 @@ public class PreferencesUtils {
 
 
     /**
-     * Stores a value into shared preferences
+     * Stores a value into shared preferences.
      *
      * @param key
      * @param value
@@ -53,7 +53,7 @@ public class PreferencesUtils {
 
 
     /**
-     * Stores a value into shared preferences
+     * Stores a value into shared preferences.
      *
      * @param key
      * @param value
@@ -67,7 +67,7 @@ public class PreferencesUtils {
 
 
     /**
-     * Stores a value into shared preferences
+     * Stores a value into shared preferences.
      *
      * @param key
      * @param value

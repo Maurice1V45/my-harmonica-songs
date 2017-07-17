@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.listener.MainActivityListener;
-import com.mivas.myharmonicasongs.util.DimensionUtils;
 import com.mivas.myharmonicasongs.util.SongKeyUtils;
 
 import java.util.List;
@@ -111,7 +110,7 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
         return songs.size();
     }
 
-    public static class SongViewHolder extends RecyclerView.ViewHolder {
+    static class SongViewHolder extends RecyclerView.ViewHolder {
         TextView titleText;
         TextView authorText;
         TextView keyText;

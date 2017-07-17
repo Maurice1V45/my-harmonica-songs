@@ -6,9 +6,11 @@ import android.net.Uri;
 import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
+import com.activeandroid.ActiveAndroid;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharSink;
 import com.google.common.io.Files;
+import com.mivas.myharmonicasongs.MHSApplication;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SectionDbHandler;
@@ -16,7 +18,6 @@ import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.database.model.DbSection;
 import com.mivas.myharmonicasongs.database.model.DbSong;
-import com.mivas.myharmonicasongs.listener.MainActivityListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -119,31 +120,60 @@ public class ExportHelper {
         return jsonObject;
     }
 
-    public void saveJsonSongsToDb(final String jsonString, final MainActivityListener listener) {
+    public void restoreSongs(final String songsJson) {
         Thread thread = new Thread() {
 
             @Override
             public void run() {
+
+                // clear database
+                ActiveAndroid.beginTransaction();
+                SectionDbHandler.deleteSections();
+                NoteDbHandler.deleteNotes();
+                SongDbHandler.deleteSongs();
+
+                // init list of dbSongs and songJsons
                 List<DbSong> dbSongs = new ArrayList<DbSong>();
+                List<JSONObject> songJsons = new ArrayList<JSONObject>();
+
+                // start parsing the songs
                 try {
-                    JSONObject jsonObject = new JSONObject(jsonString);
+                    JSONObject jsonObject = new JSONObject(songsJson);
                     JSONArray songsArray = jsonObject.getJSONArray("songs");
                     for (int i = 0; i < songsArray.length(); i++) {
-
-                        // save song
                         JSONObject songJson = songsArray.getJSONObject(i);
+                        songJsons.add(songJson);
+
+                        // populate the song
                         DbSong dbSong = new DbSong();
                         dbSong.setTitle(songJson.getString("title"));
                         dbSong.setAuthor(songJson.getString("author"));
                         dbSong.setFavourite(songJson.getBoolean("favorite"));
                         dbSong.setKey(songJson.getInt("key"));
-                        SongDbHandler.insertSong(dbSong);
                         dbSongs.add(dbSong);
 
-                        // save notes
+                        // add the song to the transaction
+                        SongDbHandler.insertSong(dbSong);
+                    }
+
+                    // set the transaction successful
+                    ActiveAndroid.setTransactionSuccessful();
+                } catch (JSONException e) {
+                    return;
+                } finally {
+                    ActiveAndroid.endTransaction();
+                }
+
+                // start parsing the notes and the sections
+                try {
+                    ActiveAndroid.beginTransaction();
+                    for (int i = 0; i < songJsons.size(); i++) {
+                        JSONObject songJson = songJsons.get(i);
                         JSONArray notesArray = songJson.getJSONArray("notes");
                         for (int j = 0; j < notesArray.length(); j++) {
                             JSONObject noteJson = notesArray.getJSONObject(j);
+
+                            // populate the note
                             DbNote dbNote = new DbNote();
                             dbNote.setHole(noteJson.getInt("hole"));
                             dbNote.setBlow(noteJson.getBoolean("blow"));
@@ -151,7 +181,9 @@ public class ExportHelper {
                             dbNote.setRow(noteJson.getInt("row"));
                             dbNote.setColumn(noteJson.getInt("column"));
                             dbNote.setBend((float) noteJson.getDouble("bend"));
-                            dbNote.setSongId(dbSong.getId());
+                            dbNote.setSongId(dbSongs.get(i).getId());
+
+                            // add the note to the transaction
                             NoteDbHandler.insertNote(dbNote);
                         }
 
@@ -159,17 +191,31 @@ public class ExportHelper {
                         JSONArray sectionsArray = songJson.getJSONArray("sections");
                         for (int j = 0; j < sectionsArray.length(); j++) {
                             JSONObject sectionJson = sectionsArray.getJSONObject(j);
+
+                            // populate the section
                             DbSection dbSection = new DbSection();
                             dbSection.setName(sectionJson.getString("name"));
                             dbSection.setRow(sectionJson.getInt("row"));
-                            dbSection.setSongId(dbSong.getId());
+                            dbSection.setSongId(dbSongs.get(i).getId());
+
+                            // add the section to the transaction
                             SectionDbHandler.insertSection(dbSection);
                         }
                     }
-                    listener.onSongsImported(dbSongs);
+
+                    // set the transaction successful
+                    ActiveAndroid.setTransactionSuccessful();
                 } catch (JSONException e) {
-                    listener.onSongsImportedError();
+                    return;
+                } finally {
+                    ActiveAndroid.endTransaction();
                 }
+
+                // send broadcast receiver
+                Intent intent = new Intent();
+                intent.setAction(Constants.INTENT_SONGS_UPDATED);
+                intent.putExtra(Constants.EXTRA_SONGS_UPDATED_COUNT, dbSongs.size());
+                MHSApplication.getInstance().getApplicationContext().sendBroadcast(intent);
             }
         };
         thread.start();

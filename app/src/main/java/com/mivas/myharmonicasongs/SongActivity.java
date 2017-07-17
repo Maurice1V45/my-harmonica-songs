@@ -27,7 +27,6 @@ import com.mivas.myharmonicasongs.listener.SongActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.ExportHelper;
-import com.mivas.myharmonicasongs.util.PreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -510,30 +509,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     public void onSectionEdit(DbSection dbSection) {
         SectionDbHandler.insertSection(dbSection);
         drawNotes();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_song_activity, menu);
-        if(menu instanceof MenuBuilder){
-            MenuBuilder menuBuilder = (MenuBuilder) menu;
-            menuBuilder.setOptionalIconsVisible(true);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_export_song:
-                List<DbSong> dbSongs = new ArrayList<DbSong>();
-                dbSongs.add(dbSong);
-                ExportHelper.getInstance().launchExportIntent(SongActivity.this, dbSongs, dbSong.getTitle() + ".mhs");
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-
-        }
     }
 
     /**

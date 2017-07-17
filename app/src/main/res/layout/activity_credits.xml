@@ -15,6 +15,7 @@
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="@string/credits"
         app:titleTextColor="@color/white" />
 
     <ScrollView

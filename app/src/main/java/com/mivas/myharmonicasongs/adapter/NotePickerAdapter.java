@@ -3,6 +3,7 @@ package com.mivas.myharmonicasongs.adapter;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
     private NotePickerDialogListener listener;
     private DbNote selectedNote;
     private boolean showBendings = false;
-    private static final Map<Integer, Float> BENDINGS_MAP = new HashMap<Integer, Float>();
+    private static final Map<Integer, Float> BENDINGS_MAP = new HashMap<>();
     static {
         BENDINGS_MAP.put(1, -0.5f);
         BENDINGS_MAP.put(2, -1f);

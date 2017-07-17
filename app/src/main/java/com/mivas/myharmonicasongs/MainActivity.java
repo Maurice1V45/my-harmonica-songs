@@ -1,11 +1,9 @@
 package com.mivas.myharmonicasongs;
 
-import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.MenuBuilder;
@@ -14,8 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,8 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.CharStreams;
 import com.mivas.myharmonicasongs.adapter.SongsListAdapter;
 import com.mivas.myharmonicasongs.animation.SlideAnimation;
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
@@ -34,21 +28,16 @@ import com.mivas.myharmonicasongs.database.handler.SectionDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.dialog.DeleteSongDialog;
-import com.mivas.myharmonicasongs.dialog.ExportSongsDialog;
 import com.mivas.myharmonicasongs.dialog.SongDialog;
 import com.mivas.myharmonicasongs.listener.MainActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.DimensionUtils;
-import com.mivas.myharmonicasongs.util.ExportHelper;
 import com.mivas.myharmonicasongs.util.FirstRunUtils;
 import com.mivas.myharmonicasongs.util.KeyboardUtils;
 import com.mivas.myharmonicasongs.util.PreferencesUtils;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -59,6 +48,23 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity implements MainActivityListener {
 
+    private class SongsUpdatedReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int songsImported = intent.getIntExtra(Constants.EXTRA_SONGS_UPDATED_COUNT, 0);
+            if (songsImported == 0) {
+                CustomToast.makeText(MainActivity.this, songsImported + " " + getString(R.string.no_song_imported), Toast.LENGTH_SHORT).show();
+            } else if (songsImported == 1) {
+                CustomToast.makeText(MainActivity.this, songsImported + " " + getString(R.string.song_imported), Toast.LENGTH_SHORT).show();
+            } else {
+                CustomToast.makeText(MainActivity.this, songsImported + " " + getString(R.string.songs_imported), Toast.LENGTH_SHORT).show();
+            }
+            dbSongs = SongDbHandler.getSongs();
+            refreshSongsList();
+        }
+    }
+
     private RecyclerView songsListView;
     private SongsListAdapter songsListAdapter;
     private List<DbSong> dbSongs;
@@ -67,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     private View searchView;
     private boolean searchMode = false;
     private EditText searchField;
+    private SongsUpdatedReceiver songsUpdatedReceiver = new SongsUpdatedReceiver();
     private Comparator<DbSong> songsComparator = new Comparator<DbSong>() {
 
         @Override
@@ -75,8 +82,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         }
     };
 
-    private static final int REQUEST_CODE_IMPORT_SONG = 1;
-    private static final int REQUEST_CODE_STORAGE_PERMISSION = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         songsListAdapter = new SongsListAdapter(MainActivity.this, dbSongs, MainActivity.this);
         songsListView.setAdapter(songsListAdapter);
         toggleNoSongsText();
+        registerReceiver(songsUpdatedReceiver, new IntentFilter(Constants.INTENT_SONGS_UPDATED));
     }
 
     private void initViews() {
@@ -142,10 +148,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main_activity, menu);
-        if(menu instanceof MenuBuilder){
-            MenuBuilder menuBuilder = (MenuBuilder) menu;
-            menuBuilder.setOptionalIconsVisible(true);
-        }
         return true;
     }
 
@@ -176,64 +178,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
                 songDialog.setListener(MainActivity.this);
                 songDialog.show(getFragmentManager(), Constants.TAG_SONG_DIALOG);
                 return true;
-            case R.id.action_import_songs:
-                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
-                } else {
-                    launchImportSongsActivity();
-                }
-                return true;
-            case R.id.action_export_songs:
-                ExportSongsDialog exportSongsDialog = new ExportSongsDialog();
-                exportSongsDialog.setDbSongs(dbSongs);
-                exportSongsDialog.setListener(MainActivity.this);
-                exportSongsDialog.show(getFragmentManager(), Constants.TAG_EXPORT_SONG_DIALOG);
-                return true;
-            case R.id.action_credits:
-                Intent intent = new Intent(MainActivity.this, CreditsActivity.class);
+            case R.id.action_settings:
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void launchImportSongsActivity() {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.setType("file/*");
-        startActivityForResult(intent, REQUEST_CODE_IMPORT_SONG);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_IMPORT_SONG && resultCode == RESULT_OK) {
-            try {
-                CustomToast.makeText(MainActivity.this, R.string.importing_songs, Toast.LENGTH_SHORT).show();
-                InputStream inputStream = getContentResolver().openInputStream(data.getData());
-                String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
-                ExportHelper.getInstance().saveJsonSongsToDb(fileJson, MainActivity.this);
-            } catch (IOException e) {
-                CustomToast.makeText(MainActivity.this, R.string.error_importing_song, Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_STORAGE_PERMISSION: {
-
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    launchImportSongsActivity();
-                } else {
-                    CustomToast.makeText(MainActivity.this, R.string.permission_needed, Toast.LENGTH_LONG).show();
-                }
-                return;
-            }
-            default:
-                break;
         }
     }
 
@@ -284,41 +234,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         startActivity(intent);
     }
 
-    @Override
-    public void onExportSongs(List<DbSong> dbSongs) {
-        String fileName = (dbSongs.size() == 1) ? dbSongs.size() + " song.mhs" : dbSongs.size() + " songs.mhs";
-        ExportHelper.getInstance().launchExportIntent(MainActivity.this, dbSongs, fileName);
-    }
-
-    @Override
-    public void onSongsImported(final List<DbSong> dbSongs) {
-        this.dbSongs.addAll(dbSongs);
-        Collections.sort(dbSongs, songsComparator);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                refreshSongsList();
-                if (dbSongs.size() == 0) {
-                    CustomToast.makeText(MainActivity.this, dbSongs.size() + " " + getString(R.string.no_song_imported), Toast.LENGTH_SHORT).show();
-                } else if (dbSongs.size() == 1) {
-                    CustomToast.makeText(MainActivity.this, dbSongs.size() + " " + getString(R.string.song_imported), Toast.LENGTH_SHORT).show();
-                } else {
-                    CustomToast.makeText(MainActivity.this, dbSongs.size() + " " + getString(R.string.songs_imported), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onSongsImportedError() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                CustomToast.makeText(MainActivity.this, R.string.error_importing_song, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
     private void refreshSongsList() {
         refreshDisplayedSongs();
         songsListAdapter.setSongs(displayedSongs);
@@ -352,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
 
     @Override
     protected void onDestroy() {
+        unregisterReceiver(songsUpdatedReceiver);
         try {
             File exportDir = new File(getFilesDir(), "Songs");
             for (File file : exportDir.listFiles()) {

@@ -29,6 +29,9 @@
         <activity
             android:name=".CreditsActivity"
             android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".SettingsActivity"
+            android:configChanges="orientation|screenSize" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

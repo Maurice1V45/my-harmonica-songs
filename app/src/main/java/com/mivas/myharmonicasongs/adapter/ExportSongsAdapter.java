@@ -26,15 +26,14 @@ public class ExportSongsAdapter extends RecyclerView.Adapter<ExportSongsAdapter.
     public ExportSongsAdapter(Context context, List<DbSong> songs) {
         this.context = context;
         this.songs = songs;
-        this.selectedSongs = new ArrayList<DbSong>();
+        this.selectedSongs = new ArrayList<>();
     }
 
     @Override
     public SongViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_export_song, parent, false);
-        SongViewHolder viewHolder = new SongViewHolder(view);
-        return viewHolder;
+        return new SongViewHolder(view);
     }
 
     @Override
@@ -60,7 +59,7 @@ public class ExportSongsAdapter extends RecyclerView.Adapter<ExportSongsAdapter.
         return songs.size();
     }
 
-    public static class SongViewHolder extends RecyclerView.ViewHolder {
+    static class SongViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkbox;
 
         SongViewHolder(View itemView) {

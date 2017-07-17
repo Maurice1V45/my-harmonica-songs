@@ -5,10 +5,13 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 
+/**
+ * Animation for expand/collapse.
+ */
 public class SlideAnimation extends Animation {
 
-    public final static int COLLAPSE = 1;
     public final static int EXPAND = 0;
+    public final static int COLLAPSE = 1;
 
     private View view;
     private int endHeight;

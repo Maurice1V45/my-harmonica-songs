@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 /**
- * Credits Activity
+ * Credits Activity.
  */
 public class CreditsActivity extends AppCompatActivity {
 
@@ -16,6 +16,5 @@ public class CreditsActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.credits);
     }
 }
