@@ -1,42 +1,33 @@
 package com.mivas.myharmonicasongs.dialog;
 
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mivas.myharmonicasongs.R;
-import com.mivas.myharmonicasongs.adapter.KeyPickerAdapter;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.listener.MainActivityListener;
-import com.mivas.myharmonicasongs.listener.SongDialogListener;
-import com.mivas.myharmonicasongs.util.CustomToast;
-import com.mivas.myharmonicasongs.util.KeyboardUtils;
+import com.mivas.myharmonicasongs.listener.SongActivityListener;
 
 /**
- * Dialog for deleting a song.
+ * Dialog for saving changes to a song.
  */
-public class DeleteSongDialog extends DialogFragment {
+public class SaveChangesDialog extends DialogFragment {
 
     private TextView titleText;
     private Button yesButton;
     private Button noButton;
     private DbSong dbSong;
-    private MainActivityListener listener;
+    private SongActivityListener listener;
 
     /**
      * Default constructor
      */
-    public DeleteSongDialog() {
+    public SaveChangesDialog() {
         // empty constructor
     }
 
@@ -47,7 +38,6 @@ public class DeleteSongDialog extends DialogFragment {
      */
     private void initViews(View rootView) {
         titleText = (TextView) rootView.findViewById(R.id.text_title);
-        titleText.setText(getString(R.string.delete_song_dialog_message) + " " + dbSong.getTitle() + "?");
         yesButton = (Button) rootView.findViewById(R.id.button_yes);
         noButton = (Button) rootView.findViewById(R.id.button_no);
     }
@@ -60,7 +50,7 @@ public class DeleteSongDialog extends DialogFragment {
 
             @Override
             public void onClick(View v) {
-                listener.onSongDeleteConfirmed(dbSong);
+                listener.onSaveChangesSelected();
                 getDialog().dismiss();
             }
         });
@@ -68,6 +58,7 @@ public class DeleteSongDialog extends DialogFragment {
 
             @Override
             public void onClick(View v) {
+                listener.onNotSaveChangesSelected();
                 getDialog().dismiss();
             }
         });
@@ -75,7 +66,7 @@ public class DeleteSongDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_delete_song, container);
+        View view = inflater.inflate(R.layout.dialog_save_changes, container);
         initViews(view);
         initListeners();
         return view;
@@ -95,7 +86,7 @@ public class DeleteSongDialog extends DialogFragment {
         this.dbSong = dbSong;
     }
 
-    public void setListener(MainActivityListener listener) {
+    public void setListener(SongActivityListener listener) {
         this.listener = listener;
     }
 

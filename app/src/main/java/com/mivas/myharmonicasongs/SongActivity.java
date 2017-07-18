@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.activeandroid.ActiveAndroid;
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SectionDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
@@ -22,11 +23,11 @@ import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.database.model.DbSection;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.dialog.NotePickerDialog;
+import com.mivas.myharmonicasongs.dialog.SaveChangesDialog;
 import com.mivas.myharmonicasongs.dialog.SectionDialog;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
-import com.mivas.myharmonicasongs.util.ExportHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,6 +46,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private List<DbSection> sections = new ArrayList<DbSection>();
     private Comparator notesComparator;
     private TextView noNotesText;
+    private boolean changesMade = false;
     private List<DbNote> copiedNotes = new ArrayList<DbNote>();
 
 
@@ -323,6 +325,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
      * @param row
      */
     private void onDeleteRowCommand(int row) {
+        changesMade = true;
 
         // delete all notes on the row
         Iterator<DbNote> iterator = notes.iterator();
@@ -330,7 +333,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             DbNote note = iterator.next();
             if (note.getRow() == row) {
                 iterator.remove();
-                NoteDbHandler.deleteNote(note);
             }
         }
 
@@ -338,7 +340,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         DbSection dbSection = getSectionByRow(row);
         if (dbSection != null) {
             sections.remove(dbSection);
-            SectionDbHandler.deleteSection(dbSection);
         }
 
         // decrement rows and sections
@@ -361,9 +362,9 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         }
         int copedNotesNr = copiedNotes.size();
         if (copedNotesNr == 1) {
-            CustomToast.makeText(SongActivity.this, copedNotesNr + " " + getString(R.string.toast_note_copied), Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(SongActivity.this, copedNotesNr + " " + getString(R.string.song_activity_toast_note_copied), Toast.LENGTH_SHORT).show();
         } else {
-            CustomToast.makeText(SongActivity.this, copedNotesNr + " " + getString(R.string.toast_notes_copied), Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(SongActivity.this, copedNotesNr + " " + getString(R.string.song_activity_toast_notes_copied), Toast.LENGTH_SHORT).show();
         }
         drawNotes();
     }
@@ -376,15 +377,15 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
      */
     private void onPasteRowCommand(int row, int column) {
         if (copiedNotes.isEmpty()) {
-            Toast.makeText(SongActivity.this, R.string.toast_no_notes_copied, Toast.LENGTH_SHORT).show();
+            Toast.makeText(SongActivity.this, R.string.song_activity_toast_no_notes_copied, Toast.LENGTH_SHORT).show();
         } else {
+            changesMade = true;
             int currentColumn = column;
             for (DbNote copiedNote : copiedNotes) {
                 DbNote pastedNote = new DbNote(copiedNote);
                 pastedNote.setRow(row);
                 pastedNote.setColumn(currentColumn);
                 notes.add(pastedNote);
-                NoteDbHandler.insertNote(pastedNote);
                 currentColumn++;
             }
             Collections.sort(notes, notesComparator);
@@ -421,39 +422,39 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     }
 
     private void onDeleteSectionCommand(int row) {
+        changesMade = true;
         DbSection dbSection = getSectionByRow(row);
         if (dbSection != null) {
             sections.remove(dbSection);
-            SectionDbHandler.deleteSection(dbSection);
         }
         drawNotes();
     }
 
     @Override
     public void onNoteAdded(DbNote dbNote, boolean newRow) {
+        changesMade = true;
         if (newRow) {
             incrementRows(dbNote.getRow());
             incrementSections(dbNote.getRow());
         }
         notes.add(dbNote);
-        NoteDbHandler.insertNote(dbNote);
         Collections.sort(notes, notesComparator);
         drawNotes();
     }
 
     @Override
     public void onNoteEdited(DbNote dbNote) {
-        NoteDbHandler.insertNote(dbNote);
+        changesMade = true;
         drawNotes();
     }
 
     @Override
     public void onNoteDeleted(DbNote dbNote) {
+        changesMade = true;
 
         // delete the note
         int position = notes.indexOf(dbNote);
         notes.remove(dbNote);
-        NoteDbHandler.deleteNote(dbNote);
 
         // check the remaining notes on the row
         int rowCount = 0;
@@ -470,7 +471,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 if (notes.get(i).getRow() == dbNote.getRow()) {
                     DbNote note = notes.get(i);
                     note.setColumn(note.getColumn() - 1);
-                    NoteDbHandler.insertNote(note);
                 }
             }
         } else {
@@ -479,7 +479,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             DbSection dbSection = getSectionByRow(dbNote.getRow());
             if (dbSection != null) {
                 sections.remove(dbSection);
-                SectionDbHandler.deleteSection(dbSection);
             }
 
             // decrement the row of the notes below the deleted note
@@ -487,7 +486,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 if (notes.get(i).getRow() > dbNote.getRow()) {
                     DbNote note = notes.get(i);
                     note.setRow(note.getRow() - 1);
-                    NoteDbHandler.insertNote(note);
                 }
             }
 
@@ -500,15 +498,43 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
     @Override
     public void onSectionAdded(DbSection dbSection) {
+        changesMade = true;
         sections.add(dbSection);
-        SectionDbHandler.insertSection(dbSection);
         drawNotes();
     }
 
     @Override
     public void onSectionEdit(DbSection dbSection) {
-        SectionDbHandler.insertSection(dbSection);
+        changesMade = true;
         drawNotes();
+    }
+
+    @Override
+    public void onSaveChangesSelected() {
+
+        // save the notes and sections into db
+        ActiveAndroid.beginTransaction();
+        try {
+            NoteDbHandler.deleteNotesBySongId(dbSong.getId());
+            SectionDbHandler.deleteSectionsBySongId(dbSong.getId());
+            for (DbNote dbNote : notes) {
+                NoteDbHandler.insertNote(dbNote);
+            }
+            for (DbSection dbSection : sections) {
+                SectionDbHandler.insertSection(dbSection);
+            }
+            ActiveAndroid.setTransactionSuccessful();
+        } finally {
+            ActiveAndroid.endTransaction();
+        }
+
+        // finish the activity
+        finish();
+    }
+
+    @Override
+    public void onNotSaveChangesSelected() {
+        finish();
     }
 
     /**
@@ -558,7 +584,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             int noteRow = note.getRow();
             if (noteRow >= row) {
                 note.setRow(noteRow + 1);
-                NoteDbHandler.insertNote(note);
             }
         }
     }
@@ -573,7 +598,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             int noteRow = note.getRow();
             if (noteRow >= row) {
                 note.setRow(noteRow - 1);
-                NoteDbHandler.insertNote(note);
             }
         }
     }
@@ -582,7 +606,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         for (DbSection dbSection : sections) {
             if (dbSection.getRow() >= row) {
                 dbSection.setRow(dbSection.getRow() + 1);
-                SectionDbHandler.insertSection(dbSection);
             }
         }
     }
@@ -591,9 +614,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         if (notes.isEmpty()) {
 
             // delete all sections
-            for (DbSection dbSection : sections) {
-                SectionDbHandler.deleteSection(dbSection);
-            }
             sections.clear();
 
         } else {
@@ -602,7 +622,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             for (DbSection dbSection : sections) {
                 if (dbSection.getRow() > row) {
                     dbSection.setRow(dbSection.getRow() - 1);
-                    SectionDbHandler.insertSection(dbSection);
                 }
             }
 
@@ -618,7 +637,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             if (duplicateSections.size() > 1) {
                 for (int i = 1; i < duplicateSections.size(); i++) {
                     sections.remove(duplicateSections.get(i));
-                    SectionDbHandler.deleteSection(duplicateSections.get(i));
                 }
             }
         }
@@ -673,6 +691,19 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             }
         }
         return null;
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (changesMade) {
+            SaveChangesDialog saveChangesDialog = new SaveChangesDialog();
+            saveChangesDialog.setSong(dbSong);
+            saveChangesDialog.setListener(SongActivity.this);
+            saveChangesDialog.show(getFragmentManager(), Constants.TAG_SAVE_CHANGES_DIALOG);
+        } else {
+            super.onBackPressed();
+        }
     }
 
 }

@@ -6,15 +6,15 @@
     <item
         android:id="@+id/search_song_action"
         android:icon="@drawable/icon_search2"
-        android:title="@string/menu_search"
+        android:title="@string/main_activity_menu_search"
         app:showAsAction="always" />
     <item
         android:id="@+id/add_song_action"
         android:icon="@drawable/icon_plus"
-        android:title="@string/menu_add_song"
+        android:title="@string/main_activity_menu_add_song"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_settings"
-        android:title="@string/menu_settings"
+        android:title="@string/main_activity_menu_settings"
         app:showAsAction="never" />
 </menu>

@@ -3,41 +3,41 @@
     <item
         android:id="@+id/action_add_note"
         android:icon="@drawable/icon_plus2"
-        android:title="@string/menu_add_note"
+        android:title="@string/song_activity_menu_add_note"
         app:actionLayout="@layout/list_item_menu" />
     <item
         android:id="@+id/action_delete_row"
         android:icon="@drawable/icon_delete2"
-        android:title="@string/menu_delete_row"
+        android:title="@string/song_activity_menu_delete_row"
         app:actionLayout="@layout/list_item_menu" />
     <item
         android:id="@+id/action_insert_row"
         android:icon="@drawable/icon_insert"
-        android:title="@string/menu_insert_row"
+        android:title="@string/song_activity_menu_insert_row"
         app:actionLayout="@layout/list_item_menu" />
     <item
         android:id="@+id/action_copy_row"
         android:icon="@drawable/icon_copy"
-        android:title="@string/menu_copy_row"
+        android:title="@string/song_activity_menu_copy_row"
         app:actionLayout="@layout/list_item_menu" />
     <item
         android:id="@+id/action_paste_row"
         android:icon="@drawable/icon_paste"
-        android:title="@string/menu_paste_row"
+        android:title="@string/song_activity_menu_paste_row"
         app:actionLayout="@layout/list_item_menu" />
     <item
         android:id="@+id/action_add_section"
         android:icon="@drawable/icon_plus2"
-        android:title="@string/menu_add_section"
+        android:title="@string/song_activity_menu_add_section"
         app:actionLayout="@layout/list_item_menu" />
     <item
         android:id="@+id/action_edit_section"
         android:icon="@drawable/icon_edit"
-        android:title="@string/menu_edit_section"
+        android:title="@string/song_activity_menu_edit_section"
         app:actionLayout="@layout/list_item_menu" />
     <item
         android:id="@+id/action_delete_section"
         android:icon="@drawable/icon_delete2"
-        android:title="@string/menu_delete_section"
+        android:title="@string/song_activity_menu_delete_section"
         app:actionLayout="@layout/list_item_menu" />
 </menu>

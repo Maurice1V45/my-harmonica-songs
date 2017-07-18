@@ -62,7 +62,7 @@ public class ExportHelper {
             sink.write(text);
         } catch (IOException e) {
             e.printStackTrace();
-            CustomToast.makeText(context, R.string.error_exporting_song, Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(context, R.string.settings_activity_toast_backup_error, Toast.LENGTH_SHORT).show();
         }
         return file;
     }
@@ -230,6 +230,6 @@ public class ExportHelper {
         intent.setDataAndType(contentUri, context.getContentResolver().getType(contentUri));
         intent.setType("file/*");
         intent.putExtra(Intent.EXTRA_STREAM, contentUri);
-        context.startActivity(Intent.createChooser(intent, context.getString(R.string.export_to)));
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.settings_activity_text_export_to)));
     }
 }

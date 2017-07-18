@@ -54,7 +54,7 @@
                     android:layout_marginLeft="@dimen/bu1"
                     android:background="@null"
                     android:backgroundTint="@color/white"
-                    android:hint="@string/hint_search"
+                    android:hint="@string/main_activity_hint_search"
                     android:imeOptions="actionDone"
                     android:inputType="textCapSentences"
                     android:textColor="@color/white"
@@ -82,7 +82,7 @@
         android:layout_marginLeft="@dimen/bu2"
         android:layout_marginRight="@dimen/bu2"
         android:gravity="center"
-        android:text="@string/no_songs"
+        android:text="@string/main_activity_text_no_songs"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_42px" />
 

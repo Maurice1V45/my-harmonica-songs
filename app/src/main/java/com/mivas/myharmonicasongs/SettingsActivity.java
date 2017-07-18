@@ -109,12 +109,12 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_RESTORE_SONGS && resultCode == RESULT_OK) {
             try {
-                CustomToast.makeText(SettingsActivity.this, R.string.importing_songs, Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_importing_songs, Toast.LENGTH_SHORT).show();
                 InputStream inputStream = getContentResolver().openInputStream(data.getData());
                 String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
                 ExportHelper.getInstance().restoreSongs(fileJson);
             } catch (IOException e) {
-                CustomToast.makeText(SettingsActivity.this, R.string.error_importing_song, Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_restore_error, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -128,7 +128,7 @@ public class SettingsActivity extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     launchRestoreSongsActivity();
                 } else {
-                    CustomToast.makeText(SettingsActivity.this, R.string.permission_needed, Toast.LENGTH_LONG).show();
+                    CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_permission_needed, Toast.LENGTH_LONG).show();
                 }
                 return;
             }

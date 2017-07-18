@@ -32,7 +32,7 @@
             android:layout_marginLeft="@dimen/bu2"
             android:layout_marginRight="@dimen/bu2"
             android:gravity="center"
-            android:text="@string/no_notes"
+            android:text="@string/song_activity_text_no_notes"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_42px" />
 

@@ -80,7 +80,7 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                showBendingsCheckbox.setText(isChecked ? R.string.checkbox_hide_bendings : R.string.checkbox_show_bendings);
+                showBendingsCheckbox.setText(isChecked ? R.string.note_picker_dialog_button_hide_bendings : R.string.note_picker_dialog_button_show_bendings);
                 adapter.setShowBendings(isChecked);
                 adapter.notifyDataSetChanged();
             }

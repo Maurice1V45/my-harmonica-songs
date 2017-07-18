@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/bu1"
-        android:hint="@string/hint_section_name"
+        android:hint="@string/section_dialog_hint_section_name"
         android:inputType="textCapSentences"
         android:paddingLeft="@dimen/bu1"
         android:textColor="@color/black"

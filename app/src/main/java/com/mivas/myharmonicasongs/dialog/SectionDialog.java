@@ -44,10 +44,10 @@ public class SectionDialog extends DialogFragment {
         sectionNameField = (EditText) rootView.findViewById(R.id.field_section_name);
         okButton = (Button) rootView.findViewById(R.id.button_ok);
         if (editMode) {
-            dialogTitle.setText(R.string.dialog_edit_section);
+            dialogTitle.setText(R.string.section_dialog_text_edit_section);
             sectionNameField.setText(dbSection.getName());
         } else {
-            dialogTitle.setText(R.string.dialog_add_section);
+            dialogTitle.setText(R.string.section_dialog_text_add_section);
         }
     }
 
@@ -61,7 +61,7 @@ public class SectionDialog extends DialogFragment {
             public void onClick(View v) {
 
                 if (sectionNameField.getText().toString().isEmpty()) {
-                    CustomToast.makeText(getActivity(), R.string.error_no_section_name, Toast.LENGTH_SHORT).show();
+                    CustomToast.makeText(getActivity(), R.string.section_dialog_toast_no_section_name, Toast.LENGTH_SHORT).show();
                 } else {
                     if (!editMode) {
 

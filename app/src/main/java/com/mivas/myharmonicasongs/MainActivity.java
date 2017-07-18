@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -54,11 +53,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         public void onReceive(Context context, Intent intent) {
             int songsImported = intent.getIntExtra(Constants.EXTRA_SONGS_UPDATED_COUNT, 0);
             if (songsImported == 0) {
-                CustomToast.makeText(MainActivity.this, songsImported + " " + getString(R.string.no_song_imported), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(MainActivity.this, songsImported + " " + getString(R.string.settings_activity_toast_no_song_imported), Toast.LENGTH_SHORT).show();
             } else if (songsImported == 1) {
-                CustomToast.makeText(MainActivity.this, songsImported + " " + getString(R.string.song_imported), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(MainActivity.this, songsImported + " " + getString(R.string.settings_activity_toast_song_imported), Toast.LENGTH_SHORT).show();
             } else {
-                CustomToast.makeText(MainActivity.this, songsImported + " " + getString(R.string.songs_imported), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(MainActivity.this, songsImported + " " + getString(R.string.settings_activity_toast_songs_imported), Toast.LENGTH_SHORT).show();
             }
             dbSongs = SongDbHandler.getSongs();
             refreshSongsList();

@@ -56,12 +56,12 @@ public class SongDialog extends DialogFragment implements SongDialogListener {
         authorField = (EditText) rootView.findViewById(R.id.field_author);
         okButton = (Button) rootView.findViewById(R.id.button_ok);
         if (dbSong != null) {
-            dialogTitle.setText(R.string.dialog_edit_song);
+            dialogTitle.setText(R.string.song_dialog_text_edit_song);
             titleField.setText(dbSong.getTitle());
             authorField.setText(dbSong.getAuthor());
             selectedKey = dbSong.getKey();
         } else {
-            dialogTitle.setText(R.string.dialog_add_song);
+            dialogTitle.setText(R.string.song_dialog_text_add_song);
         }
         keyList = (RecyclerView) rootView.findViewById(R.id.list_keys);
         keyList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL, false));
@@ -80,7 +80,7 @@ public class SongDialog extends DialogFragment implements SongDialogListener {
             public void onClick(View v) {
 
                 if (titleField.getText().toString().isEmpty()) {
-                    CustomToast.makeText(getActivity(), R.string.error_no_title, Toast.LENGTH_SHORT).show();
+                    CustomToast.makeText(getActivity(), R.string.song_dialog_toast_no_title, Toast.LENGTH_SHORT).show();
                 } else {
                     if (dbSong == null) {
 
