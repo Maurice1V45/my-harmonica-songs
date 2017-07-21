@@ -1,12 +1,15 @@
 package com.mivas.myharmonicasongs;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,11 +26,11 @@ import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.database.model.DbSection;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.dialog.NotePickerDialog;
-import com.mivas.myharmonicasongs.dialog.SaveChangesDialog;
 import com.mivas.myharmonicasongs.dialog.SectionDialog;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
+import com.mivas.myharmonicasongs.util.CustomizationUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,9 +49,29 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private List<DbSection> sections = new ArrayList<DbSection>();
     private Comparator notesComparator;
     private TextView noNotesText;
-    private boolean changesMade = false;
     private List<DbNote> copiedNotes = new ArrayList<DbNote>();
+    private View backgroundView;
+    private NotePickerDialog notePickerDialog;
+    private int blowSign;
+    private int blowStyle;
+    private int blowTextColor;
+    private int blowBackgroundColor;
+    private int drawSign;
+    private int drawStyle;
+    private int drawTextColor;
+    private int drawBackgroundColor;
+    private int sectionStyle;
+    private int sectionTextColor;
+    private int backgroundColor;
+    private BroadcastReceiver customizationReceiver = new BroadcastReceiver() {
 
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            initCustomizations();
+            drawNotes();
+            backgroundView.setBackgroundColor(backgroundColor);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +79,38 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         setContentView(R.layout.activity_song);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         initViews();
+        initCustomizations();
         initComparator();
 
         dbSong = SongDbHandler.getSongById(getIntent().getLongExtra(Constants.EXTRA_SONG_ID, 0));
         notes = NoteDbHandler.getNotesBySongId(dbSong.getId());
         sections = SectionDbHandler.getSectionsBySongId(dbSong.getId());
         getSupportActionBar().setTitle(dbSong.getTitle());
+        backgroundView.setBackgroundColor(backgroundColor);
         drawNotes();
+        notePickerDialog = new NotePickerDialog();
+        registerReceiver(customizationReceiver, new IntentFilter(Constants.INTENT_CUSTOMIZATIONS_UPDATED));
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_song_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_customize:
+                Intent intent = new Intent(SongActivity.this, CustomizeActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -74,6 +121,8 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         setSupportActionBar(myToolbar);
         notesLayout = (LinearLayout) findViewById(R.id.list_notes);
         noNotesText = (TextView) findViewById(R.id.text_no_notes);
+        backgroundView = findViewById(R.id.view_background);
+        backgroundView.setBackgroundColor(backgroundColor);
     }
 
     /**
@@ -162,15 +211,26 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
      */
     private void addNoteToNotesView(final DbNote dbNote, LinearLayout parent) {
         View noteView = getLayoutInflater().inflate(R.layout.list_item_note, null);
+
+        // set background properties
+        View noteBackground = noteView.findViewById(R.id.view_note);
+        noteBackground.setBackground(CustomizationUtils.createNoteBackground(SongActivity.this, dbNote.isBlow() ? blowBackgroundColor : drawBackgroundColor));
+
+        // set note properties
         TextView noteText = (TextView) noteView.findViewById(R.id.text_note);
-        noteText.setText(getNoteText(dbNote.getHole(), dbNote.isBlow(), dbNote.getBend()));
-        TextView wordText = (TextView) noteView.findViewById(R.id.text_word);
-        if (dbNote.getWord().isEmpty()) {
-            wordText.setVisibility(View.GONE);
+        if (dbNote.isBlow()) {
+            CustomizationUtils.styleNoteText(noteText, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, blowTextColor);
         } else {
-            wordText.setVisibility(View.VISIBLE);
-            wordText.setText(dbNote.getWord());
+            CustomizationUtils.styleNoteText(noteText, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, drawTextColor);
         }
+
+        // set word properties
+        TextView wordText = (TextView) noteView.findViewById(R.id.text_word);
+        wordText.setText(dbNote.getWord());
+        wordText.setTextColor(dbNote.isBlow() ? blowTextColor : drawTextColor);
+        wordText.setVisibility(dbNote.getWord().isEmpty() ? View.GONE : View.VISIBLE);
+
+        // set click listener
         noteView.setClickable(true);
         noteView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,6 +242,8 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 dialog.show(getFragmentManager(), Constants.TAG_HARMONICA_NOTES_DIALOG);
             }
         });
+
+        // add note to parent
         parent.addView(noteView);
     }
 
@@ -212,6 +274,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         menuBuilder.findItem(R.id.action_edit_section).setVisible(dbSection != null);
         menuBuilder.findItem(R.id.action_delete_section).setVisible(dbSection != null);
         menuBuilder.setCallback(new MenuBuilder.Callback() {
+
             @Override
             public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
                 switch (item.getItemId()) {
@@ -278,7 +341,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private void addSectionToNotesView(DbSection dbSection, LinearLayout parent) {
         TextView sectionView = (TextView) getLayoutInflater().inflate(R.layout.list_item_section, null);
         sectionView.setText(dbSection.getName());
-        sectionView.setTextColor(ContextCompat.getColor(SongActivity.this, R.color.black));
+        CustomizationUtils.styleSectionText(sectionView, sectionStyle, sectionTextColor);
         parent.addView(sectionView);
     }
 
@@ -325,26 +388,34 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
      * @param row
      */
     private void onDeleteRowCommand(int row) {
-        changesMade = true;
 
-        // delete all notes on the row
-        Iterator<DbNote> iterator = notes.iterator();
-        while (iterator.hasNext()) {
-            DbNote note = iterator.next();
-            if (note.getRow() == row) {
-                iterator.remove();
+        ActiveAndroid.beginTransaction();
+        try {
+
+            // delete all notes on the row
+            Iterator<DbNote> iterator = notes.iterator();
+            while (iterator.hasNext()) {
+                DbNote note = iterator.next();
+                if (note.getRow() == row) {
+                    iterator.remove();
+                    NoteDbHandler.deleteNote(note);
+                }
             }
-        }
 
-        // delete the section if there is one
-        DbSection dbSection = getSectionByRow(row);
-        if (dbSection != null) {
-            sections.remove(dbSection);
-        }
+            // delete the section if there is one
+            DbSection dbSection = getSectionByRow(row);
+            if (dbSection != null) {
+                sections.remove(dbSection);
+                SectionDbHandler.deleteSection(dbSection);
+            }
 
-        // decrement rows and sections
-        decrementRows(row);
-        decrementSections(row);
+            // decrement rows and sections
+            decrementRows(row);
+            decrementSections(row);
+            ActiveAndroid.setTransactionSuccessful();
+        } finally {
+            ActiveAndroid.endTransaction();
+        }
         drawNotes();
     }
 
@@ -379,14 +450,20 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         if (copiedNotes.isEmpty()) {
             Toast.makeText(SongActivity.this, R.string.song_activity_toast_no_notes_copied, Toast.LENGTH_SHORT).show();
         } else {
-            changesMade = true;
-            int currentColumn = column;
-            for (DbNote copiedNote : copiedNotes) {
-                DbNote pastedNote = new DbNote(copiedNote);
-                pastedNote.setRow(row);
-                pastedNote.setColumn(currentColumn);
-                notes.add(pastedNote);
-                currentColumn++;
+            ActiveAndroid.beginTransaction();
+            try {
+                int currentColumn = column;
+                for (DbNote copiedNote : copiedNotes) {
+                    DbNote pastedNote = new DbNote(copiedNote);
+                    pastedNote.setRow(row);
+                    pastedNote.setColumn(currentColumn);
+                    notes.add(pastedNote);
+                    NoteDbHandler.insertNote(pastedNote);
+                    currentColumn++;
+                }
+                ActiveAndroid.setTransactionSuccessful();
+            } finally {
+                ActiveAndroid.endTransaction();
             }
             Collections.sort(notes, notesComparator);
             drawNotes();
@@ -422,39 +499,45 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     }
 
     private void onDeleteSectionCommand(int row) {
-        changesMade = true;
         DbSection dbSection = getSectionByRow(row);
         if (dbSection != null) {
             sections.remove(dbSection);
+            SectionDbHandler.deleteSection(dbSection);
         }
         drawNotes();
     }
 
     @Override
     public void onNoteAdded(DbNote dbNote, boolean newRow) {
-        changesMade = true;
         if (newRow) {
-            incrementRows(dbNote.getRow());
-            incrementSections(dbNote.getRow());
+            ActiveAndroid.beginTransaction();
+            try {
+                incrementRows(dbNote.getRow());
+                incrementSections(dbNote.getRow());
+                ActiveAndroid.setTransactionSuccessful();
+            } finally {
+                ActiveAndroid.endTransaction();
+            }
         }
         notes.add(dbNote);
+        NoteDbHandler.insertNote(dbNote);
         Collections.sort(notes, notesComparator);
         drawNotes();
     }
 
     @Override
     public void onNoteEdited(DbNote dbNote) {
-        changesMade = true;
+        NoteDbHandler.insertNote(dbNote);
         drawNotes();
     }
 
     @Override
     public void onNoteDeleted(DbNote dbNote) {
-        changesMade = true;
 
         // delete the note
         int position = notes.indexOf(dbNote);
         notes.remove(dbNote);
+        NoteDbHandler.deleteNote(dbNote);
 
         // check the remaining notes on the row
         int rowCount = 0;
@@ -464,33 +547,43 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             }
         }
 
-        if (rowCount > 0) {
+        ActiveAndroid.beginTransaction();
+        try {
 
-            // decrement the column of the notes to the right of the deleted note
-            for (int i = position; i < notes.size(); i++) {
-                if (notes.get(i).getRow() == dbNote.getRow()) {
-                    DbNote note = notes.get(i);
-                    note.setColumn(note.getColumn() - 1);
+            if (rowCount > 0) {
+
+                // decrement the column of the notes to the right of the deleted note
+                for (int i = position; i < notes.size(); i++) {
+                    if (notes.get(i).getRow() == dbNote.getRow()) {
+                        DbNote note = notes.get(i);
+                        note.setColumn(note.getColumn() - 1);
+                        NoteDbHandler.insertNote(note);
+                    }
                 }
-            }
-        } else {
+            } else {
 
-            // delete the section on this row
-            DbSection dbSection = getSectionByRow(dbNote.getRow());
-            if (dbSection != null) {
-                sections.remove(dbSection);
-            }
-
-            // decrement the row of the notes below the deleted note
-            for (int i = position; i < notes.size(); i++) {
-                if (notes.get(i).getRow() > dbNote.getRow()) {
-                    DbNote note = notes.get(i);
-                    note.setRow(note.getRow() - 1);
+                // delete the section on this row
+                DbSection dbSection = getSectionByRow(dbNote.getRow());
+                if (dbSection != null) {
+                    sections.remove(dbSection);
+                    SectionDbHandler.deleteSection(dbSection);
                 }
-            }
 
-            // decrement the row of the sections below the deleted note
-            decrementSections(dbNote.getRow());
+                // decrement the row of the notes below the deleted note
+                for (int i = position; i < notes.size(); i++) {
+                    if (notes.get(i).getRow() > dbNote.getRow()) {
+                        DbNote note = notes.get(i);
+                        note.setRow(note.getRow() - 1);
+                        NoteDbHandler.insertNote(note);
+                    }
+                }
+
+                // decrement the row of the sections below the deleted note
+                decrementSections(dbNote.getRow());
+            }
+            ActiveAndroid.setTransactionSuccessful();
+        } finally {
+            ActiveAndroid.endTransaction();
         }
 
         drawNotes();
@@ -498,43 +591,15 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
     @Override
     public void onSectionAdded(DbSection dbSection) {
-        changesMade = true;
         sections.add(dbSection);
+        SectionDbHandler.insertSection(dbSection);
         drawNotes();
     }
 
     @Override
     public void onSectionEdit(DbSection dbSection) {
-        changesMade = true;
+        SectionDbHandler.insertSection(dbSection);
         drawNotes();
-    }
-
-    @Override
-    public void onSaveChangesSelected() {
-
-        // save the notes and sections into db
-        ActiveAndroid.beginTransaction();
-        try {
-            NoteDbHandler.deleteNotesBySongId(dbSong.getId());
-            SectionDbHandler.deleteSectionsBySongId(dbSong.getId());
-            for (DbNote dbNote : notes) {
-                NoteDbHandler.insertNote(dbNote);
-            }
-            for (DbSection dbSection : sections) {
-                SectionDbHandler.insertSection(dbSection);
-            }
-            ActiveAndroid.setTransactionSuccessful();
-        } finally {
-            ActiveAndroid.endTransaction();
-        }
-
-        // finish the activity
-        finish();
-    }
-
-    @Override
-    public void onNotSaveChangesSelected() {
-        finish();
     }
 
     /**
@@ -584,6 +649,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             int noteRow = note.getRow();
             if (noteRow >= row) {
                 note.setRow(noteRow + 1);
+                NoteDbHandler.insertNote(note);
             }
         }
     }
@@ -598,6 +664,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             int noteRow = note.getRow();
             if (noteRow >= row) {
                 note.setRow(noteRow - 1);
+                NoteDbHandler.insertNote(note);
             }
         }
     }
@@ -606,6 +673,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         for (DbSection dbSection : sections) {
             if (dbSection.getRow() >= row) {
                 dbSection.setRow(dbSection.getRow() + 1);
+                SectionDbHandler.insertSection(dbSection);
             }
         }
     }
@@ -614,6 +682,9 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         if (notes.isEmpty()) {
 
             // delete all sections
+            for (DbSection dbSection : sections) {
+                SectionDbHandler.deleteSection(dbSection);
+            }
             sections.clear();
 
         } else {
@@ -622,6 +693,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             for (DbSection dbSection : sections) {
                 if (dbSection.getRow() > row) {
                     dbSection.setRow(dbSection.getRow() - 1);
+                    SectionDbHandler.insertSection(dbSection);
                 }
             }
 
@@ -637,6 +709,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             if (duplicateSections.size() > 1) {
                 for (int i = 1; i < duplicateSections.size(); i++) {
                     sections.remove(duplicateSections.get(i));
+                    SectionDbHandler.deleteSection(duplicateSections.get(i));
                 }
             }
         }
@@ -655,29 +728,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         }
     }
 
-    private String getNoteText(int hole, boolean blow, float bending) {
-        if (blow) {
-            if (bending == 0f) {
-                return String.format("%s", hole);
-            } else if (bending == 0.5f) {
-                return String.format("%s'", hole);
-            } else if (bending == 1f) {
-                return String.format("%s''", hole);
-            }
-        } else {
-            if (bending == 0f) {
-                return String.format("-%s", hole);
-            } else if (bending == -0.5f) {
-                return String.format("-%s'", hole);
-            } else if (bending == -1f) {
-                return String.format("-%s''", hole);
-            } else if (bending == -1.5f) {
-                return String.format("-%s'''", hole);
-            }
-        }
-        return "";
-    }
-
     /**
      * Searches if there is a section on the specified row and returns it.
      *
@@ -693,17 +743,23 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         return null;
     }
 
-    @Override
-    public void onBackPressed() {
-
-        if (changesMade) {
-            SaveChangesDialog saveChangesDialog = new SaveChangesDialog();
-            saveChangesDialog.setSong(dbSong);
-            saveChangesDialog.setListener(SongActivity.this);
-            saveChangesDialog.show(getFragmentManager(), Constants.TAG_SAVE_CHANGES_DIALOG);
-        } else {
-            super.onBackPressed();
-        }
+    private void initCustomizations() {
+        blowSign = CustomizationUtils.getBlowSign();
+        blowStyle = CustomizationUtils.getBlowStyle();
+        blowTextColor = CustomizationUtils.getBlowTextColor();
+        blowBackgroundColor = CustomizationUtils.getBlowBackgroundColor();
+        drawSign = CustomizationUtils.getDrawSign();
+        drawStyle = CustomizationUtils.getDrawStyle();
+        drawTextColor = CustomizationUtils.getDrawTextColor();
+        drawBackgroundColor = CustomizationUtils.getDrawBackgroundColor();
+        sectionStyle = CustomizationUtils.getSectionStyle();
+        sectionTextColor = CustomizationUtils.getSectionTextColor();
+        backgroundColor = CustomizationUtils.getBackgroundColor();
     }
 
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(customizationReceiver);
+        super.onDestroy();
+    }
 }

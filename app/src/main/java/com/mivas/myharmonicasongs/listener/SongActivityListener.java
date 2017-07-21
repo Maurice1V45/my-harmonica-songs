@@ -45,13 +45,4 @@ public interface SongActivityListener {
      */
     void onSectionEdit(DbSection dbSection);
 
-    /**
-     * Triggered when the users wants to save the changes.
-     */
-    void onSaveChangesSelected();
-
-    /**
-     * Triggered when the user does not want to save the changes.
-     */
-    void onNotSaveChangesSelected();
 }

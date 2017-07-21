@@ -212,8 +212,7 @@ public class ExportHelper {
                 }
 
                 // send broadcast receiver
-                Intent intent = new Intent();
-                intent.setAction(Constants.INTENT_SONGS_UPDATED);
+                Intent intent = new Intent(Constants.INTENT_SONGS_UPDATED);
                 intent.putExtra(Constants.EXTRA_SONGS_UPDATED_COUNT, dbSongs.size());
                 MHSApplication.getInstance().getApplicationContext().sendBroadcast(intent);
             }

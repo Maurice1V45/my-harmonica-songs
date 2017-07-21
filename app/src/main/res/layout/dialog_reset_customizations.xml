@@ -12,7 +12,7 @@
         android:gravity="center_horizontal"
         android:layout_gravity="center_horizontal"
         android:textColor="@color/black"
-        android:text="@string/save_changes_dialog_message"
+        android:text="@string/reset_customizations_dialog_title"
         android:textSize="@dimen/text_size_42px" />
 
     <LinearLayout

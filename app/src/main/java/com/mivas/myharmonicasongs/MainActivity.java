@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
 
         // handle item selection
         switch (item.getItemId()) {
-            case R.id.search_song_action:
+            case R.id.action_search_song:
                 if (!searchMode) {
                     searchMode = true;
                     searchView.setVisibility(View.VISIBLE);
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
                     refreshSongsList();
                 }
                 return true;
-            case R.id.add_song_action:
+            case R.id.action_add_song:
                 SongDialog songDialog = new SongDialog();
                 songDialog.setListener(MainActivity.this);
                 songDialog.show(getFragmentManager(), Constants.TAG_SONG_DIALOG);

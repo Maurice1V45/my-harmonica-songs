@@ -10,24 +10,22 @@ import android.widget.TextView;
 
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbSong;
-import com.mivas.myharmonicasongs.listener.MainActivityListener;
+import com.mivas.myharmonicasongs.listener.CustomizeActivityListener;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
 
 /**
- * Dialog for saving changes to a song.
+ * Dialog for resetting customizations.
  */
-public class SaveChangesDialog extends DialogFragment {
+public class ResetCustomizationsDialog extends DialogFragment {
 
-    private TextView titleText;
     private Button yesButton;
     private Button noButton;
-    private DbSong dbSong;
-    private SongActivityListener listener;
+    private CustomizeActivityListener listener;
 
     /**
      * Default constructor
      */
-    public SaveChangesDialog() {
+    public ResetCustomizationsDialog() {
         // empty constructor
     }
 
@@ -37,7 +35,6 @@ public class SaveChangesDialog extends DialogFragment {
      * @param rootView
      */
     private void initViews(View rootView) {
-        titleText = (TextView) rootView.findViewById(R.id.text_title);
         yesButton = (Button) rootView.findViewById(R.id.button_yes);
         noButton = (Button) rootView.findViewById(R.id.button_no);
     }
@@ -50,7 +47,7 @@ public class SaveChangesDialog extends DialogFragment {
 
             @Override
             public void onClick(View v) {
-                listener.onSaveChangesSelected();
+                listener.onResetCustomizations();
                 getDialog().dismiss();
             }
         });
@@ -58,7 +55,6 @@ public class SaveChangesDialog extends DialogFragment {
 
             @Override
             public void onClick(View v) {
-                listener.onNotSaveChangesSelected();
                 getDialog().dismiss();
             }
         });
@@ -66,7 +62,7 @@ public class SaveChangesDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_save_changes, container);
+        View view = inflater.inflate(R.layout.dialog_reset_customizations, container);
         initViews(view);
         initListeners();
         return view;
@@ -82,11 +78,7 @@ public class SaveChangesDialog extends DialogFragment {
         }
     }
 
-    public void setSong(DbSong dbSong) {
-        this.dbSong = dbSong;
-    }
-
-    public void setListener(SongActivityListener listener) {
+    public void setListener(CustomizeActivityListener listener) {
         this.listener = listener;
     }
 

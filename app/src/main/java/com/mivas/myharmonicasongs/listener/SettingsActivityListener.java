@@ -11,14 +11,7 @@ import java.util.List;
 public interface SettingsActivityListener {
 
     /**
-     * Triggered after the songs have been imported and added to db.
-     *
-     * @param dbSongs
+     * Triggered when restore songs was confirmed.
      */
-    void onSongsImported(List<DbSong> dbSongs);
-
-    /**
-     * Triggered if there was an error importing songs.
-     */
-    void onSongsImportedError();
+    void onRestoreConfirmed();
 }

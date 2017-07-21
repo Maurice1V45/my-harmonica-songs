@@ -36,6 +36,7 @@
     <string name="song_activity_menu_add_section">Add section tag</string>
     <string name="song_activity_menu_edit_section">Edit section tag</string>
     <string name="song_activity_menu_delete_section">Delete section tag</string>
+    <string name="song_activity_menu_customize">Customize</string>
     <string name="song_activity_toast_note_copied">note copied</string>
     <string name="song_activity_toast_notes_copied">notes copied</string>
     <string name="song_activity_toast_no_notes_copied">No notes copied</string>
@@ -43,17 +44,14 @@
     <!-- Note Picker Dialog -->
     <string name="note_picker_dialog_button_delete">Delete</string>
     <string name="note_picker_dialog_hint_syllable">Syllable</string>
-    <string name="note_picker_dialog_button_show_bendings">Show bendings</string>
-    <string name="note_picker_dialog_button_hide_bendings">Hide bendings</string>
+    <string name="note_picker_dialog_button_show_bendings">Show bends</string>
+    <string name="note_picker_dialog_button_hide_bendings">Hide bends</string>
 
     <!-- Section Dialog -->
     <string name="section_dialog_hint_section_name">Section name</string>
     <string name="section_dialog_toast_no_section_name">Please type in a section name</string>
     <string name="section_dialog_text_add_section">Add Section</string>
     <string name="section_dialog_text_edit_section">Edit Section</string>
-
-    <!-- Save Changes Dialog -->
-    <string name="save_changes_dialog_message">Save changes to this song?</string>
 
     <!-- Settings Activity -->
     <string name="settings_activity_text_settings">Settings</string>
@@ -73,6 +71,42 @@
     <string name="settings_activity_toast_songs_imported">songs imported</string>
     <string name="settings_activity_toast_permission_needed">Permission needed to import songs</string>
 
+    <!-- Restore Warning Dialog -->
+    <string name="restore_warning_dialog_title">This will delete the songs from your list and import songs from a backup file. Are you sure?</string>
+
     <!-- Credits Activity -->
     <string name="credits_activity_text_credits">Credits</string>
+
+    <!-- Customize Activity -->
+    <string name="customize_activity_text_customize">Customize</string>
+    <string name="customize_activity_text_blow_note">Blow note</string>
+    <string name="customize_activity_text_draw_note">Draw note</string>
+    <string name="customize_activity_text_section">Section</string>
+    <string name="customize_activity_text_chorus">Chorus</string>
+    <string name="customize_activity_background_color">Background color</string>
+    <string name="customize_activity_background_color_title">Choose background color</string>
+    <string name="customize_activity_menu_reset">Reset</string>
+    <string name="customize_activity_toast_customizations_reset">Customizations reset</string>
+
+    <!-- Reset Customizations Dialog -->
+    <string name="reset_customizations_dialog_title">Are you sure you want to reset customizations to default settings?</string>
+
+    <!-- Customize Note Activity-->
+    <string name="customize_note_activity_text_color_title">Choose text color</string>
+    <string name="customize_note_activity_background_color_title">Choose background color</string>
+    <string name="customize_note_activity_text_blow_title">Customize Blow Note</string>
+    <string name="customize_note_activity_text_draw_title">Customize Draw Note</string>
+    <string name="customize_note_activity_text_preview">(preview)</string>
+    <string name="customize_note_activity_text_sign">Sign</string>
+    <string name="customize_note_activity_text_style">Style</string>
+    <string name="customize_note_activity_text_text_color">Text color</string>
+    <string name="customize_note_activity_text_background_color">Background color</string>
+
+    <!-- Customize Section Activity-->
+    <string name="customize_section_activity_title">Customize Section</string>
+    <string name="customize_section_activity_text_chorus">Chorus</string>
+    <string name="customize_section_activity_text_preview">(preview)</string>
+    <string name="customize_section_activity_text_style">Style</string>
+    <string name="customize_section_activity_text_text_color">Text color</string>
+    <string name="customize_section_activity_text_color_title">Choose text color</string>
 </resources>

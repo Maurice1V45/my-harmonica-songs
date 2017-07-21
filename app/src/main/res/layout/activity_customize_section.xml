@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/image_background"
+    android:orientation="vertical"
+    tools:context="com.mivas.myharmonicasongs.CustomizeNoteActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/black_30"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="@string/customize_section_activity_title"
+        app:titleTextColor="@color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/greyEE">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:scrollbars="none">
+
+            <TextView
+                android:id="@+id/text_preview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/bu3"
+                android:text="@string/customize_section_activity_text_chorus"
+                android:textSize="@dimen/text_size_48px" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/bu0_25"
+                android:text="@string/customize_note_activity_text_preview"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_30px" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/bu1"
+                android:layout_marginRight="@dimen/bu1"
+                android:layout_marginTop="@dimen/bu3"
+                android:background="@color/greyCC" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bu0_5"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="@dimen/bu6"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/bu1"
+                    android:text="@string/customize_section_activity_text_style"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_36px" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list_styles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/bu1"
+                android:layout_marginRight="@dimen/bu1"
+                android:layout_marginTop="@dimen/bu0_5"
+                android:background="@color/greyCC" />
+
+            <RelativeLayout
+                android:id="@+id/view_text_color"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu5"
+                android:background="@drawable/selector_settings_item"
+                android:clickable="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu1"
+                    android:text="@string/customize_section_activity_text_text_color"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_36px" />
+
+                <View
+                    android:id="@+id/view_text_color_color"
+                    android:layout_width="@dimen/bu4"
+                    android:layout_height="@dimen/bu4"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/bu1" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/bu1"
+                    android:layout_marginRight="@dimen/bu1"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

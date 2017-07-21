@@ -32,6 +32,15 @@
         <activity
             android:name=".SettingsActivity"
             android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".CustomizeActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".CustomizeNoteActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".CustomizeSectionActivity"
+            android:configChanges="orientation|screenSize" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

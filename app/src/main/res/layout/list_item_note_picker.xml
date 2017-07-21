@@ -15,10 +15,10 @@
             android:layout_width="@dimen/bu3"
             android:layout_height="@dimen/bu3"
             android:layout_marginTop="@dimen/bu0_5"
-            android:background="@drawable/selector_harmonica_note"
             android:clickable="true"
             android:gravity="center"
-            android:textSize="@dimen/text_size_48px"
+            android:maxLines="1"
+            android:textSize="@dimen/text_size_42px"
             android:visibility="gone" />
 
         <TextView
@@ -27,10 +27,10 @@
             android:layout_height="@dimen/bu3"
             android:layout_marginBottom="@dimen/bu0_5"
             android:layout_marginTop="@dimen/bu0_5"
-            android:background="@drawable/selector_harmonica_note"
             android:clickable="true"
             android:gravity="center"
-            android:textSize="@dimen/text_size_48px"
+            android:maxLines="1"
+            android:textSize="@dimen/text_size_42px"
             android:visibility="gone" />
 
         <RelativeLayout
@@ -54,10 +54,10 @@
                     android:layout_width="@dimen/bu3"
                     android:layout_height="@dimen/bu3"
                     android:layout_marginTop="@dimen/bu0_5"
-                    android:background="@drawable/selector_harmonica_note"
                     android:clickable="true"
                     android:gravity="center"
-                    android:textSize="@dimen/text_size_48px" />
+                    android:maxLines="1"
+                    android:textSize="@dimen/text_size_42px" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -80,10 +80,10 @@
                     android:layout_width="@dimen/bu3"
                     android:layout_height="@dimen/bu3"
                     android:layout_marginBottom="@dimen/bu0_5"
-                    android:background="@drawable/selector_harmonica_note"
                     android:clickable="true"
                     android:gravity="center"
-                    android:textSize="@dimen/text_size_48px" />
+                    android:maxLines="1"
+                    android:textSize="@dimen/text_size_42px" />
 
                 <View
                     android:layout_width="match_parent"
@@ -114,10 +114,10 @@
             android:layout_height="@dimen/bu3"
             android:layout_marginBottom="@dimen/bu0_5"
             android:layout_marginTop="@dimen/bu0_5"
-            android:background="@drawable/selector_harmonica_note"
             android:clickable="true"
             android:gravity="center"
-            android:textSize="@dimen/text_size_48px"
+            android:maxLines="1"
+            android:textSize="@dimen/text_size_42px"
             android:visibility="gone" />
 
         <TextView
@@ -125,10 +125,10 @@
             android:layout_width="@dimen/bu3"
             android:layout_height="@dimen/bu3"
             android:layout_marginBottom="@dimen/bu0_5"
-            android:background="@drawable/selector_harmonica_note"
             android:clickable="true"
             android:gravity="center"
-            android:textSize="@dimen/text_size_48px"
+            android:maxLines="1"
+            android:textSize="@dimen/text_size_42px"
             android:visibility="gone" />
 
         <TextView
@@ -136,12 +136,10 @@
             android:layout_width="@dimen/bu3"
             android:layout_height="@dimen/bu3"
             android:layout_marginBottom="@dimen/bu0_5"
-            android:background="@drawable/selector_harmonica_note"
             android:clickable="true"
             android:gravity="center"
-            android:textSize="@dimen/text_size_48px"
+            android:maxLines="1"
+            android:textSize="@dimen/text_size_42px"
             android:visibility="gone" />
-
     </LinearLayout>
-
 </LinearLayout>

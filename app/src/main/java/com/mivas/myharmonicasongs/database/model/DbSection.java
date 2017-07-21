@@ -28,6 +28,12 @@ public class DbSection extends Model {
         this.songId = songId;
     }
 
+    public DbSection(DbSection dbSection) {
+        this.name = dbSection.getName();
+        this.row = dbSection.getRow();
+        this.songId = dbSection.getSongId();
+    }
+
     public String getName() {
         return name;
     }

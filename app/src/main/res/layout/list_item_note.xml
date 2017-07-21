@@ -7,7 +7,6 @@
         android:layout_width="@dimen/bu4"
         android:layout_height="@dimen/bu5_5"
         android:layout_margin="@dimen/bu0_25"
-        android:background="@drawable/selector_note"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -15,7 +14,7 @@
             android:id="@+id/text_note"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:maxLines="1"
             android:textSize="@dimen/text_size_48px" />
 
         <TextView
@@ -24,7 +23,6 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/black"
             android:textSize="@dimen/text_size_20px" />
     </LinearLayout>
 

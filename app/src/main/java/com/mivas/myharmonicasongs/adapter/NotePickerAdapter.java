@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.listener.NotePickerDialogListener;
+import com.mivas.myharmonicasongs.util.Constants;
+import com.mivas.myharmonicasongs.util.CustomizationUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +27,14 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
     private NotePickerDialogListener listener;
     private DbNote selectedNote;
     private boolean showBendings = false;
+    private int blowSign;
+    private int blowStyle;
+    private int blowTextColor;
+    private int blowBackgroundColor;
+    private int drawSign;
+    private int drawStyle;
+    private int drawTextColor;
+    private int drawBackgroundColor;
     private static final Map<Integer, Float> BENDINGS_MAP = new HashMap<>();
     static {
         BENDINGS_MAP.put(1, -0.5f);
@@ -44,6 +54,14 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
         this.listener = listener;
         this.selectedNote = selectedNote;
         this.showBendings = showBendings;
+        blowSign = CustomizationUtils.getBlowSign();
+        blowStyle = CustomizationUtils.getBlowStyle();
+        blowTextColor = CustomizationUtils.getBlowTextColor();
+        blowBackgroundColor = CustomizationUtils.getBlowBackgroundColor();
+        drawSign = CustomizationUtils.getDrawSign();
+        drawStyle = CustomizationUtils.getDrawStyle();
+        drawTextColor = CustomizationUtils.getDrawTextColor();
+        drawBackgroundColor = CustomizationUtils.getDrawBackgroundColor();
     }
 
     @Override
@@ -58,15 +76,54 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
         final int note = position + 1;
 
         // set hole text
-        holder.upperNote.setText(String.format("%s", note));
-        if (selectedNote != null && selectedNote.getHole() == position + 1 && selectedNote.isBlow() && selectedNote.getBend() == 0f) {
+        CustomizationUtils.styleNoteText(holder.upperNote, note, 0f, blowSign, blowStyle, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
+        CustomizationUtils.styleNoteText(holder.lowerNote, note, 0f, drawSign, drawStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
+        if (showBendings) {
+            CustomizationUtils.styleNoteText(holder.upperNoteBend2, note, 1f, blowSign, blowStyle, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
+            CustomizationUtils.styleNoteText(holder.upperNoteBend1, note, 0.5f, blowSign, blowStyle, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
+            CustomizationUtils.styleNoteText(holder.lowerNoteBend1, note, -0.5f, drawSign, drawStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
+            CustomizationUtils.styleNoteText(holder.lowerNoteBend2, note, -1f, drawSign, drawStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
+            CustomizationUtils.styleNoteText(holder.lowerNoteBend3, note, -1.5f, drawSign, drawStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
+        }
+
+        // set hole background
+        holder.upperNote.setBackground(CustomizationUtils.createNotePickerBackground(context, blowBackgroundColor));
+        holder.lowerNote.setBackground(CustomizationUtils.createNotePickerBackground(context, drawBackgroundColor));
+        if (showBendings) {
+            holder.upperNoteBend2.setBackground(CustomizationUtils.createNotePickerBackground(context, blowBackgroundColor));
+            holder.upperNoteBend1.setBackground(CustomizationUtils.createNotePickerBackground(context, blowBackgroundColor));
+            holder.lowerNoteBend1.setBackground(CustomizationUtils.createNotePickerBackground(context, drawBackgroundColor));
+            holder.lowerNoteBend2.setBackground(CustomizationUtils.createNotePickerBackground(context, drawBackgroundColor));
+            holder.lowerNoteBend3.setBackground(CustomizationUtils.createNotePickerBackground(context, drawBackgroundColor));
+        }
+
+        if (selectedNote != null && selectedNote.getHole() == position + 1) {
+            TextView selectedView = null;
+            if (selectedNote.getBend() == 0f) {
+                selectedView = selectedNote.isBlow() ? holder.upperNote : holder.lowerNote;
+            } else if (selectedNote.getBend() == 0.5f) {
+                selectedView = holder.upperNoteBend1;
+            } else if (selectedNote.getBend() == 1f) {
+                selectedView = holder.upperNoteBend2;
+            } else if (selectedNote.getBend() == -0.5f) {
+                selectedView = holder.lowerNoteBend1;
+            } else if (selectedNote.getBend() == -1f) {
+                selectedView = holder.lowerNoteBend2;
+            } else if (selectedNote.getBend() == -1.5f) {
+                selectedView = holder.lowerNoteBend3;
+            }
+            if (selectedView != null) {
+                CustomizationUtils.styleNoteText(selectedView, note, selectedNote.getBend(), selectedNote.isBlow() ? blowSign : drawSign, selectedNote.isBlow() ? blowStyle : drawStyle, Constants.DEFAULT_COLOR_WHITE);
+                selectedView.setBackground(CustomizationUtils.createSimpleBackground(context, 12, Constants.DEFAULT_COLOR_PRIMARY));
+            }
+        }
+        /*if (selectedNote != null && selectedNote.getHole() == position + 1 && selectedNote.isBlow() && selectedNote.getBend() == 0f) {
             holder.upperNote.setBackgroundResource(R.drawable.shape_harmonica_note_pressed);
             holder.upperNote.setTextColor(ContextCompat.getColor(context, R.color.white));
         } else {
             holder.upperNote.setBackgroundResource(R.drawable.selector_harmonica_note);
             holder.upperNote.setTextColor(ContextCompat.getColorStateList(context, R.color.selector_harmonica_note_text));
         }
-        holder.lowerNote.setText(String.format("-%s", note));
         if (selectedNote != null && selectedNote.getHole() == position + 1 && !selectedNote.isBlow() && selectedNote.getBend() == 0f) {
             holder.lowerNote.setBackgroundResource(R.drawable.shape_harmonica_note_pressed);
             holder.lowerNote.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -75,7 +132,6 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
             holder.lowerNote.setTextColor(ContextCompat.getColorStateList(context, R.color.selector_harmonica_note_text));
         }
         if (showBendings) {
-            holder.upperNoteBend2.setText(String.format("%s''", note));
             if (selectedNote != null && selectedNote.getHole() == position + 1 && selectedNote.isBlow() && selectedNote.getBend() == 1f) {
                 holder.upperNoteBend2.setBackgroundResource(R.drawable.shape_harmonica_note_pressed);
                 holder.upperNoteBend2.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -83,7 +139,6 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
                 holder.upperNoteBend2.setBackgroundResource(R.drawable.selector_harmonica_note);
                 holder.upperNoteBend2.setTextColor(ContextCompat.getColorStateList(context, R.color.selector_harmonica_note_text));
             }
-            holder.upperNoteBend1.setText(String.format("%s'", note));
             if (selectedNote != null && selectedNote.getHole() == position + 1 && selectedNote.isBlow() && selectedNote.getBend() == 0.5f) {
                 holder.upperNoteBend1.setBackgroundResource(R.drawable.shape_harmonica_note_pressed);
                 holder.upperNoteBend1.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -91,7 +146,6 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
                 holder.upperNoteBend1.setBackgroundResource(R.drawable.selector_harmonica_note);
                 holder.upperNoteBend1.setTextColor(ContextCompat.getColorStateList(context, R.color.selector_harmonica_note_text));
             }
-            holder.lowerNoteBend1.setText(String.format("-%s'", note));
             if (selectedNote != null && selectedNote.getHole() == position + 1 && !selectedNote.isBlow() && selectedNote.getBend() == -0.5f) {
                 holder.lowerNoteBend1.setBackgroundResource(R.drawable.shape_harmonica_note_pressed);
                 holder.lowerNoteBend1.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -99,7 +153,6 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
                 holder.lowerNoteBend1.setBackgroundResource(R.drawable.selector_harmonica_note);
                 holder.lowerNoteBend1.setTextColor(ContextCompat.getColorStateList(context, R.color.selector_harmonica_note_text));
             }
-            holder.lowerNoteBend2.setText(String.format("-%s''", note));
             if (selectedNote != null && selectedNote.getHole() == position + 1 && !selectedNote.isBlow() && selectedNote.getBend() == -1f) {
                 holder.lowerNoteBend2.setBackgroundResource(R.drawable.shape_harmonica_note_pressed);
                 holder.lowerNoteBend2.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -107,7 +160,6 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
                 holder.lowerNoteBend2.setBackgroundResource(R.drawable.selector_harmonica_note);
                 holder.lowerNoteBend2.setTextColor(ContextCompat.getColorStateList(context, R.color.selector_harmonica_note_text));
             }
-            holder.lowerNoteBend3.setText(String.format("-%s'''", note));
             if (selectedNote != null && selectedNote.getHole() == position + 1 && !selectedNote.isBlow() && selectedNote.getBend() == -1.5f) {
                 holder.lowerNoteBend3.setBackgroundResource(R.drawable.shape_harmonica_note_pressed);
                 holder.lowerNoteBend3.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -115,7 +167,7 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
                 holder.lowerNoteBend3.setBackgroundResource(R.drawable.selector_harmonica_note);
                 holder.lowerNoteBend3.setTextColor(ContextCompat.getColorStateList(context, R.color.selector_harmonica_note_text));
             }
-        }
+        }*/
 
         // set hole listeners
         holder.upperNote.setOnClickListener(new View.OnClickListener() {

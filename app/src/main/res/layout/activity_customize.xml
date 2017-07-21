@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/image_background"
+    android:orientation="vertical"
+    tools:context="com.mivas.myharmonicasongs.SettingsActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/black_30"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="@string/customize_activity_text_customize"
+        app:titleTextColor="@color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/greyEE">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:scrollbars="none">
+
+            <RelativeLayout
+                android:id="@+id/view_blow_note"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu5"
+                android:background="@drawable/selector_settings_item"
+                android:clickable="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu2"
+                    android:text="@string/customize_activity_text_blow_note"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_36px" />
+
+                <RelativeLayout
+                    android:id="@+id/view_blow_background"
+                    android:layout_width="@dimen/bu3"
+                    android:layout_height="@dimen/bu4"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/bu1_5">
+
+                    <TextView
+                        android:id="@+id/text_blow_note"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:textSize="@dimen/text_size_40px" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/bu1"
+                    android:layout_marginRight="@dimen/bu1"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/view_draw_note"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu5"
+                android:background="@drawable/selector_settings_item"
+                android:clickable="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu2"
+                    android:text="@string/customize_activity_text_draw_note"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_36px" />
+
+                <RelativeLayout
+                    android:id="@+id/view_draw_background"
+                    android:layout_width="@dimen/bu3"
+                    android:layout_height="@dimen/bu4"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/bu1_5">
+
+                    <TextView
+                        android:id="@+id/text_draw_note"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:textSize="@dimen/text_size_40px" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/bu1"
+                    android:layout_marginRight="@dimen/bu1"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/view_section"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu5"
+                android:background="@drawable/selector_settings_item"
+                android:clickable="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu2"
+                    android:text="@string/customize_activity_text_section"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_36px" />
+
+                    <TextView
+                        android:id="@+id/text_section"
+                        android:layout_alignParentRight="true"
+                        android:layout_width="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/customize_activity_text_chorus"
+                        android:layout_marginRight="@dimen/bu1_5"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_34px" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/bu1"
+                    android:layout_marginRight="@dimen/bu1"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/view_background_color"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu5"
+                android:background="@drawable/selector_settings_item"
+                android:clickable="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu2"
+                    android:text="@string/customize_activity_background_color"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_36px" />
+
+                <View
+                    android:id="@+id/view_background_color_color"
+                    android:layout_width="@dimen/bu4"
+                    android:layout_height="@dimen/bu4"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/bu1">
+                </View>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/bu1"
+                    android:layout_marginRight="@dimen/bu1"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

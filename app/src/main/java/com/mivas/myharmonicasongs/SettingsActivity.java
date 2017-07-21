@@ -17,6 +17,9 @@ import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbSong;
+import com.mivas.myharmonicasongs.dialog.RestoreWarningDialog;
+import com.mivas.myharmonicasongs.listener.SettingsActivityListener;
+import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.ExportHelper;
 
@@ -28,7 +31,7 @@ import java.util.List;
 /**
  * Settings activity.
  */
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity implements SettingsActivityListener {
 
     private View backupView;
     private View restoreView;
@@ -70,11 +73,10 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(SettingsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
-                } else {
-                    launchRestoreSongsActivity();
-                }
+                RestoreWarningDialog dialog = new RestoreWarningDialog();
+                dialog.setListener(SettingsActivity.this);
+                dialog.show(getFragmentManager(), Constants.TAG_RESTORE_WARNING_DIALOG);
+
             }
         });
         creditsView.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +136,15 @@ public class SettingsActivity extends AppCompatActivity {
             }
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void onRestoreConfirmed() {
+        if (ContextCompat.checkSelfPermission(SettingsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
+        } else {
+            launchRestoreSongsActivity();
         }
     }
 }
