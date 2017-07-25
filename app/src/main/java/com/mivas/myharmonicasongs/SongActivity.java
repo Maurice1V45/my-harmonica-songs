@@ -1,24 +1,36 @@
 package com.mivas.myharmonicasongs;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
+import com.mivas.myharmonicasongs.animation.SlideAnimation;
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SectionDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
@@ -31,12 +43,19 @@ import com.mivas.myharmonicasongs.listener.SongActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
+import com.mivas.myharmonicasongs.util.DimensionUtils;
+import com.mivas.myharmonicasongs.util.ExportHelper;
 
+import org.w3c.dom.Text;
+
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Activity that displays notes.
@@ -51,7 +70,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private TextView noNotesText;
     private List<DbNote> copiedNotes = new ArrayList<DbNote>();
     private View backgroundView;
-    private NotePickerDialog notePickerDialog;
     private int blowSign;
     private int blowStyle;
     private int blowTextColor;
@@ -63,6 +81,14 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private int sectionStyle;
     private int sectionTextColor;
     private int backgroundColor;
+    private MediaPlayer mediaPlayer;
+    private ImageView playButton;
+    private SeekBar songProgressBar;
+    private Handler mediaHandler;
+    private TextView mediaCurrentTimeText;
+    private TextView mediaTotalTimeText;
+    private boolean mediaViewDisplayed = false;
+    private View mediaView;
     private BroadcastReceiver customizationReceiver = new BroadcastReceiver() {
 
         @Override
@@ -72,6 +98,10 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             backgroundView.setBackgroundColor(backgroundColor);
         }
     };
+    private Runnable updateSongViewsRunnable;
+
+    private static final int REQUEST_CODE_ADD_INSTRUMENTAL = 1;
+    private static final int REQUEST_CODE_STORAGE_PERMISSION = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +109,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         setContentView(R.layout.activity_song);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         initViews();
+        initListeners();
         initCustomizations();
         initComparator();
 
@@ -88,7 +119,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         getSupportActionBar().setTitle(dbSong.getTitle());
         backgroundView.setBackgroundColor(backgroundColor);
         drawNotes();
-        notePickerDialog = new NotePickerDialog();
+        initMediaPlayer();
         registerReceiver(customizationReceiver, new IntentFilter(Constants.INTENT_CUSTOMIZATIONS_UPDATED));
     }
 
@@ -104,9 +135,32 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
         // handle item selection
         switch (item.getItemId()) {
+            case R.id.action_add_instrumental:
+                if (ContextCompat.checkSelfPermission(SongActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(SongActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
+                } else {
+                    launchAddInstrumentalActivity();
+                }
+                return true;
             case R.id.action_customize:
                 Intent intent = new Intent(SongActivity.this, CustomizeActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.action_toggle_media:
+                if (dbSong.getInstrumental() == null) {
+                    CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_no_instrumental, Toast.LENGTH_SHORT).show();
+                } else {
+                    if (mediaViewDisplayed) {
+                        SlideAnimation slideAnimation = new SlideAnimation(mediaView, 100, SlideAnimation.COLLAPSE);
+                        slideAnimation.setHeight(DimensionUtils.dpToPx(SongActivity.this, 72));
+                        mediaView.startAnimation(slideAnimation);
+                    } else {
+                        SlideAnimation slideAnimation = new SlideAnimation(mediaView, 100, SlideAnimation.EXPAND);
+                        slideAnimation.setHeight(DimensionUtils.dpToPx(SongActivity.this, 72));
+                        mediaView.startAnimation(slideAnimation);
+                    }
+                    mediaViewDisplayed = !mediaViewDisplayed;
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -123,6 +177,95 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         noNotesText = (TextView) findViewById(R.id.text_no_notes);
         backgroundView = findViewById(R.id.view_background);
         backgroundView.setBackgroundColor(backgroundColor);
+        playButton = (ImageView) findViewById(R.id.button_play);
+        songProgressBar = (SeekBar) findViewById(R.id.seek_bar_progress);
+        mediaCurrentTimeText = (TextView) findViewById(R.id.text_current_time);
+        mediaTotalTimeText = (TextView) findViewById(R.id.text_total_time);
+        mediaView = findViewById(R.id.view_media);
+    }
+
+    /**
+     * Listeners initializer.
+     */
+    private void initListeners() {
+        playButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.pause();
+                    playButton.setImageResource(R.drawable.selector_play_button);
+                } else {
+                    mediaPlayer.start();
+                    playButton.setImageResource(R.drawable.selector_pause_button);
+                }
+            }
+        });
+    }
+
+    private void initMediaPlayer() {
+        if (dbSong.getInstrumental() != null) {
+
+            // prepare song
+            Uri songUri = ExportHelper.getInstance().getInstrumentalUri(SongActivity.this, dbSong);
+            mediaPlayer = MediaPlayer.create(SongActivity.this, songUri);
+
+            // init progress bar
+            final int finalTime = mediaPlayer.getDuration();
+            songProgressBar.setMax(finalTime);
+            songProgressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (fromUser) {
+                        mediaPlayer.seekTo(progress);
+                        updateTimeText(mediaCurrentTimeText, progress);
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
+            // init time texts
+            updateTimeText(mediaCurrentTimeText, mediaPlayer.getCurrentPosition());
+            updateTimeText(mediaTotalTimeText, finalTime);
+
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    playButton.setImageResource(R.drawable.selector_play_button);
+                }
+            });
+
+            // init update handler
+            mediaHandler = new Handler();
+            updateSongViewsRunnable = new Runnable() {
+                public void run() {
+                    int currentTime = mediaPlayer.getCurrentPosition();
+                    songProgressBar.setProgress(currentTime);
+                    updateTimeText(mediaCurrentTimeText, currentTime > finalTime ? finalTime : currentTime);
+                    mediaHandler.postDelayed(this, 100);
+                }
+            };
+            mediaHandler.postDelayed(updateSongViewsRunnable, 100);
+
+        }
+    }
+
+    private void updateTimeText(TextView textView, int time) {
+        textView.setText(String.format("%d:%02d",
+                TimeUnit.MILLISECONDS.toMinutes(time),
+                TimeUnit.MILLISECONDS.toSeconds(time) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time))));
     }
 
     /**
@@ -758,8 +901,55 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_ADD_INSTRUMENTAL && resultCode == RESULT_OK) {
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(data.getData());
+                String fileName = ExportHelper.getInstance().getFileName(SongActivity.this, data.getData());
+                String finalName = dbSong.getId() + "-" + fileName;
+                ExportHelper.getInstance().saveToInternalStorage(SongActivity.this, finalName, inputStream);
+                dbSong.setInstrumental(finalName);
+                SongDbHandler.insertSong(dbSong);
+            } catch (Exception e) {
+                e.printStackTrace();
+                CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_add_instrumental_error, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_STORAGE_PERMISSION: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    launchAddInstrumentalActivity();
+                } else {
+                    CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_permission_needed, Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+            default:
+                break;
+        }
+    }
+
+    private void launchAddInstrumentalActivity() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("file/*.mp3");
+        startActivityForResult(intent, REQUEST_CODE_ADD_INSTRUMENTAL);
+    }
+
+    @Override
     protected void onDestroy() {
         unregisterReceiver(customizationReceiver);
+        if (mediaPlayer != null) {
+            mediaHandler.removeCallbacks(updateSongViewsRunnable);
+            mediaPlayer.stop();
+            mediaPlayer.release();
+        }
         super.onDestroy();
     }
 }

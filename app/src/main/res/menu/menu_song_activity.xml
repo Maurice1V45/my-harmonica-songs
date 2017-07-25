@@ -4,6 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mivas.myharmonicasongs.MainActivity">
     <item
+        android:id="@+id/action_toggle_media"
+        android:icon="@drawable/icon_note"
+        android:title="@string/song_activity_menu_toggle_media"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_add_instrumental"
+        android:title="@string/song_activity_menu_add_instrumental"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_customize"
         android:title="@string/song_activity_menu_customize"
         app:showAsAction="never" />

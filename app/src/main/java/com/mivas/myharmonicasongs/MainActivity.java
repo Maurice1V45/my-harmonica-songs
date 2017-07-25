@@ -157,20 +157,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         switch (item.getItemId()) {
             case R.id.action_search_song:
                 if (!searchMode) {
-                    searchMode = true;
                     searchView.setVisibility(View.VISIBLE);
                     KeyboardUtils.focusEditText(MainActivity.this, searchField);
                     SlideAnimation slideAnimation = new SlideAnimation(searchView, 200, SlideAnimation.EXPAND);
                     slideAnimation.setHeight(DimensionUtils.dpToPx(MainActivity.this, 66));
                     searchView.startAnimation(slideAnimation);
                 } else {
-                    searchMode = false;
                     KeyboardUtils.closeKeyboard(MainActivity.this);
                     searchField.setText("");
                     SlideAnimation slideAnimation = new SlideAnimation(searchView, 200, SlideAnimation.COLLAPSE);
                     searchView.startAnimation(slideAnimation);
                     refreshSongsList();
                 }
+                searchMode = !searchMode;
                 return true;
             case R.id.action_add_song:
                 SongDialog songDialog = new SongDialog();

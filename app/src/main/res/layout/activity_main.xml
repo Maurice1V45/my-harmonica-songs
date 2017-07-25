@@ -17,11 +17,10 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:titleTextColor="@color/white" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:orientation="vertical">
+        android:layout_marginTop="?attr/actionBarSize">
 
         <RelativeLayout
             android:id="@+id/view_search"
@@ -67,11 +66,12 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_songs"
             android:layout_width="match_parent"
+            android:layout_below="@+id/view_search"
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingBottom="@dimen/bu0_33"
             android:paddingTop="@dimen/bu0_33" />
-    </LinearLayout>
+    </RelativeLayout>
 
 
     <TextView

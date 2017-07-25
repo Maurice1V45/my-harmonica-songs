@@ -2,7 +2,9 @@ package com.mivas.myharmonicasongs.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
@@ -24,7 +26,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -230,5 +236,57 @@ public class ExportHelper {
         intent.setType("file/*");
         intent.putExtra(Intent.EXTRA_STREAM, contentUri);
         context.startActivity(Intent.createChooser(intent, context.getString(R.string.settings_activity_text_export_to)));
+    }
+
+    public void saveToInternalStorage(Context context, String fileName, InputStream inputStream) throws Exception {
+        File instrumentalsDir = new File(context.getFilesDir() + "/Instrumentals");
+        if (!instrumentalsDir.exists()) {
+            instrumentalsDir.mkdir();
+        }
+        File file = new File(instrumentalsDir, fileName);
+        OutputStream output = new FileOutputStream(file);
+        try {
+            byte[] buffer = new byte[4 * 1024];
+            int read;
+
+            while ((read = inputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, read);
+            }
+            output.flush();
+        } finally {
+            output.close();
+            inputStream.close();
+        }
+    }
+
+    public Uri getInstrumentalUri(Context context, DbSong dbSong) {
+        File instrumentalsDir = new File(context.getFilesDir() + "/Instrumentals");
+        if (!instrumentalsDir.exists()) {
+            instrumentalsDir.mkdir();
+        }
+        File file = new File(instrumentalsDir, dbSong.getInstrumental());
+        return Uri.fromFile(file);
+    }
+
+    public String getFileName(Context context, Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
     }
 }

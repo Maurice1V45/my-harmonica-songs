@@ -22,6 +22,9 @@ public class DbSong extends Model {
     @Column(name = "song_key")
     private int key;
 
+    @Column(name = "instrumental")
+    private String instrumental;
+
     public String getTitle() {
         return title;
     }
@@ -52,5 +55,13 @@ public class DbSong extends Model {
 
     public void setKey(int key) {
         this.key = key;
+    }
+
+    public String getInstrumental() {
+        return instrumental;
+    }
+
+    public void setInstrumental(String instrumental) {
+        this.instrumental = instrumental;
     }
 }

@@ -23,6 +23,58 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize">
 
+        <RelativeLayout
+            android:id="@+id/view_media"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:background="@color/greyDD"
+                android:layout_height="@dimen/bu6">
+
+                <ImageView
+                    android:id="@+id/button_play"
+                    android:layout_width="@dimen/bu4"
+                    android:layout_height="@dimen/bu4"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/bu1"
+                    android:clickable="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/selector_play_button" />
+
+                <SeekBar
+                    android:id="@+id/seek_bar_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/button_play" />
+
+                <TextView
+                    android:id="@+id/text_current_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/seek_bar_progress"
+                    android:layout_below="@+id/seek_bar_progress"
+                    android:layout_marginLeft="@dimen/bu1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_22px" />
+
+                <TextView
+                    android:id="@+id/text_total_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@+id/seek_bar_progress"
+                    android:layout_below="@+id/seek_bar_progress"
+                    android:layout_marginRight="@dimen/bu1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_22px" />
+            </RelativeLayout>
+        </RelativeLayout>
+
         <TextView
             android:id="@+id/text_no_notes"
             android:layout_width="wrap_content"
@@ -38,6 +90,7 @@
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/view_media"
             android:clipToPadding="false"
             android:paddingBottom="@dimen/bu0_25"
             android:paddingTop="@dimen/bu0_25"
