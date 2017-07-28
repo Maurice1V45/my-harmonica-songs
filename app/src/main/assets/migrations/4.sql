@@ -1,0 +1,1 @@
+ALTER TABLE songs ADD COLUMN audio_file TEXT;

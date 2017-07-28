@@ -22,8 +22,8 @@ public class DbSong extends Model {
     @Column(name = "song_key")
     private int key;
 
-    @Column(name = "instrumental")
-    private String instrumental;
+    @Column(name = "audio_file")
+    private String audioFile;
 
     public String getTitle() {
         return title;
@@ -57,11 +57,11 @@ public class DbSong extends Model {
         this.key = key;
     }
 
-    public String getInstrumental() {
-        return instrumental;
+    public String getAudioFile() {
+        return audioFile;
     }
 
-    public void setInstrumental(String instrumental) {
-        this.instrumental = instrumental;
+    public void setAudioFile(String audioFile) {
+        this.audioFile = audioFile;
     }
 }

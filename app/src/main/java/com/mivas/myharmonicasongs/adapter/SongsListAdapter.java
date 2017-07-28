@@ -44,7 +44,7 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
     public void onBindViewHolder(final SongViewHolder holder, int position) {
         final DbSong dbSong = songs.get(position);
 
-        // set song key, title and author
+        // set song key, audio file, title and author
         holder.keyText.setText(SongKeyUtils.getKey(dbSong.getKey()));
         int key = dbSong.getKey();
         if (key == 1 || key == 3 || key == 6 || key == 8 || key == 10) {
@@ -52,6 +52,7 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
         } else {
             holder.keyText.setTextSize(35);
         }
+        holder.audioFileIcon.setVisibility(dbSong.getAudioFile() == null ? View.GONE : View.VISIBLE);
         holder.titleText.setText(dbSong.getTitle());
         if (dbSong.getAuthor().isEmpty()) {
             holder.authorText.setVisibility(View.GONE);
@@ -116,6 +117,7 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
         TextView keyText;
         View moreButton;
         View songView;
+        View audioFileIcon;
 
         SongViewHolder(View itemView) {
             super(itemView);
@@ -124,6 +126,7 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
             keyText = (TextView) itemView.findViewById(R.id.text_key);
             moreButton = itemView.findViewById(R.id.button_more);
             songView = itemView.findViewById(R.id.view_song);
+            audioFileIcon = itemView.findViewById(R.id.icon_audio_file);
         }
     }
 

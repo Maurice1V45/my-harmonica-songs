@@ -26,7 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -239,11 +238,11 @@ public class ExportHelper {
     }
 
     public void saveToInternalStorage(Context context, String fileName, InputStream inputStream) throws Exception {
-        File instrumentalsDir = new File(context.getFilesDir() + "/Instrumentals");
-        if (!instrumentalsDir.exists()) {
-            instrumentalsDir.mkdir();
+        File audioFilesDir = new File(context.getFilesDir() + "/Audio Files");
+        if (!audioFilesDir.exists()) {
+            audioFilesDir.mkdir();
         }
-        File file = new File(instrumentalsDir, fileName);
+        File file = new File(audioFilesDir, fileName);
         OutputStream output = new FileOutputStream(file);
         try {
             byte[] buffer = new byte[4 * 1024];
@@ -259,12 +258,12 @@ public class ExportHelper {
         }
     }
 
-    public Uri getInstrumentalUri(Context context, DbSong dbSong) {
-        File instrumentalsDir = new File(context.getFilesDir() + "/Instrumentals");
-        if (!instrumentalsDir.exists()) {
-            instrumentalsDir.mkdir();
+    public Uri getAudioFileUri(Context context, DbSong dbSong) {
+        File audioFilesDir = new File(context.getFilesDir() + "/Audio Files");
+        if (!audioFilesDir.exists()) {
+            audioFilesDir.mkdir();
         }
-        File file = new File(instrumentalsDir, dbSong.getInstrumental());
+        File file = new File(audioFilesDir, dbSong.getAudioFile());
         return Uri.fromFile(file);
     }
 
@@ -288,5 +287,10 @@ public class ExportHelper {
             }
         }
         return result;
+    }
+
+    public void removeAudioFile(Context context, DbSong dbSong) {
+        File file = new File(context.getFilesDir() + "/Audio Files", dbSong.getAudioFile());
+        file.delete();
     }
 }

@@ -17,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,6 +38,7 @@ import com.mivas.myharmonicasongs.database.model.DbSection;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.dialog.NotePickerDialog;
 import com.mivas.myharmonicasongs.dialog.SectionDialog;
+import com.mivas.myharmonicasongs.exception.MediaPlayerException;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
@@ -46,9 +46,6 @@ import com.mivas.myharmonicasongs.util.CustomizationUtils;
 import com.mivas.myharmonicasongs.util.DimensionUtils;
 import com.mivas.myharmonicasongs.util.ExportHelper;
 
-import org.w3c.dom.Text;
-
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -100,7 +97,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     };
     private Runnable updateSongViewsRunnable;
 
-    private static final int REQUEST_CODE_ADD_INSTRUMENTAL = 1;
+    private static final int REQUEST_CODE_ADD_AUDIO_FILE = 1;
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 2;
 
     @Override
@@ -119,7 +116,11 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         getSupportActionBar().setTitle(dbSong.getTitle());
         backgroundView.setBackgroundColor(backgroundColor);
         drawNotes();
-        initMediaPlayer();
+        try {
+            initMediaPlayer();
+        } catch (MediaPlayerException e) {
+            CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_media_player_init_error, Toast.LENGTH_SHORT).show();
+        }
         registerReceiver(customizationReceiver, new IntentFilter(Constants.INTENT_CUSTOMIZATIONS_UPDATED));
     }
 
@@ -127,6 +128,15 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_song_activity, menu);
+        MenuItem addAudioFile = menu.findItem(R.id.action_add_audio_file);
+        MenuItem removeAudioFile = menu.findItem(R.id.action_remove_audio_file);
+        if (dbSong.getAudioFile() == null) {
+            addAudioFile.setVisible(true);
+            removeAudioFile.setVisible(false);
+        } else {
+            addAudioFile.setVisible(false);
+            removeAudioFile.setVisible(true);
+        }
         return true;
     }
 
@@ -135,36 +145,46 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
         // handle item selection
         switch (item.getItemId()) {
-            case R.id.action_add_instrumental:
+            case R.id.action_add_audio_file:
                 if (ContextCompat.checkSelfPermission(SongActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(SongActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
                 } else {
-                    launchAddInstrumentalActivity();
+                    launchAddAudioFileActivity();
                 }
+                return true;
+            case R.id.action_remove_audio_file:
+                ExportHelper.getInstance().removeAudioFile(SongActivity.this, dbSong);
+                dbSong.setAudioFile(null);
+                SongDbHandler.insertSong(dbSong);
+                CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_audio_file_removed, Toast.LENGTH_SHORT).show();
+                if (mediaView.getVisibility() == View.VISIBLE) {
+                    animateMediaView(false);
+                }
+                invalidateOptionsMenu();
+                releaseMediaPlayer();
+                sendSongsUpdatedBroadcast();
                 return true;
             case R.id.action_customize:
                 Intent intent = new Intent(SongActivity.this, CustomizeActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.action_toggle_media:
-                if (dbSong.getInstrumental() == null) {
-                    CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_no_instrumental, Toast.LENGTH_SHORT).show();
+                if (dbSong.getAudioFile() == null) {
+                    CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_no_audio_file, Toast.LENGTH_SHORT).show();
                 } else {
-                    if (mediaViewDisplayed) {
-                        SlideAnimation slideAnimation = new SlideAnimation(mediaView, 100, SlideAnimation.COLLAPSE);
-                        slideAnimation.setHeight(DimensionUtils.dpToPx(SongActivity.this, 72));
-                        mediaView.startAnimation(slideAnimation);
-                    } else {
-                        SlideAnimation slideAnimation = new SlideAnimation(mediaView, 100, SlideAnimation.EXPAND);
-                        slideAnimation.setHeight(DimensionUtils.dpToPx(SongActivity.this, 72));
-                        mediaView.startAnimation(slideAnimation);
-                    }
-                    mediaViewDisplayed = !mediaViewDisplayed;
+                    animateMediaView(!mediaViewDisplayed);
                 }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void animateMediaView(boolean expand) {
+        SlideAnimation slideAnimation = new SlideAnimation(mediaView, 100, expand ? SlideAnimation.EXPAND : SlideAnimation.COLLAPSE);
+        slideAnimation.setHeight(DimensionUtils.dpToPx(SongActivity.this, 72));
+        mediaView.startAnimation(slideAnimation);
+        mediaViewDisplayed= !mediaViewDisplayed;
     }
 
     /**
@@ -203,12 +223,15 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         });
     }
 
-    private void initMediaPlayer() {
-        if (dbSong.getInstrumental() != null) {
+    private void initMediaPlayer() throws MediaPlayerException {
+        if (dbSong.getAudioFile() != null) {
 
             // prepare song
-            Uri songUri = ExportHelper.getInstance().getInstrumentalUri(SongActivity.this, dbSong);
+            Uri songUri = ExportHelper.getInstance().getAudioFileUri(SongActivity.this, dbSong);
             mediaPlayer = MediaPlayer.create(SongActivity.this, songUri);
+            if (mediaPlayer == null) {
+                throw new MediaPlayerException();
+            }
 
             // init progress bar
             final int finalTime = mediaPlayer.getDuration();
@@ -234,9 +257,10 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 }
             });
 
-            // init time texts
+            // init time texts and play button
             updateTimeText(mediaCurrentTimeText, mediaPlayer.getCurrentPosition());
             updateTimeText(mediaTotalTimeText, finalTime);
+            playButton.setImageResource(R.drawable.selector_play_button);
 
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
@@ -902,17 +926,27 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_ADD_INSTRUMENTAL && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CODE_ADD_AUDIO_FILE && resultCode == RESULT_OK) {
             try {
                 InputStream inputStream = getContentResolver().openInputStream(data.getData());
                 String fileName = ExportHelper.getInstance().getFileName(SongActivity.this, data.getData());
-                String finalName = dbSong.getId() + "-" + fileName;
+                String finalName = dbSong.getId() + Constants.SEPARATOR_AUDIO_FILE + fileName;
                 ExportHelper.getInstance().saveToInternalStorage(SongActivity.this, finalName, inputStream);
-                dbSong.setInstrumental(finalName);
+                dbSong.setAudioFile(finalName);
                 SongDbHandler.insertSong(dbSong);
+                CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_audio_file_added, Toast.LENGTH_SHORT).show();
+                initMediaPlayer();
+                if (mediaView.getVisibility() == View.GONE) {
+                    animateMediaView(true);
+                }
+                invalidateOptionsMenu();
+                sendSongsUpdatedBroadcast();
             } catch (Exception e) {
-                e.printStackTrace();
-                CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_add_instrumental_error, Toast.LENGTH_SHORT).show();
+                ExportHelper.getInstance().removeAudioFile(SongActivity.this, dbSong);
+                dbSong.setAudioFile(null);
+                SongDbHandler.insertSong(dbSong);
+                releaseMediaPlayer();
+                CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_add_audio_file_error, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -924,7 +958,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    launchAddInstrumentalActivity();
+                    launchAddAudioFileActivity();
                 } else {
                     CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_permission_needed, Toast.LENGTH_LONG).show();
                 }
@@ -935,21 +969,29 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         }
     }
 
-    private void launchAddInstrumentalActivity() {
+    private void launchAddAudioFileActivity() {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.setType("file/*.mp3");
-        startActivityForResult(intent, REQUEST_CODE_ADD_INSTRUMENTAL);
+        intent.setType("file/*");
+        startActivityForResult(intent, REQUEST_CODE_ADD_AUDIO_FILE);
     }
 
     @Override
     protected void onDestroy() {
         unregisterReceiver(customizationReceiver);
+        releaseMediaPlayer();
+        super.onDestroy();
+    }
+
+    private void releaseMediaPlayer() {
         if (mediaPlayer != null) {
             mediaHandler.removeCallbacks(updateSongViewsRunnable);
-            mediaPlayer.stop();
             mediaPlayer.release();
         }
-        super.onDestroy();
+    }
+
+    private void sendSongsUpdatedBroadcast() {
+        Intent intent = new Intent(Constants.INTENT_SONGS_UPDATED);
+        sendBroadcast(intent);
     }
 }

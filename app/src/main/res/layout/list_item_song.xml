@@ -26,6 +26,15 @@
                 android:textStyle="bold" />
         </RelativeLayout>
 
+        <ImageView
+            android:id="@+id/icon_audio_file"
+            android:layout_width="@dimen/bu1"
+            android:layout_height="@dimen/bu1"
+            android:layout_marginLeft="@dimen/bu3_5"
+            android:layout_marginTop="@dimen/bu0_5"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_note" />
+
         <View
             android:id="@+id/view_separator"
             android:layout_width="1dp"

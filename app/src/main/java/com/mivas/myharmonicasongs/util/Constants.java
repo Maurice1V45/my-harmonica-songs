@@ -58,4 +58,7 @@ public class Constants {
     public static final String PREF_CURRENT_BACKGROUND_COLOR = "pref_current_background_color";
     public static final String PREF_CURRENT_SECTION_STYLE = "pref_current_section_style";
     public static final String PREF_CURRENT_SECTION_TEXT_COLOR = "pref_current_section_text_color";
+
+    /* Misc */
+    public static final String SEPARATOR_AUDIO_FILE = "%&#";
 }

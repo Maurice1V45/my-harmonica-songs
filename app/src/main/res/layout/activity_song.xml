@@ -32,7 +32,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:background="@color/greyDD"
+                android:background="@color/greyEE"
                 android:layout_height="@dimen/bu6">
 
                 <ImageView
