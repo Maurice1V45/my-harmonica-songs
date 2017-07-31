@@ -166,6 +166,39 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/view_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu5"
+                android:background="@drawable/selector_settings_item"
+                android:clickable="true">
+
+                <ImageView
+                    android:layout_width="@dimen/bu2"
+                    android:layout_height="@dimen/bu2"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu2"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_email" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu5"
+                    android:text="@string/settings_activity_text_feedback"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_36px" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/bu1"
+                    android:layout_marginRight="@dimen/bu1"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/view_credits"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/bu5"

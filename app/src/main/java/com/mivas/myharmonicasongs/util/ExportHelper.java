@@ -293,4 +293,15 @@ public class ExportHelper {
         File file = new File(context.getFilesDir() + "/Audio Files", dbSong.getAudioFile());
         file.delete();
     }
+
+    public void removeAllAudioFiles(Context context) {
+        File audioFilesDir = new File(context.getFilesDir() + "/Audio Files");
+        if (!audioFilesDir.exists()) {
+            audioFilesDir.mkdir();
+        } else {
+            for (File file : audioFilesDir.listFiles()) {
+                file.delete();
+            }
+        }
+    }
 }

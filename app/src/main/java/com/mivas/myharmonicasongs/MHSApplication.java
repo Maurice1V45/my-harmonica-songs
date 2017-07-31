@@ -38,4 +38,8 @@ public class MHSApplication extends Application {
         // dispose of Active Android
         ActiveAndroid.dispose();
     }
+
+    public boolean isTablet() {
+        return getResources().getBoolean(R.bool.is_tablet);
+    }
 }

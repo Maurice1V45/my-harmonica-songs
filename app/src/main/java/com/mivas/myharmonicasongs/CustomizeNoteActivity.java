@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -119,6 +120,7 @@ public class CustomizeNoteActivity extends AppCompatActivity implements Customiz
                             public void onClick(DialogInterface dialogInterface, int selectedColor, Integer[] integers) {
                                 changesMade = true;
                                 if (blow) {
+                                    Log.w("asd", selectedColor + "");
                                     blowTextColor = selectedColor;
                                     PreferencesUtils.storePreference(Constants.PREF_CURRENT_NOTE_BLOW_TEXT_COLOR, selectedColor);
                                 } else {

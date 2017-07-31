@@ -12,58 +12,47 @@ import android.widget.TextView;
 public class CustomizationUtils {
 
     public static int getBlowSign() {
-        int retrievedBlowSign = PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_BLOW_SIGN, -1);
-        return retrievedBlowSign == -1 ? Constants.DEFAULT_NOTE_BLOW_SIGN : retrievedBlowSign;
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_BLOW_SIGN, Constants.DEFAULT_NOTE_BLOW_SIGN);
     }
 
     public static int getBlowStyle() {
-        int retrievedBlowStyle = PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_BLOW_STYLE, -1);
-        return retrievedBlowStyle == -1 ? Constants.DEFAULT_NOTE_BLOW_STYLE : retrievedBlowStyle;
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_BLOW_STYLE, Constants.DEFAULT_NOTE_BLOW_STYLE);
     }
 
     public static int getBlowTextColor() {
-        int retrievedBlowTextColor = PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_BLOW_TEXT_COLOR, -1);
-        return retrievedBlowTextColor == -1 ? Constants.DEFAULT_NOTE_BLOW_TEXT_COLOR : retrievedBlowTextColor;
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_BLOW_TEXT_COLOR, Constants.DEFAULT_NOTE_BLOW_TEXT_COLOR);
     }
 
     public static int getBlowBackgroundColor() {
-        int retrievedBlowBackgroundColor = PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_BLOW_BACKGROUND_COLOR, -1);
-        return retrievedBlowBackgroundColor == -1 ? Constants.DEFAULT_NOTE_BLOW_BACKGROUND_COLOR : retrievedBlowBackgroundColor;
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_BLOW_BACKGROUND_COLOR, Constants.DEFAULT_NOTE_BLOW_BACKGROUND_COLOR);
     }
 
     public static int getDrawSign() {
-        int retrievedDrawSign = PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_DRAW_SIGN, -1);
-        return retrievedDrawSign == -1 ? Constants.DEFAULT_NOTE_DRAW_SIGN : retrievedDrawSign;
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_DRAW_SIGN, Constants.DEFAULT_NOTE_DRAW_SIGN);
     }
 
     public static int getDrawStyle() {
-        int retrievedDrawStyle = PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_DRAW_STYLE, -1);
-        return retrievedDrawStyle == -1 ? Constants.DEFAULT_NOTE_DRAW_STYLE : retrievedDrawStyle;
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_DRAW_STYLE, Constants.DEFAULT_NOTE_DRAW_STYLE);
     }
 
     public static int getDrawTextColor() {
-        int retrievedDrawTextColor = PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_DRAW_TEXT_COLOR, -1);
-        return retrievedDrawTextColor == -1 ? Constants.DEFAULT_NOTE_DRAW_TEXT_COLOR : retrievedDrawTextColor;
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_DRAW_TEXT_COLOR, Constants.DEFAULT_NOTE_DRAW_TEXT_COLOR);
     }
 
     public static int getDrawBackgroundColor() {
-        int retrievedDrawBackgroundColor = PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_DRAW_BACKGROUND_COLOR, -1);
-        return retrievedDrawBackgroundColor == -1 ? Constants.DEFAULT_NOTE_DRAW_BACKGROUND_COLOR : retrievedDrawBackgroundColor;
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_DRAW_BACKGROUND_COLOR, Constants.DEFAULT_NOTE_DRAW_BACKGROUND_COLOR);
     }
 
     public static int getBackgroundColor() {
-        int retrievedBackgroundColor = PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_BACKGROUND_COLOR, -1);
-        return retrievedBackgroundColor == -1 ? Constants.DEFAULT_BACKGROUND_COLOR : retrievedBackgroundColor;
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_BACKGROUND_COLOR, Constants.DEFAULT_BACKGROUND_COLOR);
     }
 
     public static int getSectionStyle() {
-        int retrievedSectionStyle = PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_SECTION_STYLE, -1);
-        return retrievedSectionStyle == -1 ? Constants.DEFAULT_SECTION_STYLE : retrievedSectionStyle;
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_SECTION_STYLE, Constants.DEFAULT_SECTION_STYLE);
     }
 
     public static int getSectionTextColor() {
-        int retrievedSectionTextColor = PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_SECTION_TEXT_COLOR, -1);
-        return retrievedSectionTextColor == -1 ? Constants.DEFAULT_SECTION_TEXT_COLOR : retrievedSectionTextColor;
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_SECTION_TEXT_COLOR, Constants.DEFAULT_SECTION_TEXT_COLOR);
     }
 
     public static StateListDrawable createNoteBackground(Context context, int backgroundColor) {

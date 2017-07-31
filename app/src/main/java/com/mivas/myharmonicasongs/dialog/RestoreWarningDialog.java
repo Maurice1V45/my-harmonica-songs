@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.mivas.myharmonicasongs.MHSApplication;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.listener.CustomizeActivityListener;
 import com.mivas.myharmonicasongs.listener.SettingsActivityListener;
@@ -71,7 +72,7 @@ public class RestoreWarningDialog extends DialogFragment {
         super.onStart();
 
         // set width to match parent
-        if (getDialog() != null) {
+        if (!MHSApplication.getInstance().isTablet() && getDialog() != null) {
             getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }

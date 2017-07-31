@@ -79,6 +79,8 @@
     <string name="settings_activity_toast_song_imported">song imported</string>
     <string name="settings_activity_toast_songs_imported">songs imported</string>
     <string name="settings_activity_toast_permission_needed">Permission needed to import songs</string>
+    <string name="settings_activity_feedback_subject">My Harmonica Songs Feedback</string>
+    <string name="settings_activity_feedback_chooser">Send feedback using…</string>
 
     <!-- Restore Warning Dialog -->
     <string name="restore_warning_dialog_title">This will delete the songs from your list and import songs from a backup file. Are you sure?</string>

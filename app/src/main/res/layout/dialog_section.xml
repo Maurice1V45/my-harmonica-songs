@@ -1,15 +1,15 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:orientation="vertical"
     android:padding="@dimen/bu1">
 
     <TextView
         android:id="@+id/text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_size_40px" />
 
@@ -17,6 +17,7 @@
         android:id="@+id/field_section_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/text_title"
         android:layout_marginTop="@dimen/bu1"
         android:hint="@string/section_dialog_hint_section_name"
         android:inputType="textCapSentences"
@@ -28,10 +29,10 @@
         android:id="@+id/button_ok"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bu4"
+        android:layout_below="@id/field_section_name"
         android:layout_marginTop="@dimen/bu1"
         android:background="@drawable/selector_button_generic"
         android:text="@string/button_ok"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_40px" />
-
-</LinearLayout>
+</RelativeLayout>

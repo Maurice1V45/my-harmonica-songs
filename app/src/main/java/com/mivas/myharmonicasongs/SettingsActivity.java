@@ -37,6 +37,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
     private View restoreView;
     private View creditsView;
     private View rateAppView;
+    private View feedbackView;
 
     private static final int REQUEST_CODE_RESTORE_SONGS = 1;
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 2;
@@ -57,6 +58,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
         restoreView = findViewById(R.id.view_restore);
         creditsView = findViewById(R.id.view_credits);
         rateAppView = findViewById(R.id.view_rate_app);
+        feedbackView = findViewById(R.id.view_feedback);
     }
 
     private void initListeners() {
@@ -98,6 +100,16 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
                 }
             }
         });
+        feedbackView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:marius.ivas1@gmail.com"));
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.settings_activity_feedback_subject));
+                startActivity(Intent.createChooser(intent, getString(R.string.settings_activity_feedback_chooser)));
+            }
+        });
     }
 
     private void launchRestoreSongsActivity() {
@@ -114,6 +126,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
                 CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_importing_songs, Toast.LENGTH_SHORT).show();
                 InputStream inputStream = getContentResolver().openInputStream(data.getData());
                 String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
+                ExportHelper.getInstance().removeAllAudioFiles(SettingsActivity.this);
                 ExportHelper.getInstance().restoreSongs(fileJson);
             } catch (IOException e) {
                 CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_restore_error, Toast.LENGTH_SHORT).show();

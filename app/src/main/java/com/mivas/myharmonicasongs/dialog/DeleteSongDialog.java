@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mivas.myharmonicasongs.MHSApplication;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.adapter.KeyPickerAdapter;
 import com.mivas.myharmonicasongs.database.model.DbSong;
@@ -86,7 +87,7 @@ public class DeleteSongDialog extends DialogFragment {
         super.onStart();
 
         // set width to match parent
-        if (getDialog() != null) {
+        if (!MHSApplication.getInstance().isTablet() && getDialog() != null) {
             getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }

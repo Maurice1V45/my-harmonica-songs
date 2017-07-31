@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.mivas.myharmonicasongs.MHSApplication;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.listener.CustomizeActivityListener;
@@ -73,7 +74,7 @@ public class ResetCustomizationsDialog extends DialogFragment {
         super.onStart();
 
         // set width to match parent
-        if (getDialog() != null) {
+        if (!MHSApplication.getInstance().isTablet() && getDialog() != null) {
             getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
