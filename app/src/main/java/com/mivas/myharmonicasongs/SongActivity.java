@@ -1,6 +1,7 @@
 package com.mivas.myharmonicasongs;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -970,10 +971,14 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     }
 
     private void launchAddAudioFileActivity() {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.setType("file/*");
-        startActivityForResult(intent, REQUEST_CODE_ADD_AUDIO_FILE);
+        try {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.setType("file/*");
+            startActivityForResult(intent, REQUEST_CODE_ADD_AUDIO_FILE);
+        } catch (ActivityNotFoundException e) {
+            CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_error_no_filepicker_app, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

@@ -16,7 +16,7 @@ public class SongKeyUtils {
         keysMap.put(3, "Eb");
         keysMap.put(4, "E");
         keysMap.put(5, "F");
-        keysMap.put(6, "Gb");
+        keysMap.put(6, "F#");
         keysMap.put(7, "G");
         keysMap.put(8, "Ab");
         keysMap.put(9, "A");

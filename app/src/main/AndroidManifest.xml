@@ -30,6 +30,9 @@
             android:name=".CreditsActivity"
             android:configChanges="orientation|screenSize" />
         <activity
+            android:name=".QaActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
             android:name=".SettingsActivity"
             android:configChanges="orientation|screenSize" />
         <activity

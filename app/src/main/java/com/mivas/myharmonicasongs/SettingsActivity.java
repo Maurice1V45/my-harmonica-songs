@@ -1,6 +1,7 @@
 package com.mivas.myharmonicasongs;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -36,6 +37,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
     private View backupView;
     private View restoreView;
     private View creditsView;
+    private View qaView;
     private View rateAppView;
     private View feedbackView;
 
@@ -56,6 +58,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
         setSupportActionBar(toolbar);
         backupView = findViewById(R.id.view_backup);
         restoreView = findViewById(R.id.view_restore);
+        qaView = findViewById(R.id.view_qa);
         creditsView = findViewById(R.id.view_credits);
         rateAppView = findViewById(R.id.view_rate_app);
         feedbackView = findViewById(R.id.view_feedback);
@@ -81,6 +84,13 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
 
             }
         });
+        qaView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingsActivity.this, QaActivity.class);
+                startActivity(intent);
+            }
+        });
         creditsView.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -104,19 +114,29 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse("mailto:marius.ivas1@gmail.com"));
-                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.settings_activity_feedback_subject));
-                startActivity(Intent.createChooser(intent, getString(R.string.settings_activity_feedback_chooser)));
+                try {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO);
+                    intent.setData(Uri.parse("mailto:marius.ivas1@gmail.com"));
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.settings_activity_feedback_subject));
+                    startActivity(Intent.createChooser(intent, getString(R.string.settings_activity_feedback_chooser)));
+                } catch (ActivityNotFoundException e) {
+                    CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_error_no_email_app, Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
 
     private void launchRestoreSongsActivity() {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.setType("file/*");
-        startActivityForResult(intent, REQUEST_CODE_RESTORE_SONGS);
+        try {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.setType("file/*");
+            startActivityForResult(intent, REQUEST_CODE_RESTORE_SONGS);
+        } catch (ActivityNotFoundException e) {
+            CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_error_no_filepicker_app, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
