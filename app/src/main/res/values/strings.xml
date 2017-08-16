@@ -70,7 +70,7 @@
     <string name="settings_activity_text_general_settings">GENERAL SETTINGS</string>
     <string name="settings_activity_text_sharing">SHARING</string>
     <string name="settings_activity_text_share_song">Share</string>
-    <string name="settings_activity_text_import_song">Import from file</string>
+    <string name="settings_activity_text_import_song">Import song</string>
     <string name="settings_activity_text_backup_restore">BACKUP/RESTORE SONGS</string>
     <string name="settings_activity_text_backup">Backup</string>
     <string name="settings_activity_text_restore">Restore</string>
