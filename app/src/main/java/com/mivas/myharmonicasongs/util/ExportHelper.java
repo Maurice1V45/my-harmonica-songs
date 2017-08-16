@@ -125,17 +125,20 @@ public class ExportHelper {
         return jsonObject;
     }
 
-    public void restoreSongs(final String songsJson) {
+    public void importSongs(final String songsJson, final boolean clearDb) {
         Thread thread = new Thread() {
 
             @Override
             public void run() {
 
-                // clear database
                 ActiveAndroid.beginTransaction();
-                SectionDbHandler.deleteSections();
-                NoteDbHandler.deleteNotes();
-                SongDbHandler.deleteSongs();
+
+                    // clear database
+                if (clearDb) {
+                    SectionDbHandler.deleteSections();
+                    NoteDbHandler.deleteNotes();
+                    SongDbHandler.deleteSongs();
+                }
 
                 // init list of dbSongs and songJsons
                 List<DbSong> dbSongs = new ArrayList<DbSong>();
@@ -225,7 +228,7 @@ public class ExportHelper {
         thread.start();
     }
 
-    public void launchExportIntent(Context context, List<DbSong> dbSongs, String fileName) {
+    public void launchExportIntent(Context context, List<DbSong> dbSongs, String fileName, String chooserText) {
         File songFile = saveTempFile(context, fileName, ExportHelper.getInstance().convertSongsToJson(dbSongs).toString());
         Uri contentUri = FileProvider.getUriForFile(context, "com.mivas.myharmonicasongs.fileprovider", songFile);
         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -234,7 +237,7 @@ public class ExportHelper {
         intent.setDataAndType(contentUri, context.getContentResolver().getType(contentUri));
         intent.setType("file/*");
         intent.putExtra(Intent.EXTRA_STREAM, contentUri);
-        context.startActivity(Intent.createChooser(intent, context.getString(R.string.settings_activity_text_export_to)));
+        context.startActivity(Intent.createChooser(intent, chooserText));
     }
 
     public void saveToInternalStorage(Context context, String fileName, InputStream inputStream) throws Exception {
@@ -267,6 +270,22 @@ public class ExportHelper {
         return Uri.fromFile(file);
     }
 
+    public void removeAudioFile(Context context, DbSong dbSong) {
+        File file = new File(context.getFilesDir() + "/Audio Files", dbSong.getAudioFile());
+        file.delete();
+    }
+
+    public void removeAllAudioFiles(Context context) {
+        File audioFilesDir = new File(context.getFilesDir() + "/Audio Files");
+        if (!audioFilesDir.exists()) {
+            audioFilesDir.mkdir();
+        } else {
+            for (File file : audioFilesDir.listFiles()) {
+                file.delete();
+            }
+        }
+    }
+
     public String getFileName(Context context, Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
@@ -289,19 +308,8 @@ public class ExportHelper {
         return result;
     }
 
-    public void removeAudioFile(Context context, DbSong dbSong) {
-        File file = new File(context.getFilesDir() + "/Audio Files", dbSong.getAudioFile());
-        file.delete();
-    }
-
-    public void removeAllAudioFiles(Context context) {
-        File audioFilesDir = new File(context.getFilesDir() + "/Audio Files");
-        if (!audioFilesDir.exists()) {
-            audioFilesDir.mkdir();
-        } else {
-            for (File file : audioFilesDir.listFiles()) {
-                file.delete();
-            }
-        }
+    public boolean isMhsFile(Context context, Uri uri) {
+        String fileName = getFileName(context, uri);
+        return "mhs".equals(Files.getFileExtension(fileName));
     }
 }

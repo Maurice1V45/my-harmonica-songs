@@ -35,6 +35,58 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/bu1_5"
                 android:layout_marginTop="@dimen/bu2"
+                android:text="@string/settings_activity_text_sharing"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_30px"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="@dimen/bu1"
+                android:layout_marginRight="@dimen/bu1"
+                android:layout_marginTop="@dimen/bu0_25"
+                android:background="@color/greyCC" />
+
+
+            <RelativeLayout
+                android:id="@+id/view_import"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu5"
+                android:background="@drawable/selector_settings_item"
+                android:clickable="true">
+
+                <ImageView
+                    android:layout_width="@dimen/bu2"
+                    android:layout_height="@dimen/bu2"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu2"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_import2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu5"
+                    android:text="@string/settings_activity_text_import_song"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_36px" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/bu1"
+                    android:layout_marginRight="@dimen/bu1"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/bu1_5"
+                android:layout_marginTop="@dimen/bu2"
                 android:text="@string/settings_activity_text_backup_restore"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_30px"

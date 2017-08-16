@@ -34,6 +34,7 @@ import java.util.List;
  */
 public class SettingsActivity extends AppCompatActivity implements SettingsActivityListener {
 
+    private View importView;
     private View backupView;
     private View restoreView;
     private View creditsView;
@@ -42,7 +43,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
     private View feedbackView;
 
     private static final int REQUEST_CODE_RESTORE_SONGS = 1;
-    private static final int REQUEST_CODE_STORAGE_PERMISSION = 2;
+    private static final int REQUEST_CODE_STORAGE_PERMISSION_RESTORE = 2;
+    private static final int REQUEST_CODE_IMPORT_SONG = 3;
+    private static final int REQUEST_CODE_STORAGE_PERMISSION_IMPORT = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
     private void initViews() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        importView = findViewById(R.id.view_import);
         backupView = findViewById(R.id.view_backup);
         restoreView = findViewById(R.id.view_restore);
         qaView = findViewById(R.id.view_qa);
@@ -65,13 +69,24 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
     }
 
     private void initListeners() {
+        importView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(SettingsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION_IMPORT);
+                } else {
+                    launchImportActivity(REQUEST_CODE_IMPORT_SONG);
+                }
+            }
+        });
         backupView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 List<DbSong> dbSongs = SongDbHandler.getSongs();
-                String fileName = (dbSongs.size() == 1) ? dbSongs.size() + " song.mhs" : dbSongs.size() + " songs.mhs";
-                ExportHelper.getInstance().launchExportIntent(SettingsActivity.this, dbSongs, fileName);
+                String fileName = "Backup" + System.currentTimeMillis() + ".mhs";
+                ExportHelper.getInstance().launchExportIntent(SettingsActivity.this, dbSongs, fileName, getString(R.string.settings_activity_text_export_to));
             }
         });
         restoreView.setOnClickListener(new View.OnClickListener() {
@@ -127,29 +142,45 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
         });
     }
 
-    private void launchRestoreSongsActivity() {
+    private void launchImportActivity(int reqCode) {
         try {
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_GET_CONTENT);
-            intent.setType("file/*");
-            startActivityForResult(intent, REQUEST_CODE_RESTORE_SONGS);
+            intent.setType("*/*");
+            startActivityForResult(intent, reqCode);
         } catch (ActivityNotFoundException e) {
             CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_error_no_filepicker_app, Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_RESTORE_SONGS && resultCode == RESULT_OK) {
-            try {
-                CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_importing_songs, Toast.LENGTH_SHORT).show();
-                InputStream inputStream = getContentResolver().openInputStream(data.getData());
-                String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
-                ExportHelper.getInstance().removeAllAudioFiles(SettingsActivity.this);
-                ExportHelper.getInstance().restoreSongs(fileJson);
-            } catch (IOException e) {
-                CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_restore_error, Toast.LENGTH_SHORT).show();
+            if (ExportHelper.getInstance().isMhsFile(SettingsActivity.this, data.getData())) {
+                try {
+                    CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_restoring_songs, Toast.LENGTH_SHORT).show();
+                    InputStream inputStream = getContentResolver().openInputStream(data.getData());
+                    String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
+                    ExportHelper.getInstance().removeAllAudioFiles(SettingsActivity.this);
+                    ExportHelper.getInstance().importSongs(fileJson, true);
+                } catch (IOException e) {
+                    CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_restore_error, Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_not_mhs_file, Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == REQUEST_CODE_IMPORT_SONG && resultCode == RESULT_OK) {
+            if (ExportHelper.getInstance().isMhsFile(SettingsActivity.this, data.getData())) {
+                try {
+                    CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_importing_song, Toast.LENGTH_SHORT).show();
+                    InputStream inputStream = getContentResolver().openInputStream(data.getData());
+                    String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
+                    ExportHelper.getInstance().importSongs(fileJson, false);
+                } catch (IOException e) {
+                    CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_import_error, Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_not_mhs_file, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -157,11 +188,21 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_CODE_STORAGE_PERMISSION: {
+            case REQUEST_CODE_STORAGE_PERMISSION_RESTORE: {
 
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    launchRestoreSongsActivity();
+                    launchImportActivity(REQUEST_CODE_RESTORE_SONGS);
+                } else {
+                    CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_permission_needed, Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+            case REQUEST_CODE_STORAGE_PERMISSION_IMPORT: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    launchImportActivity(REQUEST_CODE_IMPORT_SONG);
                 } else {
                     CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_permission_needed, Toast.LENGTH_LONG).show();
                 }
@@ -175,9 +216,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
     @Override
     public void onRestoreConfirmed() {
         if (ContextCompat.checkSelfPermission(SettingsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
+            ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION_RESTORE);
         } else {
-            launchRestoreSongsActivity();
+            launchImportActivity(REQUEST_CODE_RESTORE_SONGS);
         }
     }
 }

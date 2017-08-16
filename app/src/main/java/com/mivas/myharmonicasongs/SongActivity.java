@@ -127,14 +127,20 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if (menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_song_activity, menu);
+        MenuItem toggleMedia = menu.findItem(R.id.action_toggle_media);
         MenuItem addAudioFile = menu.findItem(R.id.action_add_audio_file);
         MenuItem removeAudioFile = menu.findItem(R.id.action_remove_audio_file);
         if (dbSong.getAudioFile() == null) {
+            toggleMedia.setVisible(false);
             addAudioFile.setVisible(true);
             removeAudioFile.setVisible(false);
         } else {
+            toggleMedia.setVisible(true);
             addAudioFile.setVisible(false);
             removeAudioFile.setVisible(true);
         }
@@ -175,6 +181,12 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 } else {
                     animateMediaView(!mediaViewDisplayed);
                 }
+                return true;
+            case R.id.action_share:
+                List<DbSong> dbSongs = new ArrayList<DbSong>();
+                dbSongs.add(dbSong);
+                String fileName = (dbSong.getTitle() + ".mhs");
+                ExportHelper.getInstance().launchExportIntent(SongActivity.this, dbSongs, fileName, getString(R.string.song_activity_text_share_to));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -974,7 +986,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         try {
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_GET_CONTENT);
-            intent.setType("file/*");
+            intent.setType("*/*");
             startActivityForResult(intent, REQUEST_CODE_ADD_AUDIO_FILE);
         } catch (ActivityNotFoundException e) {
             CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_error_no_filepicker_app, Toast.LENGTH_SHORT).show();

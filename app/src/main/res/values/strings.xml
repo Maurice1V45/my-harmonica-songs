@@ -36,6 +36,7 @@
     <string name="song_activity_menu_add_section">Add section tag</string>
     <string name="song_activity_menu_edit_section">Edit section tag</string>
     <string name="song_activity_menu_delete_section">Delete section tag</string>
+    <string name="song_activity_menu_share">Share</string>
     <string name="song_activity_menu_customize">Customize</string>
     <string name="song_activity_menu_add_audio_file">Add audio file</string>
     <string name="song_activity_menu_remove_audio_file">Remove audio file</string>
@@ -50,6 +51,7 @@
     <string name="song_activity_toast_audio_file_removed">Audio file removed</string>
     <string name="song_activity_toast_media_player_init_error">Error initializing media player</string>
     <string name="song_activity_toast_error_no_filepicker_app">No file picker app available on the device</string>
+    <string name="song_activity_text_share_to">Share with…</string>
 
     <!-- Note Picker Dialog -->
     <string name="note_picker_dialog_button_delete">Delete</string>
@@ -66,6 +68,9 @@
     <!-- Settings Activity -->
     <string name="settings_activity_text_settings">Settings</string>
     <string name="settings_activity_text_general_settings">GENERAL SETTINGS</string>
+    <string name="settings_activity_text_sharing">SHARING</string>
+    <string name="settings_activity_text_share_song">Share</string>
+    <string name="settings_activity_text_import_song">Import from file</string>
     <string name="settings_activity_text_backup_restore">BACKUP/RESTORE SONGS</string>
     <string name="settings_activity_text_backup">Backup</string>
     <string name="settings_activity_text_restore">Restore</string>
@@ -76,7 +81,10 @@
     <string name="settings_activity_text_export_to">Export to…</string>
     <string name="settings_activity_toast_backup_error">Backup error</string>
     <string name="settings_activity_toast_restore_error">Restore error</string>
-    <string name="settings_activity_toast_importing_songs">Importing songs…</string>
+    <string name="settings_activity_toast_import_error">Import error</string>
+    <string name="settings_activity_toast_restoring_songs">Restoring songs…</string>
+    <string name="settings_activity_toast_importing_song">Importing song…</string>
+    <string name="settings_activity_toast_not_mhs_file">Not a mhs file</string>
     <string name="settings_activity_toast_no_song_imported">No songs imported</string>
     <string name="settings_activity_toast_song_imported">song imported</string>
     <string name="settings_activity_toast_songs_imported">songs imported</string>
@@ -87,7 +95,7 @@
     <string name="settings_activity_feedback_chooser">Send feedback using…</string>
 
     <!-- Restore Warning Dialog -->
-    <string name="restore_warning_dialog_title">This will delete the songs from your list and import songs from a backup file. Are you sure?</string>
+    <string name="restore_warning_dialog_title">WARNING: This will delete the songs from your list and import songs from a backup file. Are you sure?</string>
 
     <!-- Credits Activity -->
     <string name="credits_activity_text_credits">Credits</string>
