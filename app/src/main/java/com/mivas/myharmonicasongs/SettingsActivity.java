@@ -156,31 +156,31 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_RESTORE_SONGS && resultCode == RESULT_OK) {
-            if (ExportHelper.getInstance().isMhsFile(SettingsActivity.this, data.getData())) {
-                try {
+            try {
+                if (ExportHelper.getInstance().isMhsFile(SettingsActivity.this, data.getData())) {
                     CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_restoring_songs, Toast.LENGTH_SHORT).show();
                     InputStream inputStream = getContentResolver().openInputStream(data.getData());
                     String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
                     ExportHelper.getInstance().removeAllAudioFiles(SettingsActivity.this);
                     ExportHelper.getInstance().importSongs(fileJson, true);
-                } catch (IOException e) {
-                    CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_restore_error, Toast.LENGTH_SHORT).show();
+                } else {
+                    CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_not_mhs_file, Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_not_mhs_file, Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_restore_error, Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == REQUEST_CODE_IMPORT_SONG && resultCode == RESULT_OK) {
-            if (ExportHelper.getInstance().isMhsFile(SettingsActivity.this, data.getData())) {
-                try {
+            try {
+                if (ExportHelper.getInstance().isMhsFile(SettingsActivity.this, data.getData())) {
                     CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_importing_song, Toast.LENGTH_SHORT).show();
                     InputStream inputStream = getContentResolver().openInputStream(data.getData());
                     String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
                     ExportHelper.getInstance().importSongs(fileJson, false);
-                } catch (IOException e) {
-                    CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_import_error, Toast.LENGTH_SHORT).show();
+                } else {
+                    CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_not_mhs_file, Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_not_mhs_file, Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_import_error, Toast.LENGTH_SHORT).show();
             }
         }
     }

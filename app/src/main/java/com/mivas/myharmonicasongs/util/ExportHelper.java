@@ -271,8 +271,10 @@ public class ExportHelper {
     }
 
     public void removeAudioFile(Context context, DbSong dbSong) {
-        File file = new File(context.getFilesDir() + "/Audio Files", dbSong.getAudioFile());
-        file.delete();
+        if (dbSong.getAudioFile() != null) {
+            File file = new File(context.getFilesDir() + "/Audio Files", dbSong.getAudioFile());
+            file.delete();
+        }
     }
 
     public void removeAllAudioFiles(Context context) {
