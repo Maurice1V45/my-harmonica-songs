@@ -41,6 +41,8 @@
     <string name="song_activity_menu_add_audio_file">Add audio file</string>
     <string name="song_activity_menu_remove_audio_file">Remove audio file</string>
     <string name="song_activity_menu_toggle_media">Show/Hide Media player</string>
+    <string name="song_activity_menu_increase_octave">Increase octave</string>
+    <string name="song_activity_menu_decrease_octave">Decrease octave</string>
     <string name="song_activity_toast_note_copied">note copied</string>
     <string name="song_activity_toast_notes_copied">notes copied</string>
     <string name="song_activity_toast_no_notes_copied">No notes copied</string>
@@ -64,6 +66,9 @@
     <string name="section_dialog_toast_no_section_name">Please type in a section name</string>
     <string name="section_dialog_text_add_section">Add Section</string>
     <string name="section_dialog_text_edit_section">Edit Section</string>
+
+    <!-- Octave Shift Dialog -->
+    <string name="octave_shift_dialog_button_delete">Delete</string>
 
     <!-- Settings Activity -->
     <string name="settings_activity_text_settings">Settings</string>

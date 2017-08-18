@@ -32,4 +32,16 @@
         android:icon="@drawable/icon_remove_song"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_increase_octave"
+        android:title="@string/song_activity_menu_increase_octave"
+        android:icon="@drawable/icon_remove_song"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_decrease_octave"
+        android:title="@string/song_activity_menu_decrease_octave"
+        android:icon="@drawable/icon_remove_song"
+        app:showAsAction="never" />
+
 </menu>

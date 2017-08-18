@@ -46,6 +46,7 @@ import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
 import com.mivas.myharmonicasongs.util.DimensionUtils;
 import com.mivas.myharmonicasongs.util.ExportHelper;
+import com.mivas.myharmonicasongs.util.OctaveShiftUtils;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -188,8 +189,32 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 String fileName = (dbSong.getTitle() + ".mhs");
                 ExportHelper.getInstance().launchExportIntent(SongActivity.this, dbSongs, fileName, getString(R.string.song_activity_text_share_to));
                 return true;
+            case R.id.action_increase_octave:
+                increaseOctave();
+                return true;
+            case R.id.action_decrease_octave:
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void increaseOctave() {
+        int eligible = 0;
+        for (DbNote dbNote : notes) {
+            if (OctaveShiftUtils.isIncreasePossible(dbNote)) {
+                eligible++;
+            }
+        }
+        if (eligible == notes.size()) {
+            for (DbNote dbNote : notes) {
+                OctaveShiftUtils.increase(dbNote);
+            }
+            ActiveAndroid.beginTransaction();
+            NoteDbHandler.insertNotes(notes);
+            ActiveAndroid.setTransactionSuccessful();
+            ActiveAndroid.endTransaction();
+            drawNotes();
         }
     }
 
