@@ -2,6 +2,7 @@ package com.mivas.myharmonicasongs;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -20,9 +22,6 @@ import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbSong;
-import com.mivas.myharmonicasongs.dialog.RestoreWarningDialog;
-import com.mivas.myharmonicasongs.listener.SettingsActivityListener;
-import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.ExportHelper;
 
@@ -34,7 +33,7 @@ import java.util.List;
 /**
  * Settings activity.
  */
-public class SettingsActivity extends AppCompatActivity implements SettingsActivityListener {
+public class SettingsActivity extends AppCompatActivity {
 
     private View importView;
     private View backupView;
@@ -110,10 +109,30 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
 
             @Override
             public void onClick(View v) {
-                RestoreWarningDialog dialog = new RestoreWarningDialog();
-                dialog.setListener(SettingsActivity.this);
-                dialog.show(getFragmentManager(), Constants.TAG_RESTORE_WARNING_DIALOG);
+                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+                builder.setTitle(R.string.settings_activity_restore_warning_dialog_title);
+                builder.setMessage(R.string.settings_activity_restore_warning_dialog_description);
+                builder.setPositiveButton(R.string.button_restore, new DialogInterface.OnClickListener() {
 
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (ContextCompat.checkSelfPermission(SettingsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION_RESTORE);
+                        } else {
+                            launchImportActivity(REQUEST_CODE_RESTORE_SONGS);
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.create().show();
             }
         });
         qaView.setOnClickListener(new View.OnClickListener() {
@@ -230,12 +249,4 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
         }
     }
 
-    @Override
-    public void onRestoreConfirmed() {
-        if (ContextCompat.checkSelfPermission(SettingsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION_RESTORE);
-        } else {
-            launchImportActivity(REQUEST_CODE_RESTORE_SONGS);
-        }
-    }
 }

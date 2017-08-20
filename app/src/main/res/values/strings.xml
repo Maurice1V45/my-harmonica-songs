@@ -5,6 +5,11 @@
     <string name="button_ok">OK</string>
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
+    <string name="button_delete">DELETE</string>
+    <string name="button_reset">RESET</string>
+    <string name="button_restore">RESTORE</string>
+    <string name="button_shift">SHIFT</string>
+    <string name="button_cancel">CANCEL</string>
 
     <!-- Main Activity -->
     <string name="main_activity_menu_add_song">Add Song</string>
@@ -12,6 +17,8 @@
     <string name="main_activity_menu_settings">Settings</string>
     <string name="main_activity_text_no_songs">Press \"+\" to add a song</string>
     <string name="main_activity_hint_search">Search song</string>
+    <string name="main_activity_toast_song_deleted">Song deleted</string>
+    <string name="main_activity_delete_dialog_description" formatted="false">Are you sure you want to delete %s?</string>
 
     <!-- Song Dialog -->
     <string name="song_dialog_hint_title">Title</string>
@@ -20,9 +27,6 @@
     <string name="song_dialog_text_add_song">Add Song</string>
     <string name="song_dialog_text_edit_song">Edit Song</string>
     <string name="song_dialog_text_key">Key</string>
-
-    <!-- Delete Song Dialog -->
-    <string name="delete_song_dialog_message">Are you sure you want to delete</string>
 
     <!-- Song Activity -->
     <string name="song_activity_text_no_notes">Press \"+\" to add a note.\nLong press \"+\" for more options.</string>
@@ -54,6 +58,8 @@
     <string name="song_activity_toast_error_no_filepicker_app">No file picker app available on the device</string>
     <string name="song_activity_toast_notes_shifted">Notes shifted</string>
     <string name="song_activity_text_share_to">Share with…</string>
+    <string name="song_activity_shift_warning_dialog_title" formatted="false">Shift only %d notes?</string>
+    <string name="song_activity_shift_warning_dialog_description" formatted="false">%d out of %d notes cannot be shifted. Do you want to shift the other %d notes?</string>
 
     <!-- Note Picker Dialog -->
     <string name="note_picker_dialog_button_delete">Delete</string>
@@ -74,10 +80,6 @@
     <string name="notes_shift_dialog_no">No</string>
     <string name="notes_shift_dialog_all">All</string>
 
-    <!-- Shift Warning Dialog -->
-    <string name="shift_warning_dialog_notes_text" formatted="false">Only %d out of %d notes can be shifted. Are you sure you want to leave %d notes unshifted?</string>
-    <string name="shift_warning_dialog_note_text" formatted="false">Only %d out of %d notes can be shifted. Are you sure you want to leave %d note unshifted?</string>
-
     <!-- Settings Activity -->
     <string name="settings_activity_text_settings">Settings</string>
     <string name="settings_activity_text_general_settings">GENERAL SETTINGS</string>
@@ -85,7 +87,7 @@
     <string name="settings_activity_text_share_song">Share</string>
     <string name="settings_activity_text_import_song">Import song</string>
     <string name="settings_activity_text_import_song_desc">Import a song from a mhs file</string>
-    <string name="settings_activity_text_backup_restore">BACKUP/RESTORE SONGS</string>
+    <string name="settings_activity_text_backup_restore">BACKUP &amp; RESTORE</string>
     <string name="settings_activity_text_backup">Backup</string>
     <string name="settings_activity_text_backup_desc">Create a backup file</string>
     <string name="settings_activity_text_restore">Restore</string>
@@ -111,9 +113,8 @@
     <string name="settings_activity_toast_permission_needed">Permission needed to import songs</string>
     <string name="settings_activity_feedback_subject">My Harmonica Songs Feedback</string>
     <string name="settings_activity_feedback_chooser">Send feedback using…</string>
-
-    <!-- Restore Warning Dialog -->
-    <string name="restore_warning_dialog_title">WARNING: This will delete the songs from your list and import songs from a backup mhs file. Are you sure?</string>
+    <string name="settings_activity_restore_warning_dialog_title">Warning!</string>
+    <string name="settings_activity_restore_warning_dialog_description">This will delete your songs and import songs from a backup file. Are you sure you want to restore?</string>
 
     <!-- Credits Activity -->
     <string name="credits_activity_text_credits">Credits</string>
@@ -128,9 +129,7 @@
     <string name="customize_activity_background_color_title">Choose background color</string>
     <string name="customize_activity_menu_reset">Reset</string>
     <string name="customize_activity_toast_customizations_reset">Customizations reset</string>
-
-    <!-- Reset Customizations Dialog -->
-    <string name="reset_customizations_dialog_title">Are you sure you want to reset customizations to default settings?</string>
+    <string name="customize_activity_reset_customizations_dialog_description">Are you sure you want to reset customizations to default settings?</string>
 
     <!-- Customize Note Activity-->
     <string name="customize_note_activity_text_color_title">Choose text color</string>

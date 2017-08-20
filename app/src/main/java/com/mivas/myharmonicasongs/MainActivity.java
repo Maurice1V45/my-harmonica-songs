@@ -2,8 +2,10 @@ package com.mivas.myharmonicasongs;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.MenuBuilder;
@@ -27,7 +29,6 @@ import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SectionDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbSong;
-import com.mivas.myharmonicasongs.dialog.DeleteSongDialog;
 import com.mivas.myharmonicasongs.dialog.SongDialog;
 import com.mivas.myharmonicasongs.listener.MainActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
@@ -217,20 +218,31 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     }
 
     @Override
-    public void onSongDelete(DbSong dbSong) {
-        DeleteSongDialog deleteSongDialog = new DeleteSongDialog();
-        deleteSongDialog.setSong(dbSong);
-        deleteSongDialog.setListener(MainActivity.this);
-        deleteSongDialog.show(getFragmentManager(), Constants.TAG_DELETE_SONG_DIALOG);
-    }
+    public void onSongDelete(final DbSong dbSong) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage(String.format(getString(R.string.main_activity_delete_dialog_description), dbSong.getTitle()));
+                builder.setPositiveButton(R.string.button_delete, new DialogInterface.OnClickListener() {
 
-    @Override
-    public void onSongDeleteConfirmed(DbSong dbSong) {
-        dbSongs.remove(dbSong);
-        NoteDbHandler.deleteNotesBySongId(dbSong.getId());
-        SectionDbHandler.deleteSectionsBySongId(dbSong.getId());
-        SongDbHandler.deleteSongById(dbSong.getId());
-        refreshSongsList();
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dbSongs.remove(dbSong);
+                                NoteDbHandler.deleteNotesBySongId(dbSong.getId());
+                                SectionDbHandler.deleteSectionsBySongId(dbSong.getId());
+                                SongDbHandler.deleteSongById(dbSong.getId());
+                                refreshSongsList();
+                                CustomToast.makeText(MainActivity.this, R.string.main_activity_toast_song_deleted, Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        });
+
+        builder.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
     @Override

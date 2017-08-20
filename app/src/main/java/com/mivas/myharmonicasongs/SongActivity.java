@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
@@ -203,7 +205,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         SlideAnimation slideAnimation = new SlideAnimation(mediaView, 100, expand ? SlideAnimation.EXPAND : SlideAnimation.COLLAPSE);
         slideAnimation.setHeight(DimensionUtils.dpToPx(SongActivity.this, 72));
         mediaView.startAnimation(slideAnimation);
-        mediaViewDisplayed= !mediaViewDisplayed;
+        mediaViewDisplayed = !mediaViewDisplayed;
     }
 
     /**
@@ -1021,15 +1023,35 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     @Override
     public void onNotesShiftedUp() {
         shiftNotes(true);
-        drawNotes();
-        CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_notes_shifted, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onNotesShiftedDown() {
         shiftNotes(false);
-        drawNotes();
-        CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_notes_shifted, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNotesShiftConfirmationRequested(final boolean shiftUp, int eligibleNotes, int allNotes) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SongActivity.this);
+        builder.setTitle(String.format(getString(R.string.song_activity_shift_warning_dialog_title), eligibleNotes));
+        builder.setMessage(String.format(getString(R.string.song_activity_shift_warning_dialog_description), (allNotes - eligibleNotes), allNotes, eligibleNotes));
+        builder.setPositiveButton(R.string.button_shift, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                shiftNotes(shiftUp);
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
     private void shiftNotes(boolean increase) {
@@ -1044,5 +1066,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         NoteDbHandler.insertNotes(notes);
         ActiveAndroid.setTransactionSuccessful();
         ActiveAndroid.endTransaction();
+        drawNotes();
+        CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_notes_shifted, Toast.LENGTH_SHORT).show();
     }
 }

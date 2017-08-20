@@ -39,13 +39,6 @@ public interface MainActivityListener {
     void onSongDelete(DbSong dbSong);
 
     /**
-     * Triggered when a song was deleted.
-     *
-     * @param dbSong
-     */
-    void onSongDeleteConfirmed(DbSong dbSong);
-
-    /**
      * Triggered when a song was selected.
      *
      * @param dbSong

@@ -49,9 +49,12 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-3dp"
                 android:gravity="center_horizontal"
+                android:paddingBottom="@dimen/bu0_25"
                 android:text="@string/notes_shift_dialog_eligible_notes"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_30px" />
@@ -99,7 +102,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-3dp"
                 android:gravity="center_horizontal"
+                android:paddingBottom="@dimen/bu0_25"
                 android:text="@string/notes_shift_dialog_eligible_notes"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_30px" />

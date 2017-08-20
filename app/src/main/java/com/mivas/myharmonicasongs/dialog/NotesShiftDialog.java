@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.listener.NotesShiftListener;
-import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.NotesShiftUtils;
 
 import java.util.List;
@@ -59,12 +58,7 @@ public class NotesShiftDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (increaseEligible < dbNotes.size()) {
-                    ShiftWarningDialog dialog = new ShiftWarningDialog();
-                    dialog.setShiftUp(true);
-                    dialog.setEligibleNotes(increaseEligible);
-                    dialog.setAllNotes(dbNotes.size());
-                    dialog.setListener(listener);
-                    dialog.show(getFragmentManager(), Constants.TAG_SHIFT_WARNING_DIALOG);
+                    listener.onNotesShiftConfirmationRequested(true, increaseEligible, dbNotes.size());
                 } else {
                     listener.onNotesShiftedUp();
                 }
@@ -76,12 +70,7 @@ public class NotesShiftDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (decreaseEligible < dbNotes.size()) {
-                    ShiftWarningDialog dialog = new ShiftWarningDialog();
-                    dialog.setShiftUp(false);
-                    dialog.setEligibleNotes(decreaseEligible);
-                    dialog.setAllNotes(dbNotes.size());
-                    dialog.setListener(listener);
-                    dialog.show(getFragmentManager(), Constants.TAG_SHIFT_WARNING_DIALOG);
+                    listener.onNotesShiftConfirmationRequested(false, decreaseEligible, dbNotes.size());
                 } else {
                     listener.onNotesShiftedDown();
                 }
