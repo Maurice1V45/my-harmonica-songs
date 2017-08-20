@@ -16,6 +16,7 @@
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ToolbarBackArrow"
         app:title="@string/customize_section_activity_title"
         app:titleTextColor="@color/white" />
 
@@ -51,8 +52,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/bu1"
-                android:layout_marginRight="@dimen/bu1"
                 android:layout_marginTop="@dimen/bu3"
                 android:background="@color/greyCC" />
 
@@ -66,10 +65,10 @@
                 <TextView
                     android:layout_width="@dimen/bu6"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/bu1"
+                    android:layout_marginLeft="@dimen/bu1_5"
                     android:text="@string/customize_section_activity_text_style"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_36px" />
+                    android:textSize="@dimen/text_size_34px" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/list_styles"
@@ -81,8 +80,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/bu1"
-                android:layout_marginRight="@dimen/bu1"
                 android:layout_marginTop="@dimen/bu0_5"
                 android:background="@color/greyCC" />
 
@@ -90,17 +87,17 @@
                 android:id="@+id/view_text_color"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/bu5"
-                android:background="@drawable/selector_settings_item"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu1"
+                    android:layout_marginLeft="@dimen/bu1_5"
                     android:text="@string/customize_section_activity_text_text_color"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_36px" />
+                    android:textSize="@dimen/text_size_34px" />
 
                 <View
                     android:id="@+id/view_text_color_color"
@@ -114,8 +111,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="@dimen/bu1"
-                    android:layout_marginRight="@dimen/bu1"
                     android:background="@color/greyCC" />
             </RelativeLayout>
 

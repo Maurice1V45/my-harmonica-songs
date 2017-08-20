@@ -21,4 +21,8 @@
         <item name="android:src">@drawable/icon_overflow</item>
     </style>
 
+    <style name="ToolbarBackArrow" parent="AppTheme">
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
 </resources>

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,6 +20,9 @@ import com.mivas.myharmonicasongs.listener.StylePickerListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
 import com.mivas.myharmonicasongs.util.PreferencesUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Customize Note Activity.
@@ -45,6 +49,16 @@ public class CustomizeSectionActivity extends AppCompatActivity implements Style
         refreshPreview();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initStyles() {
         sectionStyle = CustomizationUtils.getSectionStyle();
         sectionTextColor = CustomizationUtils.getSectionTextColor();
@@ -56,9 +70,15 @@ public class CustomizeSectionActivity extends AppCompatActivity implements Style
     private void initViews() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         styleList = (RecyclerView) findViewById(R.id.list_styles);
         styleList.setLayoutManager(new LinearLayoutManager(CustomizeSectionActivity.this, LinearLayout.HORIZONTAL, false));
-        styleAdapter = new StylePickerAdapter(CustomizeSectionActivity.this, R.layout.list_item_section_style_picker, CustomizeSectionActivity.this, sectionStyle, getString(R.string.customize_section_activity_text_chorus));
+        List<String> texts = new ArrayList<String>();
+        texts.add("Normal");
+        texts.add("Bold");
+        texts.add("Italic");
+        styleAdapter = new StylePickerAdapter(CustomizeSectionActivity.this, R.layout.list_item_section_style_picker, CustomizeSectionActivity.this, sectionStyle, texts);
         styleList.setAdapter(styleAdapter);
         textColorView = findViewById(R.id.view_text_color);
         textColorColorView = findViewById(R.id.view_text_color_color);

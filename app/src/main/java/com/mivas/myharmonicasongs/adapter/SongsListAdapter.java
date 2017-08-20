@@ -64,7 +64,6 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
 
         // add song options menu
         final MenuBuilder menuBuilder = new MenuBuilder(context);
-        menuBuilder.setOptionalIconsVisible(true);
         MenuInflater inflater = new MenuInflater(context);
         inflater.inflate(R.menu.menu_song_options, menuBuilder);
         final MenuPopupHelper optionsMenu = new MenuPopupHelper(context, menuBuilder, holder.moreButton);

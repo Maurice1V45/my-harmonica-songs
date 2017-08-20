@@ -15,6 +15,7 @@
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ToolbarBackArrow"
         app:title="@string/qa_activity_text_title"
         app:titleTextColor="@color/white" />
 
@@ -38,9 +39,14 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/bu2"
                 android:text="@string/qa_activity_text_m_songs"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_48px"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_40px"
                 android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/greyCC" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -99,9 +105,14 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/bu2"
                 android:text="@string/qa_activity_text_m_notes"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_48px"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_40px"
                 android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/greyCC" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -211,9 +222,14 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/bu2"
                 android:text="@string/qa_activity_text_m_sections"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_48px"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_40px"
                 android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/greyCC" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -255,9 +271,14 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/bu2"
                 android:text="@string/qa_activity_text_m_customizations"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_48px"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_40px"
                 android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/greyCC" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -299,9 +320,14 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/bu2"
                 android:text="@string/qa_activity_text_m_audio_files"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_48px"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_40px"
                 android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/greyCC" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -343,9 +369,14 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/bu2"
                 android:text="@string/qa_activity_text_m_backup_restore"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_48px"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_40px"
                 android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/greyCC" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -404,9 +435,14 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/bu2"
                 android:text="@string/qa_activity_text_m_sharing"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_48px"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_40px"
                 android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/greyCC" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -442,32 +478,6 @@
                 android:textSize="@dimen/text_size_30px"
                 android:textStyle="italic" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/bu2"
-                android:text="@string/qa_activity_text_m_troubleshooting"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_48px"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/bu1"
-                android:text="@string/qa_activity_text_q_add_audio_file_error"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_36px"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/qa_activity_text_a_add_audio_file_error"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_30px"
-                android:textStyle="italic" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

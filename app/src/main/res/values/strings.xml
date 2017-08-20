@@ -84,12 +84,17 @@
     <string name="settings_activity_text_sharing">SHARING</string>
     <string name="settings_activity_text_share_song">Share</string>
     <string name="settings_activity_text_import_song">Import song</string>
+    <string name="settings_activity_text_import_song_desc">Import a song from a mhs file</string>
     <string name="settings_activity_text_backup_restore">BACKUP/RESTORE SONGS</string>
     <string name="settings_activity_text_backup">Backup</string>
+    <string name="settings_activity_text_backup_desc">Create a backup file</string>
     <string name="settings_activity_text_restore">Restore</string>
+    <string name="settings_activity_text_restore_desc">Import songs from a backup file</string>
+    <string name="settings_activity_text_about">ABOUT</string>
     <string name="settings_activity_text_credits">Credits</string>
+    <string name="settings_activity_text_version">Version</string>
     <string name="settings_activity_text_rate_app">Rate the app</string>
-    <string name="settings_activity_text_qa">Q &amp; A</string>
+    <string name="settings_activity_text_qa">Questions &amp; answers</string>
     <string name="settings_activity_text_feedback">Feedback</string>
     <string name="settings_activity_text_export_to">Export to…</string>
     <string name="settings_activity_toast_backup_error">Backup error</string>
@@ -108,7 +113,7 @@
     <string name="settings_activity_feedback_chooser">Send feedback using…</string>
 
     <!-- Restore Warning Dialog -->
-    <string name="restore_warning_dialog_title">WARNING: This will delete the songs from your list and import songs from a backup file. Are you sure?</string>
+    <string name="restore_warning_dialog_title">WARNING: This will delete the songs from your list and import songs from a backup mhs file. Are you sure?</string>
 
     <!-- Credits Activity -->
     <string name="credits_activity_text_credits">Credits</string>
@@ -148,14 +153,14 @@
 
     <!-- QA Activity -->
     <string name="qa_activity_text_title">Questions &amp; answers</string>
-    <string name="qa_activity_text_m_songs">Songs</string>
+    <string name="qa_activity_text_m_songs">SONGS</string>
     <string name="qa_activity_text_q_add_song">How do I add a song?</string>
     <string name="qa_activity_text_a_add_song">While on the songs screen, tap the + button on the top to add a new song. Then fill in the title, author (optional) and the key in which the song is played (optional).</string>
     <string name="qa_activity_text_q_key">What if I don\'t know the key of a song?</string>
     <string name="qa_activity_text_a_key">If you only have one harmonica, then this doesn\'t affect you very much and you can leave it in the default key of C. But this is really useful if you have more harmonicas in different keys or if you play with a band and you all have to play in the same key.</string>
     <string name="qa_activity_text_q_search">How can I filter my songs?</string>
     <string name="qa_activity_text_a_search">You can press the search button on the top and type in a song title or an author.</string>
-    <string name="qa_activity_text_m_notes">Notes</string>
+    <string name="qa_activity_text_m_notes">NOTES</string>
     <string name="qa_activity_text_q_note">How do I add a note?</string>
     <string name="qa_activity_text_a_note">Open a song, tap any white plus button, then pick a note from the harmonica.</string>
     <string name="qa_activity_text_q_bend_note">How do I add a bend note?</string>
@@ -168,34 +173,31 @@
     <string name="qa_activity_text_a_insert_row">Press and hold the plus button at the end of the first row, then select the Insert row option. Then add a note. This will insert the note between the 2 rows.</string>
     <string name="qa_activity_text_q_copy_paste_notes">How can I copy/paste notes?</string>
     <string name="qa_activity_text_a_copy_paste_notes">Press and hold the plus button at the end of the row you want to copy, then select the Copy row option. Then press and hold another plus button and select Paste row.</string>
-    <string name="qa_activity_text_m_sections">Sections</string>
+    <string name="qa_activity_text_m_sections">SECTIONS</string>
     <string name="qa_activity_text_q_sections">What are sections?</string>
     <string name="qa_activity_text_a_sections">Sections are a group of notes that compose a song. Some common sections would be Verse, Chorus, Bridge, etc.</string>
     <string name="qa_activity_text_q_add_section">How can I add a section?</string>
     <string name="qa_activity_text_a_add_section">Press and hold the plus button at the end of the first row of the section, then select Add section. Then type in a section name. This will add a section text marker above the row you selected.</string>
-    <string name="qa_activity_text_m_customizations">Customizations</string>
+    <string name="qa_activity_text_m_customizations">CUSTOMIZATIONS</string>
     <string name="qa_activity_text_q_customize_notes">How can I customize my notes?</string>
     <string name="qa_activity_text_a_customize_notes">On the tablature screen tap options, then select Customize. Here you can customize notes, text colors, background colors, etc.</string>
     <string name="qa_activity_text_q_reset_customizations">How can I reset my customizations to default settings?</string>
     <string name="qa_activity_text_a_reset_customizations">On the customize screen tap options, then select Reset.</string>
-    <string name="qa_activity_text_m_audio_files">Audio files</string>
+    <string name="qa_activity_text_m_audio_files">AUDIO FILES</string>
     <string name="qa_activity_text_q_add_audio_file">How can I add an audio file to a song?</string>
     <string name="qa_activity_text_a_add_audio_file">On the tablature screen tap options, then select Add audio file. You can add the file using other apps like File Manager or Google Drive.</string>
     <string name="qa_activity_text_q_play_song">How do I play a song file that I added?</string>
     <string name="qa_activity_text_a_play_song">If you added an audio file, on the tablature screen tap the musical note. When the audio panel shows up tap the play button.</string>
-    <string name="qa_activity_text_m_backup_restore">Backup / restore</string>
+    <string name="qa_activity_text_m_backup_restore">BACKUP / RESTORE</string>
     <string name="qa_activity_text_q_backup">How do I make a backup file?</string>
     <string name="qa_activity_text_a_backup">On the settings screen, tap the backup option. This will create a file named songs.mhs in the destination you choose.</string>
     <string name="qa_activity_text_q_backup_data">Will it backup everything?</string>
     <string name="qa_activity_text_a_backup_data">Almost, it will save all your songs, notes, sections, but not your audio files and customizations. These have to be added manually.</string>
     <string name="qa_activity_text_q_restore">How do I restore my data from a backup file?</string>
     <string name="qa_activity_text_a_restore">On the settings screen, tap the restore option. Then select the mhs file you want to restore the data from.</string>
-    <string name="qa_activity_text_m_sharing">Sharing</string>
+    <string name="qa_activity_text_m_sharing">SHARING</string>
     <string name="qa_activity_text_q_share">How do I share a song?</string>
     <string name="qa_activity_text_a_share">On the tablature screen tap options, then select Share.</string>
     <string name="qa_activity_text_q_import">How do I import a shared song?</string>
     <string name="qa_activity_text_a_import">On the settings screen under Sharing select Import song. Then select the mhs file you want to import the song from.</string>
-    <string name="qa_activity_text_m_troubleshooting">Troubleshooting</string>
-    <string name="qa_activity_text_q_add_audio_file_error">I can\'t add an audio file. I receive a No filepicker app avialable message.</string>
-    <string name="qa_activity_text_a_add_audio_file_error">This is because the app relies on you to use other apps to select a file, and you have no such app. Please install Google Drive, File Manager or any other file selection app for this function to work.</string>
 </resources>

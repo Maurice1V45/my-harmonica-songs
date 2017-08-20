@@ -9,16 +9,16 @@
         android:id="@+id/text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_size_42px" />
+        android:textSize="@dimen/text_size_36px" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/bu4"
-        android:layout_marginTop="@dimen/bu2"
         android:layout_below="@+id/text_title"
+        android:layout_marginTop="@dimen/bu2"
         android:orientation="horizontal">
 
         <Button
@@ -27,9 +27,10 @@
             android:layout_height="match_parent"
             android:layout_marginRight="@dimen/bu0_5"
             android:layout_weight="1"
-            android:background="@drawable/selector_button_generic"
+            android:background="@drawable/selector_button_generic2"
+            android:elevation="@dimen/bu0_5"
             android:text="@string/button_no"
-            android:textColor="@color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_40px" />
 
         <Button
@@ -38,9 +39,10 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/bu0_5"
             android:layout_weight="1"
-            android:background="@drawable/selector_button_generic"
+            android:background="@drawable/selector_button_generic2"
+            android:elevation="@dimen/bu0_5"
             android:text="@string/button_yes"
-            android:textColor="@color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_40px" />
     </LinearLayout>
 

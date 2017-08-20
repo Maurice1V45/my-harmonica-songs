@@ -54,8 +54,6 @@ public class CustomizeActivity extends AppCompatActivity implements CustomizeAct
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customize);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         initViews();
         initListeners();
         refreshPreviews();
@@ -78,7 +76,9 @@ public class CustomizeActivity extends AppCompatActivity implements CustomizeAct
                 ResetCustomizationsDialog dialog = new ResetCustomizationsDialog();
                 dialog.setListener(CustomizeActivity.this);
                 dialog.show(getFragmentManager(), Constants.TAG_RESET_CUSTOMIZATIONS_DIALOG);
-
+                return true;
+            case android.R.id.home:
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -89,6 +89,10 @@ public class CustomizeActivity extends AppCompatActivity implements CustomizeAct
      * Views initializer.
      */
     private void initViews() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         blowNoteView = findViewById(R.id.view_blow_note);
         blowNoteBackground = findViewById(R.id.view_blow_background);
         blowNoteText = (TextView) findViewById(R.id.text_blow_note);

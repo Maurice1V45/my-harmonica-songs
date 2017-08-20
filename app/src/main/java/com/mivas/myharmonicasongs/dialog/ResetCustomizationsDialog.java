@@ -19,6 +19,7 @@ import com.mivas.myharmonicasongs.listener.SongActivityListener;
  */
 public class ResetCustomizationsDialog extends DialogFragment {
 
+    private TextView titleText;
     private Button yesButton;
     private Button noButton;
     private CustomizeActivityListener listener;
@@ -36,6 +37,8 @@ public class ResetCustomizationsDialog extends DialogFragment {
      * @param rootView
      */
     private void initViews(View rootView) {
+        titleText = (TextView) rootView.findViewById(R.id.text_title);
+        titleText.setText(getString(R.string.reset_customizations_dialog_title));
         yesButton = (Button) rootView.findViewById(R.id.button_yes);
         noButton = (Button) rootView.findViewById(R.id.button_no);
     }
@@ -63,7 +66,7 @@ public class ResetCustomizationsDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_reset_customizations, container);
+        View view = inflater.inflate(R.layout.dialog_generic, container);
         initViews(view);
         initListeners();
         return view;

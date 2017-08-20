@@ -16,6 +16,7 @@
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ToolbarBackArrow"
         app:title="@string/settings_activity_text_settings"
         app:titleTextColor="@color/white" />
 
@@ -36,49 +37,45 @@
                 android:layout_marginLeft="@dimen/bu1_5"
                 android:layout_marginTop="@dimen/bu2"
                 android:text="@string/settings_activity_text_sharing"
-                android:textColor="@color/black"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_30px"
                 android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginLeft="@dimen/bu1"
-                android:layout_marginRight="@dimen/bu1"
-                android:layout_marginTop="@dimen/bu0_25"
-                android:background="@color/greyCC" />
 
 
             <RelativeLayout
                 android:id="@+id/view_import"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/bu5"
-                android:background="@drawable/selector_settings_item"
+                android:layout_height="@dimen/bu6"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true">
 
-                <ImageView
-                    android:layout_width="@dimen/bu2"
-                    android:layout_height="@dimen/bu2"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu2"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/icon_import2" />
-
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu5"
-                    android:text="@string/settings_activity_text_import_song"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_36px" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/settings_activity_text_import_song"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_34px" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/settings_activity_text_import_song_desc"
+                        android:textColor="@color/grey77"
+                        android:textSize="@dimen/text_size_28px" />
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="@dimen/bu1"
-                    android:layout_marginRight="@dimen/bu1"
                     android:background="@color/greyCC" />
             </RelativeLayout>
 
@@ -88,81 +85,81 @@
                 android:layout_marginLeft="@dimen/bu1_5"
                 android:layout_marginTop="@dimen/bu2"
                 android:text="@string/settings_activity_text_backup_restore"
-                android:textColor="@color/black"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_30px"
                 android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginLeft="@dimen/bu1"
-                android:layout_marginRight="@dimen/bu1"
-                android:layout_marginTop="@dimen/bu0_25"
-                android:background="@color/greyCC" />
 
             <RelativeLayout
                 android:id="@+id/view_backup"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/bu5"
-                android:background="@drawable/selector_settings_item"
+                android:layout_height="@dimen/bu6"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true">
 
-                <ImageView
-                    android:layout_width="@dimen/bu2"
-                    android:layout_height="@dimen/bu2"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu2"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/icon_export" />
-
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu5"
-                    android:text="@string/settings_activity_text_backup"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_36px" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/settings_activity_text_backup"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_34px" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/settings_activity_text_backup_desc"
+                        android:textColor="@color/grey77"
+                        android:textSize="@dimen/text_size_28px" />
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="@dimen/bu1"
-                    android:layout_marginRight="@dimen/bu1"
                     android:background="@color/greyCC" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/view_restore"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/bu5"
-                android:background="@drawable/selector_settings_item"
+                android:layout_height="@dimen/bu6"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true">
 
-                <ImageView
-                    android:layout_width="@dimen/bu2"
-                    android:layout_height="@dimen/bu2"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu2"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/icon_import" />
-
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu5"
-                    android:text="@string/settings_activity_text_restore"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_36px" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/settings_activity_text_restore"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_34px" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/settings_activity_text_restore_desc"
+                        android:textColor="@color/grey77"
+                        android:textSize="@dimen/text_size_28px" />
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="@dimen/bu1"
-                    android:layout_marginRight="@dimen/bu1"
                     android:background="@color/greyCC" />
             </RelativeLayout>
 
@@ -172,48 +169,30 @@
                 android:layout_marginLeft="@dimen/bu1_5"
                 android:layout_marginTop="@dimen/bu2"
                 android:text="@string/settings_activity_text_general_settings"
-                android:textColor="@color/black"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_30px"
                 android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginLeft="@dimen/bu1"
-                android:layout_marginRight="@dimen/bu1"
-                android:layout_marginTop="@dimen/bu0_25"
-                android:background="@color/greyCC" />
 
             <RelativeLayout
                 android:id="@+id/view_rate_app"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/bu5"
-                android:background="@drawable/selector_settings_item"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true">
-
-                <ImageView
-                    android:layout_width="@dimen/bu2"
-                    android:layout_height="@dimen/bu2"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu2"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/icon_rate_app" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu5"
+                    android:layout_marginLeft="@dimen/bu1_5"
                     android:text="@string/settings_activity_text_rate_app"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_36px" />
+                    android:textSize="@dimen/text_size_34px" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="@dimen/bu1"
-                    android:layout_marginRight="@dimen/bu1"
                     android:background="@color/greyCC" />
             </RelativeLayout>
 
@@ -221,32 +200,22 @@
                 android:id="@+id/view_qa"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/bu5"
-                android:background="@drawable/selector_settings_item"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true">
-
-                <ImageView
-                    android:layout_width="@dimen/bu2"
-                    android:layout_height="@dimen/bu2"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu2"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/icon_question" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu5"
+                    android:layout_marginLeft="@dimen/bu1_5"
                     android:text="@string/settings_activity_text_qa"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_36px" />
+                    android:textSize="@dimen/text_size_34px" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="@dimen/bu1"
-                    android:layout_marginRight="@dimen/bu1"
                     android:background="@color/greyCC" />
             </RelativeLayout>
 
@@ -254,67 +223,95 @@
                 android:id="@+id/view_feedback"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/bu5"
-                android:background="@drawable/selector_settings_item"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true">
-
-                <ImageView
-                    android:layout_width="@dimen/bu2"
-                    android:layout_height="@dimen/bu2"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu2"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/icon_email" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu5"
+                    android:layout_marginLeft="@dimen/bu1_5"
                     android:text="@string/settings_activity_text_feedback"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_36px" />
+                    android:textSize="@dimen/text_size_34px" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="@dimen/bu1"
-                    android:layout_marginRight="@dimen/bu1"
                     android:background="@color/greyCC" />
             </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/bu1_5"
+                android:layout_marginTop="@dimen/bu2"
+                android:text="@string/settings_activity_text_about"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_30px"
+                android:textStyle="bold" />
 
             <RelativeLayout
                 android:id="@+id/view_credits"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/bu5"
-                android:background="@drawable/selector_settings_item"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true">
-
-                <ImageView
-                    android:layout_width="@dimen/bu2"
-                    android:layout_height="@dimen/bu2"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu2"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/icon_credits" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu5"
+                    android:layout_marginLeft="@dimen/bu1_5"
                     android:text="@string/settings_activity_text_credits"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_36px" />
+                    android:textSize="@dimen/text_size_34px" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="@dimen/bu1"
-                    android:layout_marginRight="@dimen/bu1"
                     android:background="@color/greyCC" />
             </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/view_version"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu6"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/settings_activity_text_version"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_34px" />
+
+                    <TextView
+                        android:id="@+id/text_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:textColor="@color/grey77"
+                        android:textSize="@dimen/text_size_28px" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

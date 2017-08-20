@@ -72,7 +72,7 @@ public class ShiftWarningDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_shift_warning, container);
+        View view = inflater.inflate(R.layout.dialog_generic, container);
         initViews(view);
         initListeners();
         return view;

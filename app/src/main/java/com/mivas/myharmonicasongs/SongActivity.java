@@ -130,9 +130,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (menu instanceof MenuBuilder) {
-            ((MenuBuilder) menu).setOptionalIconsVisible(true);
-        }
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_song_activity, menu);
         MenuItem toggleMedia = menu.findItem(R.id.action_toggle_media);

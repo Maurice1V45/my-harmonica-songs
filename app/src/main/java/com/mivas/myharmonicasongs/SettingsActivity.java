@@ -11,7 +11,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.base.Charsets;
@@ -41,6 +43,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
     private View qaView;
     private View rateAppView;
     private View feedbackView;
+    private TextView versionText;
 
     private static final int REQUEST_CODE_RESTORE_SONGS = 1;
     private static final int REQUEST_CODE_STORAGE_PERMISSION_RESTORE = 2;
@@ -56,9 +59,21 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
         initListeners();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initViews() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         importView = findViewById(R.id.view_import);
         backupView = findViewById(R.id.view_backup);
         restoreView = findViewById(R.id.view_restore);
@@ -66,6 +81,8 @@ public class SettingsActivity extends AppCompatActivity implements SettingsActiv
         creditsView = findViewById(R.id.view_credits);
         rateAppView = findViewById(R.id.view_rate_app);
         feedbackView = findViewById(R.id.view_feedback);
+        versionText = (TextView) findViewById(R.id.text_version);
+        versionText.setText(BuildConfig.VERSION_NAME);
     }
 
     private void initListeners() {

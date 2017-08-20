@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.mivas.myharmonicasongs.MHSApplication;
 import com.mivas.myharmonicasongs.R;
@@ -17,6 +18,7 @@ import com.mivas.myharmonicasongs.listener.SettingsActivityListener;
  */
 public class RestoreWarningDialog extends DialogFragment {
 
+    private TextView titleText;
     private Button yesButton;
     private Button noButton;
     private SettingsActivityListener listener;
@@ -34,6 +36,8 @@ public class RestoreWarningDialog extends DialogFragment {
      * @param rootView
      */
     private void initViews(View rootView) {
+        titleText = (TextView) rootView.findViewById(R.id.text_title);
+        titleText.setText(getString(R.string.restore_warning_dialog_title));
         yesButton = (Button) rootView.findViewById(R.id.button_yes);
         noButton = (Button) rootView.findViewById(R.id.button_no);
     }
@@ -61,7 +65,7 @@ public class RestoreWarningDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_restore_warning, container);
+        View view = inflater.inflate(R.layout.dialog_generic, container);
         initViews(view);
         initListeners();
         return view;

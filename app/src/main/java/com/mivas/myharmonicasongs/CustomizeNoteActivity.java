@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +23,9 @@ import com.mivas.myharmonicasongs.listener.StylePickerListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
 import com.mivas.myharmonicasongs.util.PreferencesUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Customize Note Activity.
@@ -61,6 +65,16 @@ public class CustomizeNoteActivity extends AppCompatActivity implements Customiz
         refreshPreview();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initStyles() {
         if (blow) {
             blowSign = CustomizationUtils.getBlowSign();
@@ -82,13 +96,19 @@ public class CustomizeNoteActivity extends AppCompatActivity implements Customiz
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(blow ? R.string.customize_note_activity_text_blow_title : R.string.customize_note_activity_text_draw_title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         signList = (RecyclerView) findViewById(R.id.list_signs);
         signList.setLayoutManager(new LinearLayoutManager(CustomizeNoteActivity.this, LinearLayout.HORIZONTAL, false));
         signAdapter = new SignPickerAdapter(CustomizeNoteActivity.this, CustomizeNoteActivity.this, blow ? blowSign : drawSign);
         signList.setAdapter(signAdapter);
         styleList = (RecyclerView) findViewById(R.id.list_styles);
         styleList.setLayoutManager(new LinearLayoutManager(CustomizeNoteActivity.this, LinearLayout.HORIZONTAL, false));
-        styleAdapter = new StylePickerAdapter(CustomizeNoteActivity.this, R.layout.list_item_note_style_picker, CustomizeNoteActivity.this, blow ? blowStyle : drawStyle, "4");
+        List<String> texts = new ArrayList<String>();
+        for (int i = 0; i < 3; i++) {
+            texts.add(String.valueOf(4));
+        }
+        styleAdapter = new StylePickerAdapter(CustomizeNoteActivity.this, R.layout.list_item_note_style_picker, CustomizeNoteActivity.this, blow ? blowStyle : drawStyle, texts);
         styleList.setAdapter(styleAdapter);
         textColorView = findViewById(R.id.view_text_color);
         textColorColorView = findViewById(R.id.view_text_color_color);

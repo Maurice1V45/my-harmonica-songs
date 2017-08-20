@@ -11,31 +11,26 @@
     <item
         android:id="@+id/action_share"
         android:title="@string/song_activity_menu_share"
-        android:icon="@drawable/icon_share2"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_customize"
         android:title="@string/song_activity_menu_customize"
-        android:icon="@drawable/icon_customize"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_add_audio_file"
         android:title="@string/song_activity_menu_add_audio_file"
-        android:icon="@drawable/icon_add_song"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_remove_audio_file"
         android:title="@string/song_activity_menu_remove_audio_file"
-        android:icon="@drawable/icon_remove_song"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_shift_notes"
         android:title="@string/song_activity_menu_shift_notes"
-        android:icon="@drawable/icon_remove_song"
         app:showAsAction="never" />
 
 </menu>
