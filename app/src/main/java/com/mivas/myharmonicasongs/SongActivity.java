@@ -38,15 +38,17 @@ import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.database.model.DbSection;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.dialog.NotePickerDialog;
+import com.mivas.myharmonicasongs.dialog.NotesShiftDialog;
 import com.mivas.myharmonicasongs.dialog.SectionDialog;
 import com.mivas.myharmonicasongs.exception.MediaPlayerException;
+import com.mivas.myharmonicasongs.listener.NotesShiftListener;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
 import com.mivas.myharmonicasongs.util.DimensionUtils;
 import com.mivas.myharmonicasongs.util.ExportHelper;
-import com.mivas.myharmonicasongs.util.OctaveShiftUtils;
+import com.mivas.myharmonicasongs.util.NotesShiftUtils;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -59,7 +61,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Activity that displays notes.
  */
-public class SongActivity extends AppCompatActivity implements SongActivityListener {
+public class SongActivity extends AppCompatActivity implements SongActivityListener, NotesShiftListener {
 
     private LinearLayout notesLayout;
     private DbSong dbSong;
@@ -189,32 +191,14 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 String fileName = (dbSong.getTitle() + ".mhs");
                 ExportHelper.getInstance().launchExportIntent(SongActivity.this, dbSongs, fileName, getString(R.string.song_activity_text_share_to));
                 return true;
-            case R.id.action_increase_octave:
-                increaseOctave();
-                return true;
-            case R.id.action_decrease_octave:
+            case R.id.action_shift_notes:
+                NotesShiftDialog dialog = new NotesShiftDialog();
+                dialog.setDbNotes(notes);
+                dialog.setListener(SongActivity.this);
+                dialog.show(getFragmentManager(), Constants.TAG_NOTES_SHIFT_DIALOG);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void increaseOctave() {
-        int eligible = 0;
-        for (DbNote dbNote : notes) {
-            if (OctaveShiftUtils.isIncreasePossible(dbNote)) {
-                eligible++;
-            }
-        }
-        if (eligible == notes.size()) {
-            for (DbNote dbNote : notes) {
-                OctaveShiftUtils.increase(dbNote);
-            }
-            ActiveAndroid.beginTransaction();
-            NoteDbHandler.insertNotes(notes);
-            ActiveAndroid.setTransactionSuccessful();
-            ActiveAndroid.endTransaction();
-            drawNotes();
         }
     }
 
@@ -1035,5 +1019,33 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private void sendSongsUpdatedBroadcast() {
         Intent intent = new Intent(Constants.INTENT_SONGS_UPDATED);
         sendBroadcast(intent);
+    }
+
+    @Override
+    public void onNotesShiftedUp() {
+        shiftNotes(true);
+        drawNotes();
+        CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_notes_shifted, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNotesShiftedDown() {
+        shiftNotes(false);
+        drawNotes();
+        CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_notes_shifted, Toast.LENGTH_SHORT).show();
+    }
+
+    private void shiftNotes(boolean increase) {
+        for (DbNote dbNote : notes) {
+            if (increase) {
+                NotesShiftUtils.increase(dbNote);
+            } else {
+                NotesShiftUtils.decrease(dbNote);
+            }
+        }
+        ActiveAndroid.beginTransaction();
+        NoteDbHandler.insertNotes(notes);
+        ActiveAndroid.setTransactionSuccessful();
+        ActiveAndroid.endTransaction();
     }
 }

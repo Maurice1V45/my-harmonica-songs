@@ -1,27 +1,17 @@
 package com.mivas.myharmonicasongs.dialog;
 
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mivas.myharmonicasongs.MHSApplication;
 import com.mivas.myharmonicasongs.R;
-import com.mivas.myharmonicasongs.adapter.KeyPickerAdapter;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.listener.MainActivityListener;
-import com.mivas.myharmonicasongs.listener.SongDialogListener;
-import com.mivas.myharmonicasongs.util.CustomToast;
-import com.mivas.myharmonicasongs.util.KeyboardUtils;
 
 /**
  * Dialog for deleting a song.

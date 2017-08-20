@@ -41,8 +41,7 @@
     <string name="song_activity_menu_add_audio_file">Add audio file</string>
     <string name="song_activity_menu_remove_audio_file">Remove audio file</string>
     <string name="song_activity_menu_toggle_media">Show/Hide Media player</string>
-    <string name="song_activity_menu_increase_octave">Increase octave</string>
-    <string name="song_activity_menu_decrease_octave">Decrease octave</string>
+    <string name="song_activity_menu_shift_notes">Shift notes</string>
     <string name="song_activity_toast_note_copied">note copied</string>
     <string name="song_activity_toast_notes_copied">notes copied</string>
     <string name="song_activity_toast_no_notes_copied">No notes copied</string>
@@ -53,6 +52,7 @@
     <string name="song_activity_toast_audio_file_removed">Audio file removed</string>
     <string name="song_activity_toast_media_player_init_error">Error initializing media player</string>
     <string name="song_activity_toast_error_no_filepicker_app">No file picker app available on the device</string>
+    <string name="song_activity_toast_notes_shifted">Notes shifted</string>
     <string name="song_activity_text_share_to">Share with…</string>
 
     <!-- Note Picker Dialog -->
@@ -67,8 +67,16 @@
     <string name="section_dialog_text_add_section">Add Section</string>
     <string name="section_dialog_text_edit_section">Edit Section</string>
 
-    <!-- Octave Shift Dialog -->
-    <string name="octave_shift_dialog_button_delete">Delete</string>
+    <!-- Notes Shift Dialog -->
+    <string name="notes_shift_dialog_increase_notes_text">Increase notes by 1 octave</string>
+    <string name="notes_shift_dialog_decrease_notes_text">Decrease notes by 1 octave</string>
+    <string name="notes_shift_dialog_eligible_notes">notes eligible</string>
+    <string name="notes_shift_dialog_no">No</string>
+    <string name="notes_shift_dialog_all">All</string>
+
+    <!-- Shift Warning Dialog -->
+    <string name="shift_warning_dialog_notes_text" formatted="false">Only %d out of %d notes can be shifted. Are you sure you want to leave %d notes unshifted?</string>
+    <string name="shift_warning_dialog_note_text" formatted="false">Only %d out of %d notes can be shifted. Are you sure you want to leave %d note unshifted?</string>
 
     <!-- Settings Activity -->
     <string name="settings_activity_text_settings">Settings</string>

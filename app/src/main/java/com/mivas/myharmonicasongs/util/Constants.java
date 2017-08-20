@@ -19,7 +19,8 @@ public class Constants {
     public static final String TAG_RESET_CUSTOMIZATIONS_DIALOG = "tag_reset_customizations_dialog";
     public static final String TAG_HARMONICA_NOTES_DIALOG = "tag_harmonica_notes_dialog";
     public static final String TAG_RESTORE_WARNING_DIALOG = "tag_restore_warning_dialog";
-    public static final String TAG_OCTAVE_SHIFT_DIALOG = "tag_octave_shift_dialog";
+    public static final String TAG_NOTES_SHIFT_DIALOG = "tag_notes_shift_dialog";
+    public static final String TAG_SHIFT_WARNING_DIALOG = "tag_shift_warning_dialog";
 
     /* Extras */
     public static final String EXTRA_SONG_ID = "extra_song_id";

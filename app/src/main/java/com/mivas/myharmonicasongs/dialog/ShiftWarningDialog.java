@@ -10,24 +10,25 @@ import android.widget.TextView;
 
 import com.mivas.myharmonicasongs.MHSApplication;
 import com.mivas.myharmonicasongs.R;
-import com.mivas.myharmonicasongs.database.model.DbSong;
-import com.mivas.myharmonicasongs.listener.MainActivityListener;
+import com.mivas.myharmonicasongs.listener.NotesShiftListener;
 
 /**
- * Dialog for deleting a song.
+ * Dialog for warning before shifting notes.
  */
-public class OctaveShiftDialog extends DialogFragment {
+public class ShiftWarningDialog extends DialogFragment {
 
     private TextView titleText;
     private Button yesButton;
     private Button noButton;
-    private DbSong dbSong;
-    private MainActivityListener listener;
+    private NotesShiftListener listener;
+    private boolean shiftUp;
+    private int eligibleNotes;
+    private int allNotes;
 
     /**
      * Default constructor
      */
-    public OctaveShiftDialog() {
+    public ShiftWarningDialog() {
         // empty constructor
     }
 
@@ -38,7 +39,8 @@ public class OctaveShiftDialog extends DialogFragment {
      */
     private void initViews(View rootView) {
         titleText = (TextView) rootView.findViewById(R.id.text_title);
-        titleText.setText(getString(R.string.delete_song_dialog_message) + " " + dbSong.getTitle() + "?");
+        String message = String.format((allNotes - eligibleNotes) == 1 ? getString(R.string.shift_warning_dialog_note_text) : getString(R.string.shift_warning_dialog_notes_text), eligibleNotes, allNotes, (allNotes - eligibleNotes));
+        titleText.setText(message);
         yesButton = (Button) rootView.findViewById(R.id.button_yes);
         noButton = (Button) rootView.findViewById(R.id.button_no);
     }
@@ -51,7 +53,11 @@ public class OctaveShiftDialog extends DialogFragment {
 
             @Override
             public void onClick(View v) {
-                listener.onSongDeleteConfirmed(dbSong);
+                if (shiftUp) {
+                    listener.onNotesShiftedUp();
+                } else {
+                    listener.onNotesShiftedDown();
+                }
                 getDialog().dismiss();
             }
         });
@@ -66,7 +72,7 @@ public class OctaveShiftDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_octave_shift, container);
+        View view = inflater.inflate(R.layout.dialog_shift_warning, container);
         initViews(view);
         initListeners();
         return view;
@@ -82,12 +88,19 @@ public class OctaveShiftDialog extends DialogFragment {
         }
     }
 
-    public void setSong(DbSong dbSong) {
-        this.dbSong = dbSong;
-    }
-
-    public void setListener(MainActivityListener listener) {
+    public void setListener(NotesShiftListener listener) {
         this.listener = listener;
     }
 
+    public void setShiftUp(boolean shiftUp) {
+        this.shiftUp = shiftUp;
+    }
+
+    public void setEligibleNotes(int eligibleNotes) {
+        this.eligibleNotes = eligibleNotes;
+    }
+
+    public void setAllNotes(int allNotes) {
+        this.allNotes = allNotes;
+    }
 }
