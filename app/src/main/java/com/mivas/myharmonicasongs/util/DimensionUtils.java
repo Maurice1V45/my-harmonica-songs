@@ -27,7 +27,7 @@ public class DimensionUtils {
      * @param sp
      * @return
      */
-    public static int convertSpToPixels(Context context, float sp) {
+    public static int spToPx(Context context, float sp) {
         int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
         return px;
     }

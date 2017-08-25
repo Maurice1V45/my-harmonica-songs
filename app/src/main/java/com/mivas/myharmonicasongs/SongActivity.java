@@ -20,13 +20,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -106,11 +109,23 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private static final int REQUEST_CODE_ADD_AUDIO_FILE = 1;
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 2;
 
+    private int MEASURE_CELL_WIDTH;
+    private int MEASURE_CELL_HEIGHT;
+    private int MEASURE_CELL_MARGIN;
+    private int MEASURE_NOTE_TEXT_SIZE;
+    private int MEASURE_NOTE_WORD_SIZE;
+    private int MEASURE_PLUS_SIZE;
+    private int MEASURE_SECTION_PADDING_TOP;
+    private int MEASURE_SECTION_PADDING_LEFT;
+    private int MEASURE_SECTION_PADDING_BOTTOM;
+    private int MEASURE_SECTION_SIZE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        initMeasures();
         initViews();
         initListeners();
         initCustomizations();
@@ -199,6 +214,19 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void initMeasures() {
+        MEASURE_CELL_WIDTH = DimensionUtils.dpToPx(SongActivity.this, 48);
+        MEASURE_CELL_HEIGHT = DimensionUtils.dpToPx(SongActivity.this, 66);
+        MEASURE_CELL_MARGIN = DimensionUtils.dpToPx(SongActivity.this, 3);
+        MEASURE_NOTE_TEXT_SIZE = 24;
+        MEASURE_NOTE_WORD_SIZE = 10;
+        MEASURE_PLUS_SIZE = DimensionUtils.dpToPx(SongActivity.this, 42);
+        MEASURE_SECTION_PADDING_TOP = DimensionUtils.dpToPx(SongActivity.this, 24);
+        MEASURE_SECTION_PADDING_LEFT = DimensionUtils.dpToPx(SongActivity.this, 12);
+        MEASURE_SECTION_PADDING_BOTTOM = DimensionUtils.dpToPx(SongActivity.this, 4);
+        MEASURE_SECTION_SIZE = 24;
     }
 
     private void animateMediaView(boolean expand) {
@@ -398,29 +426,47 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
      * @param parent
      */
     private void addNoteToNotesView(final DbNote dbNote, LinearLayout parent) {
-        View noteView = getLayoutInflater().inflate(R.layout.list_item_note, null);
 
-        // set background properties
-        View noteBackground = noteView.findViewById(R.id.view_note);
-        noteBackground.setBackground(CustomizationUtils.createNoteBackground(SongActivity.this, dbNote.isBlow() ? blowBackgroundColor : drawBackgroundColor));
+        // set note layout properties
+        LinearLayout noteLayout = new LinearLayout(SongActivity.this);
+        LinearLayout.LayoutParams noteLayoutParams = new LinearLayout.LayoutParams(MEASURE_CELL_WIDTH, MEASURE_CELL_HEIGHT);
+        noteLayoutParams.setMargins(MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN);
+        noteLayout.setLayoutParams(noteLayoutParams);
+        noteLayout.setGravity(Gravity.CENTER_VERTICAL);
+        noteLayout.setOrientation(LinearLayout.VERTICAL);
+        noteLayout.setBackground(CustomizationUtils.createNoteBackground(SongActivity.this, dbNote.isBlow() ? blowBackgroundColor : drawBackgroundColor));
 
         // set note properties
-        TextView noteText = (TextView) noteView.findViewById(R.id.text_note);
+        TextView noteTextView = new TextView(SongActivity.this);
+        LinearLayout.LayoutParams noteTextLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        noteTextLayoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+        noteTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        noteTextView.setLayoutParams(noteTextLayoutParams);
+        noteTextView.setTextSize(MEASURE_NOTE_TEXT_SIZE);
+        noteTextView.setMaxLines(1);
         if (dbNote.isBlow()) {
-            CustomizationUtils.styleNoteText(noteText, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, blowTextColor);
+            CustomizationUtils.styleNoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, blowTextColor);
         } else {
-            CustomizationUtils.styleNoteText(noteText, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, drawTextColor);
+            CustomizationUtils.styleNoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, drawTextColor);
         }
+        noteLayout.addView(noteTextView);
 
         // set word properties
-        TextView wordText = (TextView) noteView.findViewById(R.id.text_word);
+        TextView wordText = new TextView(SongActivity.this);
+        LinearLayout.LayoutParams wordTextLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        wordTextLayoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+        wordText.setGravity(Gravity.CENTER_HORIZONTAL);
+        wordText.setLayoutParams(wordTextLayoutParams);
+        wordText.setTextSize(MEASURE_NOTE_WORD_SIZE);
+        wordText.setMaxLines(1);
         wordText.setText(dbNote.getWord());
         wordText.setTextColor(dbNote.isBlow() ? blowTextColor : drawTextColor);
         wordText.setVisibility(dbNote.getWord().isEmpty() ? View.GONE : View.VISIBLE);
+        noteLayout.addView(wordText);
 
         // set click listener
-        noteView.setClickable(true);
-        noteView.setOnClickListener(new View.OnClickListener() {
+        noteLayout.setClickable(true);
+        noteLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 NotePickerDialog dialog = new NotePickerDialog();
@@ -432,7 +478,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         });
 
         // add note to parent
-        parent.addView(noteView);
+        parent.addView(noteLayout);
     }
 
     /**
@@ -443,8 +489,24 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
      * @param parent
      */
     private void addPlusToNotesView(final int row, final int column, LinearLayout parent) {
-        View addNoteView = getLayoutInflater().inflate(R.layout.list_item_add_note, null);
-        addNoteView.setClickable(true);
+
+        // set add note layout properties
+        RelativeLayout addNoteLayout = new RelativeLayout(SongActivity.this);
+        LinearLayout.LayoutParams addNoteLayoutParams = new LinearLayout.LayoutParams(MEASURE_CELL_WIDTH, MEASURE_CELL_HEIGHT);
+        addNoteLayoutParams.setMargins(MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN);
+        addNoteLayout.setLayoutParams(addNoteLayoutParams);
+        addNoteLayout.setClickable(true);
+
+        // set plus image properties
+        ImageView plusImage = new ImageView(SongActivity.this);
+        RelativeLayout.LayoutParams plusImageLayoutParams = new RelativeLayout.LayoutParams(MEASURE_PLUS_SIZE, MEASURE_PLUS_SIZE);
+        plusImageLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        plusImage.setLayoutParams(plusImageLayoutParams);
+        plusImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        plusImage.setImageResource(R.drawable.selector_round_plus);
+        addNoteLayout.addView(plusImage);
+
+
         boolean overLastRow = (row > (getNumberOfRows() - 1));
         DbSection dbSection = getSectionByRow(row);
 
@@ -453,7 +515,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         menuBuilder.setOptionalIconsVisible(true);
         MenuInflater inflater = new MenuInflater(SongActivity.this);
         inflater.inflate(R.menu.menu_note_options, menuBuilder);
-        final MenuPopupHelper optionsMenu = new MenuPopupHelper(SongActivity.this, menuBuilder, addNoteView);
+        final MenuPopupHelper optionsMenu = new MenuPopupHelper(SongActivity.this, menuBuilder, addNoteLayout);
         menuBuilder.findItem(R.id.action_delete_row).setVisible(column != 0);
         menuBuilder.findItem(R.id.action_insert_row).setVisible(!overLastRow);
         menuBuilder.findItem(R.id.action_copy_row).setVisible(column != 0);
@@ -501,7 +563,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
             }
         });
-        addNoteView.setOnLongClickListener(new View.OnLongClickListener() {
+        addNoteLayout.setOnLongClickListener(new View.OnLongClickListener() {
 
             @Override
             public boolean onLongClick(View v) {
@@ -511,14 +573,14 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         });
 
         // set click listener
-        addNoteView.setOnClickListener(new View.OnClickListener() {
+        addNoteLayout.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 onAddNoteCommand(row, column);
             }
         });
-        parent.addView(addNoteView);
+        parent.addView(addNoteLayout);
     }
 
     /**
@@ -527,10 +589,14 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
      * @param dbSection
      */
     private void addSectionToNotesView(DbSection dbSection, LinearLayout parent) {
-        TextView sectionView = (TextView) getLayoutInflater().inflate(R.layout.list_item_section, null);
-        sectionView.setText(dbSection.getName());
-        CustomizationUtils.styleSectionText(sectionView, sectionStyle, sectionTextColor);
-        parent.addView(sectionView);
+
+        // set section view properties
+        TextView sectionText = new TextView(SongActivity.this);
+        sectionText.setPadding(MEASURE_SECTION_PADDING_LEFT, MEASURE_SECTION_PADDING_TOP, 0, MEASURE_SECTION_PADDING_BOTTOM);
+        sectionText.setTextSize(MEASURE_SECTION_SIZE);
+        sectionText.setText(dbSection.getName());
+        CustomizationUtils.styleSectionText(sectionText, sectionStyle, sectionTextColor);
+        parent.addView(sectionText);
     }
 
     /**
