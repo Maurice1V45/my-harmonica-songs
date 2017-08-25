@@ -946,30 +946,57 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         if (requestCode == REQUEST_CODE_ADD_AUDIO_FILE && resultCode == RESULT_OK) {
-            try {
-                InputStream inputStream = getContentResolver().openInputStream(data.getData());
-                String fileName = ExportHelper.getInstance().getFileName(SongActivity.this, data.getData());
-                String finalName = dbSong.getId() + Constants.SEPARATOR_AUDIO_FILE + fileName;
-                ExportHelper.getInstance().saveToInternalStorage(SongActivity.this, finalName, inputStream);
-                dbSong.setAudioFile(finalName);
-                SongDbHandler.insertSong(dbSong);
-                CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_audio_file_added, Toast.LENGTH_SHORT).show();
-                initMediaPlayer();
-                if (mediaView.getVisibility() == View.GONE) {
-                    animateMediaView(true);
+            CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_adding_audio_file, Toast.LENGTH_SHORT).show();
+            Thread thread = new Thread() {
+
+                @Override
+                public void run() {
+                    try {
+                        InputStream inputStream = getContentResolver().openInputStream(data.getData());
+                        String fileName = ExportHelper.getInstance().getFileName(SongActivity.this, data.getData());
+                        String finalName = dbSong.getId() + Constants.SEPARATOR_AUDIO_FILE + fileName;
+                        ExportHelper.getInstance().saveToInternalStorage(SongActivity.this, finalName, inputStream);
+                        dbSong.setAudioFile(finalName);
+                        SongDbHandler.insertSong(dbSong);
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                try {
+                                    CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_audio_file_added, Toast.LENGTH_SHORT).show();
+                                    initMediaPlayer();
+                                    if (mediaView.getVisibility() == View.GONE) {
+                                        animateMediaView(true);
+                                    }
+                                    invalidateOptionsMenu();
+                                    sendSongsUpdatedBroadcast();
+                                } catch (Exception e) {
+                                    handleAddAudioFileException();
+                                }
+                            }
+                        });
+                    } catch (Exception e) {
+                        handleAddAudioFileException();
+                    }
                 }
-                invalidateOptionsMenu();
-                sendSongsUpdatedBroadcast();
-            } catch (Exception e) {
-                ExportHelper.getInstance().removeAudioFile(SongActivity.this, dbSong);
-                dbSong.setAudioFile(null);
-                SongDbHandler.insertSong(dbSong);
-                releaseMediaPlayer();
+            };
+            thread.start();
+        }
+    }
+
+    private void handleAddAudioFileException() {
+        ExportHelper.getInstance().removeAudioFile(SongActivity.this, dbSong);
+        dbSong.setAudioFile(null);
+        SongDbHandler.insertSong(dbSong);
+        releaseMediaPlayer();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
                 CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_add_audio_file_error, Toast.LENGTH_SHORT).show();
             }
-        }
+        });
     }
 
     @Override

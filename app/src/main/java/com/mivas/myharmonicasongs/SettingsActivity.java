@@ -100,9 +100,26 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                List<DbSong> dbSongs = SongDbHandler.getSongs();
-                String fileName = "Backup" + System.currentTimeMillis() + ".mhs";
-                ExportHelper.getInstance().launchExportIntent(SettingsActivity.this, dbSongs, fileName, getString(R.string.settings_activity_text_export_to));
+                backupView.setClickable(false);
+                CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_preparing_backup, Toast.LENGTH_SHORT).show();
+                Thread thread = new Thread() {
+
+                    @Override
+                    public void run() {
+                        List<DbSong> dbSongs = SongDbHandler.getSongs();
+                        String fileName = "Backup" + System.currentTimeMillis() + ".mhs";
+                        ExportHelper.getInstance().launchExportIntent(SettingsActivity.this, dbSongs, fileName, getString(R.string.settings_activity_text_export_to));
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                backupView.setClickable(true);
+                            }
+                        });
+                    }
+                };
+                thread.start();
+
             }
         });
         restoreView.setOnClickListener(new View.OnClickListener() {
@@ -190,15 +207,32 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         if (requestCode == REQUEST_CODE_RESTORE_SONGS && resultCode == RESULT_OK) {
             try {
                 if (ExportHelper.getInstance().isMhsFile(SettingsActivity.this, data.getData())) {
                     CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_restoring_songs, Toast.LENGTH_SHORT).show();
-                    InputStream inputStream = getContentResolver().openInputStream(data.getData());
-                    String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
-                    ExportHelper.getInstance().removeAllAudioFiles(SettingsActivity.this);
-                    ExportHelper.getInstance().importSongs(fileJson, true);
+                    Thread thread = new Thread() {
+
+                        @Override
+                        public void run() {
+                            try {
+                                InputStream inputStream = getContentResolver().openInputStream(data.getData());
+                                String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
+                                ExportHelper.getInstance().removeAllAudioFiles(SettingsActivity.this);
+                                ExportHelper.getInstance().importSongs(fileJson, true);
+                            } catch (Exception e) {
+                                runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_restore_error, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        }
+                    };
+                    thread.start();
                 } else {
                     CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_not_mhs_file, Toast.LENGTH_SHORT).show();
                 }
@@ -209,9 +243,26 @@ public class SettingsActivity extends AppCompatActivity {
             try {
                 if (ExportHelper.getInstance().isMhsFile(SettingsActivity.this, data.getData())) {
                     CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_importing_song, Toast.LENGTH_SHORT).show();
-                    InputStream inputStream = getContentResolver().openInputStream(data.getData());
-                    String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
-                    ExportHelper.getInstance().importSongs(fileJson, false);
+                    Thread thread = new Thread() {
+
+                        @Override
+                        public void run() {
+                            try {
+                                InputStream inputStream = getContentResolver().openInputStream(data.getData());
+                                String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
+                                ExportHelper.getInstance().importSongs(fileJson, false);
+                            } catch (Exception e) {
+                                runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_import_error, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        }
+                    };
+                    thread.start();
                 } else {
                     CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_not_mhs_file, Toast.LENGTH_SHORT).show();
                 }

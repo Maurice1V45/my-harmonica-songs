@@ -52,6 +52,7 @@
     <string name="song_activity_toast_permission_needed">Permission needed to add audio file</string>
     <string name="song_activity_toast_add_audio_file_error">Error adding audio file</string>
     <string name="song_activity_toast_no_audio_file">No audio file added</string>
+    <string name="song_activity_toast_adding_audio_file">Adding audio file…</string>
     <string name="song_activity_toast_audio_file_added">Audio file added</string>
     <string name="song_activity_toast_audio_file_removed">Audio file removed</string>
     <string name="song_activity_toast_media_player_init_error">Error initializing media player</string>
@@ -111,6 +112,7 @@
     <string name="settings_activity_toast_error_no_filepicker_app">No file picker app available on the device</string>
     <string name="settings_activity_toast_error_no_email_app">No email app available on the device</string>
     <string name="settings_activity_toast_permission_needed">Permission needed to import songs</string>
+    <string name="settings_activity_toast_preparing_backup">Preparing backup…</string>
     <string name="settings_activity_feedback_subject">My Harmonica Songs Feedback</string>
     <string name="settings_activity_feedback_chooser">Send feedback using…</string>
     <string name="settings_activity_restore_warning_dialog_title">Warning!</string>

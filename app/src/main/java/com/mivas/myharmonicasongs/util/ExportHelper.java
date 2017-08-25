@@ -1,11 +1,13 @@
 package com.mivas.myharmonicasongs.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
 import android.support.v4.content.FileProvider;
+import android.view.View;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
@@ -126,109 +128,102 @@ public class ExportHelper {
     }
 
     public void importSongs(final String songsJson, final boolean clearDb) {
-        Thread thread = new Thread() {
 
-            @Override
-            public void run() {
+        ActiveAndroid.beginTransaction();
 
-                ActiveAndroid.beginTransaction();
+        // clear database
+        if (clearDb) {
+            SectionDbHandler.deleteSections();
+            NoteDbHandler.deleteNotes();
+            SongDbHandler.deleteSongs();
+        }
 
-                    // clear database
-                if (clearDb) {
-                    SectionDbHandler.deleteSections();
-                    NoteDbHandler.deleteNotes();
-                    SongDbHandler.deleteSongs();
-                }
+        // init list of dbSongs and songJsons
+        List<DbSong> dbSongs = new ArrayList<DbSong>();
+        List<JSONObject> songJsons = new ArrayList<JSONObject>();
 
-                // init list of dbSongs and songJsons
-                List<DbSong> dbSongs = new ArrayList<DbSong>();
-                List<JSONObject> songJsons = new ArrayList<JSONObject>();
+        // start parsing the songs
+        try {
+            JSONObject jsonObject = new JSONObject(songsJson);
+            JSONArray songsArray = jsonObject.getJSONArray("songs");
+            for (int i = 0; i < songsArray.length(); i++) {
+                JSONObject songJson = songsArray.getJSONObject(i);
+                songJsons.add(songJson);
 
-                // start parsing the songs
-                try {
-                    JSONObject jsonObject = new JSONObject(songsJson);
-                    JSONArray songsArray = jsonObject.getJSONArray("songs");
-                    for (int i = 0; i < songsArray.length(); i++) {
-                        JSONObject songJson = songsArray.getJSONObject(i);
-                        songJsons.add(songJson);
+                // populate the song
+                DbSong dbSong = new DbSong();
+                dbSong.setTitle(songJson.getString("title"));
+                dbSong.setAuthor(songJson.getString("author"));
+                dbSong.setFavourite(songJson.getBoolean("favorite"));
+                dbSong.setKey(songJson.getInt("key"));
+                dbSongs.add(dbSong);
 
-                        // populate the song
-                        DbSong dbSong = new DbSong();
-                        dbSong.setTitle(songJson.getString("title"));
-                        dbSong.setAuthor(songJson.getString("author"));
-                        dbSong.setFavourite(songJson.getBoolean("favorite"));
-                        dbSong.setKey(songJson.getInt("key"));
-                        dbSongs.add(dbSong);
-
-                        // add the song to the transaction
-                        SongDbHandler.insertSong(dbSong);
-                    }
-
-                    // set the transaction successful
-                    ActiveAndroid.setTransactionSuccessful();
-                } catch (JSONException e) {
-                    return;
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-
-                // start parsing the notes and the sections
-                try {
-                    ActiveAndroid.beginTransaction();
-                    for (int i = 0; i < songJsons.size(); i++) {
-                        JSONObject songJson = songJsons.get(i);
-                        JSONArray notesArray = songJson.getJSONArray("notes");
-                        for (int j = 0; j < notesArray.length(); j++) {
-                            JSONObject noteJson = notesArray.getJSONObject(j);
-
-                            // populate the note
-                            DbNote dbNote = new DbNote();
-                            dbNote.setHole(noteJson.getInt("hole"));
-                            dbNote.setBlow(noteJson.getBoolean("blow"));
-                            dbNote.setWord(noteJson.getString("word"));
-                            dbNote.setRow(noteJson.getInt("row"));
-                            dbNote.setColumn(noteJson.getInt("column"));
-                            dbNote.setBend((float) noteJson.getDouble("bend"));
-                            dbNote.setSongId(dbSongs.get(i).getId());
-
-                            // add the note to the transaction
-                            NoteDbHandler.insertNote(dbNote);
-                        }
-
-                        // save sections
-                        JSONArray sectionsArray = songJson.getJSONArray("sections");
-                        for (int j = 0; j < sectionsArray.length(); j++) {
-                            JSONObject sectionJson = sectionsArray.getJSONObject(j);
-
-                            // populate the section
-                            DbSection dbSection = new DbSection();
-                            dbSection.setName(sectionJson.getString("name"));
-                            dbSection.setRow(sectionJson.getInt("row"));
-                            dbSection.setSongId(dbSongs.get(i).getId());
-
-                            // add the section to the transaction
-                            SectionDbHandler.insertSection(dbSection);
-                        }
-                    }
-
-                    // set the transaction successful
-                    ActiveAndroid.setTransactionSuccessful();
-                } catch (JSONException e) {
-                    return;
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-
-                // send broadcast receiver
-                Intent intent = new Intent(Constants.INTENT_SONGS_UPDATED);
-                intent.putExtra(Constants.EXTRA_SONGS_UPDATED_COUNT, dbSongs.size());
-                MHSApplication.getInstance().getApplicationContext().sendBroadcast(intent);
+                // add the song to the transaction
+                SongDbHandler.insertSong(dbSong);
             }
-        };
-        thread.start();
+
+            // set the transaction successful
+            ActiveAndroid.setTransactionSuccessful();
+        } catch (JSONException e) {
+            return;
+        } finally {
+            ActiveAndroid.endTransaction();
+        }
+
+        // start parsing the notes and the sections
+        try {
+            ActiveAndroid.beginTransaction();
+            for (int i = 0; i < songJsons.size(); i++) {
+                JSONObject songJson = songJsons.get(i);
+                JSONArray notesArray = songJson.getJSONArray("notes");
+                for (int j = 0; j < notesArray.length(); j++) {
+                    JSONObject noteJson = notesArray.getJSONObject(j);
+
+                    // populate the note
+                    DbNote dbNote = new DbNote();
+                    dbNote.setHole(noteJson.getInt("hole"));
+                    dbNote.setBlow(noteJson.getBoolean("blow"));
+                    dbNote.setWord(noteJson.getString("word"));
+                    dbNote.setRow(noteJson.getInt("row"));
+                    dbNote.setColumn(noteJson.getInt("column"));
+                    dbNote.setBend((float) noteJson.getDouble("bend"));
+                    dbNote.setSongId(dbSongs.get(i).getId());
+
+                    // add the note to the transaction
+                    NoteDbHandler.insertNote(dbNote);
+                }
+
+                // save sections
+                JSONArray sectionsArray = songJson.getJSONArray("sections");
+                for (int j = 0; j < sectionsArray.length(); j++) {
+                    JSONObject sectionJson = sectionsArray.getJSONObject(j);
+
+                    // populate the section
+                    DbSection dbSection = new DbSection();
+                    dbSection.setName(sectionJson.getString("name"));
+                    dbSection.setRow(sectionJson.getInt("row"));
+                    dbSection.setSongId(dbSongs.get(i).getId());
+
+                    // add the section to the transaction
+                    SectionDbHandler.insertSection(dbSection);
+                }
+            }
+
+            // set the transaction successful
+            ActiveAndroid.setTransactionSuccessful();
+        } catch (JSONException e) {
+            return;
+        } finally {
+            ActiveAndroid.endTransaction();
+        }
+
+        // send broadcast receiver
+        Intent intent = new Intent(Constants.INTENT_SONGS_UPDATED);
+        intent.putExtra(Constants.EXTRA_SONGS_UPDATED_COUNT, dbSongs.size());
+        MHSApplication.getInstance().getApplicationContext().sendBroadcast(intent);
     }
 
-    public void launchExportIntent(Context context, List<DbSong> dbSongs, String fileName, String chooserText) {
+    public void launchExportIntent(final Context context, final List<DbSong> dbSongs, final String fileName, final String chooserText) {
         File songFile = saveTempFile(context, fileName, ExportHelper.getInstance().convertSongsToJson(dbSongs).toString());
         Uri contentUri = FileProvider.getUriForFile(context, "com.mivas.myharmonicasongs.fileprovider", songFile);
         Intent intent = new Intent(Intent.ACTION_SEND);
