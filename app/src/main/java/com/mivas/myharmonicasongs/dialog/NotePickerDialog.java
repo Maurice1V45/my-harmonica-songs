@@ -21,6 +21,8 @@ import com.mivas.myharmonicasongs.adapter.NotePickerAdapter;
 import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.listener.NotePickerDialogListener;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
+import com.mivas.myharmonicasongs.model.NoteViewHolder;
+import com.mivas.myharmonicasongs.model.RowViewHolder;
 
 /**
  * Dialog for choosing a harmonica note.
@@ -33,6 +35,8 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
     private SongActivityListener listener;
     private View deleteButton;
     private CheckBox showBendingsCheckbox;
+    private NoteViewHolder noteViewHolder;
+    private RowViewHolder rowViewHolder;
     private NotePickerAdapter adapter;
     private boolean editMode;
     private boolean newRow;
@@ -74,7 +78,7 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
 
             @Override
             public void onClick(View v) {
-                listener.onNoteDeleted(dbNote);
+                listener.onNoteDeleted(dbNote, noteViewHolder, rowViewHolder);
                 dismiss();
             }
         });
@@ -120,9 +124,9 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
         dbNote.setBend(bend);
         dbNote.setWord(wordField.getText().toString());
         if (editMode) {
-            listener.onNoteEdited(dbNote);
+            listener.onNoteEdited(dbNote, noteViewHolder);
         } else {
-            listener.onNoteAdded(dbNote, newRow);
+            listener.onNoteAdded(dbNote, newRow, rowViewHolder);
         }
         dismiss();
     }
@@ -143,4 +147,11 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
         this.newRow = newRow;
     }
 
+    public void setRowViewHolder(RowViewHolder rowViewHolder) {
+        this.rowViewHolder = rowViewHolder;
+    }
+
+    public void setNoteViewHolder(NoteViewHolder noteViewHolder) {
+        this.noteViewHolder = noteViewHolder;
+    }
 }

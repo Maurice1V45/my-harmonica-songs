@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,6 +49,8 @@ import com.mivas.myharmonicasongs.dialog.SectionDialog;
 import com.mivas.myharmonicasongs.exception.MediaPlayerException;
 import com.mivas.myharmonicasongs.listener.NotesShiftListener;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
+import com.mivas.myharmonicasongs.model.RowViewHolder;
+import com.mivas.myharmonicasongs.model.NoteViewHolder;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
@@ -74,6 +77,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private List<DbSection> sections = new ArrayList<DbSection>();
     private Comparator notesComparator;
     private TextView noNotesText;
+    private List<RowViewHolder> rowViewHolders = new ArrayList<RowViewHolder>();
     private List<DbNote> copiedNotes = new ArrayList<DbNote>();
     private View backgroundView;
     private int blowSign;
@@ -347,6 +351,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private void drawNotes() {
 
         // clear all views first
+        rowViewHolders.clear();
         notesLayout.removeAllViews();
         if (notes.size() == 0) {
 
@@ -354,7 +359,9 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             LinearLayout rowLayout = new LinearLayout(SongActivity.this);
             rowLayout.setOrientation(LinearLayout.HORIZONTAL);
             notesLayout.addView(rowLayout);
-            addPlusToNotesView(0, 0, rowLayout);
+            RowViewHolder rowViewHolder = new RowViewHolder(new ArrayList<NoteViewHolder>(), rowLayout);
+            rowViewHolders.add(rowViewHolder);
+            addPlusToNotesView(rowViewHolder);
         } else {
 
             // i represents the index of the note in the notes list
@@ -374,17 +381,19 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             LinearLayout rowLayout = new LinearLayout(SongActivity.this);
             rowLayout.setOrientation(LinearLayout.HORIZONTAL);
             notesLayout.addView(rowLayout);
+            RowViewHolder rowViewHolder = new RowViewHolder(new ArrayList<NoteViewHolder>(), rowLayout);
+            rowViewHolders.add(rowViewHolder);
 
             while (i < notes.size()) {
 
                 // add the current note to the horizontal linear layout
-                addNoteToNotesView(thisNote, rowLayout);
+                addNoteToNotesView(thisNote, rowViewHolder);
 
                 // if there is no next note or if this note is the last on this row
                 if (nextNote == null || (nextNote.getRow() != thisNote.getRow())) {
 
                     // add a plus note
-                    addPlusToNotesView(thisNote.getRow(), thisNote.getColumn() + 1, rowLayout);
+                    addPlusToNotesView(rowViewHolder);
                     if (nextNote != null) {
                         rowSection = getSectionByRow(nextNote.getRow());
                         if (rowSection != null) {
@@ -396,15 +405,14 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                     rowLayout = new LinearLayout(SongActivity.this);
                     rowLayout.setOrientation(LinearLayout.HORIZONTAL);
                     notesLayout.addView(rowLayout);
+                    rowViewHolder = new RowViewHolder(new ArrayList<NoteViewHolder>(), rowLayout);
+                    rowViewHolders.add(rowViewHolder);
 
                     // if there are no more notes
                     if (i == notes.size() - 1) {
 
-                        // create a new horizontal linear layout and add a plus note on it
-                        rowLayout = new LinearLayout(SongActivity.this);
-                        rowLayout.setOrientation(LinearLayout.HORIZONTAL);
-                        notesLayout.addView(rowLayout);
-                        addPlusToNotesView(thisNote.getRow() + 1, 0, rowLayout);
+                        // add a last plus
+                        addPlusToNotesView(rowViewHolder);
                     }
                 }
 
@@ -423,9 +431,8 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
      * Adds a note to the notes view.
      *
      * @param dbNote
-     * @param parent
      */
-    private void addNoteToNotesView(final DbNote dbNote, LinearLayout parent) {
+    private void addNoteToNotesView(final DbNote dbNote, RowViewHolder rowViewHolder) {
 
         // set note layout properties
         LinearLayout noteLayout = new LinearLayout(SongActivity.this);
@@ -464,6 +471,11 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         wordText.setVisibility(dbNote.getWord().isEmpty() ? View.GONE : View.VISIBLE);
         noteLayout.addView(wordText);
 
+        // add note to parent
+        rowViewHolder.getLayout().addView(noteLayout, dbNote.getColumn());
+        final NoteViewHolder noteViewHolder = new NoteViewHolder(dbNote, noteLayout);
+        rowViewHolder.addNoteViewHolder(noteViewHolder, dbNote.getColumn());
+
         // set click listener
         noteLayout.setClickable(true);
         noteLayout.setOnClickListener(new View.OnClickListener() {
@@ -473,25 +485,20 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 dialog.setDbNote(dbNote);
                 dialog.setListener(SongActivity.this);
                 dialog.setEditMode(true);
+                dialog.setNoteViewHolder(noteViewHolder);
                 dialog.show(getFragmentManager(), Constants.TAG_HARMONICA_NOTES_DIALOG);
             }
         });
 
-        // add note to parent
-        parent.addView(noteLayout);
     }
 
     /**
      * Adds a plus button to the notes view.
-     *
-     * @param row
-     * @param column
-     * @param parent
      */
-    private void addPlusToNotesView(final int row, final int column, LinearLayout parent) {
+    private void addPlusToNotesView(final RowViewHolder rowViewHolder) {
 
         // set add note layout properties
-        RelativeLayout addNoteLayout = new RelativeLayout(SongActivity.this);
+        final RelativeLayout addNoteLayout = new RelativeLayout(SongActivity.this);
         LinearLayout.LayoutParams addNoteLayoutParams = new LinearLayout.LayoutParams(MEASURE_CELL_WIDTH, MEASURE_CELL_HEIGHT);
         addNoteLayoutParams.setMargins(MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN);
         addNoteLayout.setLayoutParams(addNoteLayoutParams);
@@ -506,67 +513,90 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         plusImage.setImageResource(R.drawable.selector_round_plus);
         addNoteLayout.addView(plusImage);
 
+        // add view holder
+        rowViewHolder.getLayout().addView(addNoteLayout);
+        final NoteViewHolder noteViewHolder = new NoteViewHolder(null, addNoteLayout);
+        rowViewHolder.addNoteViewHolder(noteViewHolder);
 
-        boolean overLastRow = (row > (getNumberOfRows() - 1));
-        DbSection dbSection = getSectionByRow(row);
-
-        // set long press listener with options menu
-        final MenuBuilder menuBuilder = new MenuBuilder(SongActivity.this);
-        menuBuilder.setOptionalIconsVisible(true);
-        MenuInflater inflater = new MenuInflater(SongActivity.this);
-        inflater.inflate(R.menu.menu_note_options, menuBuilder);
-        final MenuPopupHelper optionsMenu = new MenuPopupHelper(SongActivity.this, menuBuilder, addNoteLayout);
-        menuBuilder.findItem(R.id.action_delete_row).setVisible(column != 0);
-        menuBuilder.findItem(R.id.action_insert_row).setVisible(!overLastRow);
-        menuBuilder.findItem(R.id.action_copy_row).setVisible(column != 0);
-        menuBuilder.findItem(R.id.action_paste_row).setVisible(copiedNotes.size() != 0);
-        menuBuilder.findItem(R.id.action_add_section).setVisible(dbSection == null && !overLastRow);
-        menuBuilder.findItem(R.id.action_edit_section).setVisible(dbSection != null);
-        menuBuilder.findItem(R.id.action_delete_section).setVisible(dbSection != null);
-        menuBuilder.setCallback(new MenuBuilder.Callback() {
-
-            @Override
-            public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_add_note:
-                        onAddNoteCommand(row, column);
-                        break;
-                    case R.id.action_delete_row:
-                        onDeleteRowCommand(row);
-                        break;
-                    case R.id.action_insert_row:
-                        onNewRowCommand(row);
-                        break;
-                    case R.id.action_copy_row:
-                        onCopyRowCommand(row);
-                        break;
-                    case R.id.action_paste_row:
-                        onPasteRowCommand(row, column);
-                        break;
-                    case R.id.action_add_section:
-                        onAddSectionCommand(row);
-                        break;
-                    case R.id.action_edit_section:
-                        onEditSectionCommand(row);
-                        break;
-                    case R.id.action_delete_section:
-                        onDeleteSectionCommand(row);
-                        break;
-                    default:
-                        break;
-                }
-                return false;
-            }
-
-            @Override
-            public void onMenuModeChange(MenuBuilder menu) {
-
-            }
-        });
         addNoteLayout.setOnLongClickListener(new View.OnLongClickListener() {
 
             @Override
             public boolean onLongClick(View v) {
+                int row = 0;
+                int column = 0;
+                boolean isLastPlus = false;
+
+                List<NoteViewHolder> noteViewHolders = rowViewHolder.getNoteViewHolders();
+                if (noteViewHolders.size() <= 1) {
+
+                    // this is the last plus in the tab
+                    isLastPlus = true;
+                    row = rowViewHolders.size() - 1;
+                } else {
+
+                    // get last note in the row
+                    NoteViewHolder lastNoteHolder = noteViewHolders.get(noteViewHolders.size() - 2);
+                    row = lastNoteHolder.getDbNote().getRow();
+                    column = lastNoteHolder.getDbNote().getColumn() + 1;
+                }
+
+                DbSection dbSection = getSectionByRow(row);
+
+                // set long press listener with options menu
+                final MenuBuilder menuBuilder = new MenuBuilder(SongActivity.this);
+                menuBuilder.setOptionalIconsVisible(true);
+                MenuInflater inflater = new MenuInflater(SongActivity.this);
+                inflater.inflate(R.menu.menu_note_options, menuBuilder);
+                final MenuPopupHelper optionsMenu = new MenuPopupHelper(SongActivity.this, menuBuilder, addNoteLayout);
+                menuBuilder.findItem(R.id.action_delete_row).setVisible(column != 0);
+                menuBuilder.findItem(R.id.action_insert_row).setVisible(!isLastPlus);
+                menuBuilder.findItem(R.id.action_copy_row).setVisible(column != 0);
+                menuBuilder.findItem(R.id.action_paste_row).setVisible(copiedNotes.size() != 0);
+                menuBuilder.findItem(R.id.action_add_section).setVisible(dbSection == null && !isLastPlus);
+                menuBuilder.findItem(R.id.action_edit_section).setVisible(dbSection != null);
+                menuBuilder.findItem(R.id.action_delete_section).setVisible(dbSection != null);
+                final int finalRow = row;
+                final int finalColumn = column;
+                menuBuilder.setCallback(new MenuBuilder.Callback() {
+
+                    @Override
+                    public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.action_add_note:
+                                onAddNoteCommand(finalRow, finalColumn, rowViewHolder, noteViewHolder);
+                                break;
+                            case R.id.action_delete_row:
+                                onDeleteRowCommand(finalRow);
+                                break;
+                            case R.id.action_insert_row:
+                                onNewRowCommand(finalRow);
+                                break;
+                            case R.id.action_copy_row:
+                                onCopyRowCommand(finalRow);
+                                break;
+                            case R.id.action_paste_row:
+                                onPasteRowCommand(finalRow, finalColumn);
+                                break;
+                            case R.id.action_add_section:
+                                onAddSectionCommand(finalRow);
+                                break;
+                            case R.id.action_edit_section:
+                                onEditSectionCommand(finalRow);
+                                break;
+                            case R.id.action_delete_section:
+                                onDeleteSectionCommand(finalRow);
+                                break;
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public void onMenuModeChange(MenuBuilder menu) {
+
+                    }
+                });
                 optionsMenu.show();
                 return true;
             }
@@ -577,10 +607,24 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
             @Override
             public void onClick(View v) {
-                onAddNoteCommand(row, column);
+                int row = 0;
+                int column = 0;
+
+                List<NoteViewHolder> noteViewHolders = rowViewHolder.getNoteViewHolders();
+                if (noteViewHolders.size() <= 1) {
+
+                    // this is the last plus in the tab
+                    row = rowViewHolders.size() - 1;
+                } else {
+
+                    // get last note in the row
+                    NoteViewHolder lastNoteHolder = noteViewHolders.get(noteViewHolders.size() - 2);
+                    row = lastNoteHolder.getDbNote().getRow();
+                    column = lastNoteHolder.getDbNote().getColumn() + 1;
+                }
+                onAddNoteCommand(row, column, rowViewHolder, noteViewHolder);
             }
         });
-        parent.addView(addNoteLayout);
     }
 
     /**
@@ -605,7 +649,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
      * @param row
      * @param column
      */
-    private void onAddNoteCommand(int row, int column) {
+    private void onAddNoteCommand(int row, int column, RowViewHolder rowViewHolder, NoteViewHolder noteViewHolder) {
         DbNote dbNote = new DbNote();
         dbNote.setRow(row);
         dbNote.setColumn(column);
@@ -615,6 +659,8 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         dialog.setListener(SongActivity.this);
         dialog.setEditMode(false);
         dialog.setNewRow(false);
+        dialog.setRowViewHolder(rowViewHolder);
+        dialog.setNoteViewHolder(noteViewHolder);
         dialog.show(getFragmentManager(), Constants.TAG_HARMONICA_NOTES_DIALOG);
     }
 
@@ -762,7 +808,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     }
 
     @Override
-    public void onNoteAdded(DbNote dbNote, boolean newRow) {
+    public void onNoteAdded(DbNote dbNote, boolean newRow, RowViewHolder rowViewHolder) {
         if (newRow) {
             ActiveAndroid.beginTransaction();
             try {
@@ -776,22 +822,35 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         notes.add(dbNote);
         NoteDbHandler.insertNote(dbNote);
         Collections.sort(notes, notesComparator);
-        drawNotes();
+        addNoteToNotesView(dbNote, rowViewHolder);
     }
 
     @Override
-    public void onNoteEdited(DbNote dbNote) {
+    public void onNoteEdited(DbNote dbNote, NoteViewHolder noteViewHolder) {
         NoteDbHandler.insertNote(dbNote);
-        drawNotes();
+        TextView noteTextView = (TextView) ((LinearLayout) noteViewHolder.getView()).getChildAt(0);
+        if (dbNote.isBlow()) {
+            CustomizationUtils.styleNoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, blowTextColor);
+        } else {
+            CustomizationUtils.styleNoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, drawTextColor);
+        }
+        TextView wordTextView = (TextView) ((LinearLayout) noteViewHolder.getView()).getChildAt(1);
+        wordTextView.setText(dbNote.getWord());
+        wordTextView.setVisibility(dbNote.getWord().isEmpty() ? View.GONE : View.VISIBLE);
+
     }
 
     @Override
-    public void onNoteDeleted(DbNote dbNote) {
+    public void onNoteDeleted(DbNote dbNote, NoteViewHolder noteViewHolder, RowViewHolder rowViewHolder) {
 
         // delete the note
         int position = notes.indexOf(dbNote);
         notes.remove(dbNote);
         NoteDbHandler.deleteNote(dbNote);
+
+        // remove the view
+        rowViewHolder.getLayout().removeView(noteViewHolder.getView());
+        rowViewHolder.getNoteViewHolders().remove(noteViewHolder);
 
         // check the remaining notes on the row
         int rowCount = 0;
@@ -802,45 +861,44 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         }
 
         ActiveAndroid.beginTransaction();
-        try {
+        if (rowCount > 0) {
 
-            if (rowCount > 0) {
-
-                // decrement the column of the notes to the right of the deleted note
-                for (int i = position; i < notes.size(); i++) {
-                    if (notes.get(i).getRow() == dbNote.getRow()) {
-                        DbNote note = notes.get(i);
-                        note.setColumn(note.getColumn() - 1);
-                        NoteDbHandler.insertNote(note);
-                    }
+            // decrement the column of the notes to the right of the deleted note
+            for (int i = position; i < notes.size(); i++) {
+                if (notes.get(i).getRow() == dbNote.getRow()) {
+                    DbNote note = notes.get(i);
+                    note.setColumn(note.getColumn() - 1);
+                    NoteDbHandler.insertNote(note);
                 }
-            } else {
-
-                // delete the section on this row
-                DbSection dbSection = getSectionByRow(dbNote.getRow());
-                if (dbSection != null) {
-                    sections.remove(dbSection);
-                    SectionDbHandler.deleteSection(dbSection);
-                }
-
-                // decrement the row of the notes below the deleted note
-                for (int i = position; i < notes.size(); i++) {
-                    if (notes.get(i).getRow() > dbNote.getRow()) {
-                        DbNote note = notes.get(i);
-                        note.setRow(note.getRow() - 1);
-                        NoteDbHandler.insertNote(note);
-                    }
-                }
-
-                // decrement the row of the sections below the deleted note
-                decrementSections(dbNote.getRow());
             }
-            ActiveAndroid.setTransactionSuccessful();
-        } finally {
-            ActiveAndroid.endTransaction();
-        }
+        } else {
 
-        drawNotes();
+            // delete the section on this row
+            DbSection dbSection = getSectionByRow(dbNote.getRow());
+            if (dbSection != null) {
+                sections.remove(dbSection);
+                SectionDbHandler.deleteSection(dbSection);
+            }
+
+            // decrement the row of the notes below the deleted note
+            for (int i = position; i < notes.size(); i++) {
+                if (notes.get(i).getRow() > dbNote.getRow()) {
+                    DbNote note = notes.get(i);
+                    note.setRow(note.getRow() - 1);
+                    NoteDbHandler.insertNote(note);
+                }
+            }
+
+            // decrement the row of the sections below the deleted note
+            decrementSections(dbNote.getRow());
+
+            // remove the row layout
+            notesLayout.removeView(rowViewHolder.getLayout());
+            rowViewHolders.remove(rowViewHolder);
+        }
+        ActiveAndroid.setTransactionSuccessful();
+        ActiveAndroid.endTransaction();
+
     }
 
     @Override
@@ -970,19 +1028,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     }
 
     /**
-     * Retrieves the current number of rows.
-     *
-     * @return The number of rows.
-     */
-    private int getNumberOfRows() {
-        if (notes.isEmpty()) {
-            return 0;
-        } else {
-            return notes.get(notes.size() - 1).getRow() + 1;
-        }
-    }
-
-    /**
+     * TODO maybe delete this
      * Searches if there is a section on the specified row and returns it.
      *
      * @param row
