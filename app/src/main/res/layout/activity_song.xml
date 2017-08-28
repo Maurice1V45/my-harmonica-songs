@@ -32,8 +32,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:background="@color/greyEE"
-                android:layout_height="@dimen/bu6">
+                android:layout_height="@dimen/bu6"
+                android:background="@color/greyEE">
 
                 <ImageView
                     android:id="@+id/button_play"
@@ -87,29 +87,11 @@
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_42px" />
 
-        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        <com.mivas.myharmonicasongs.view.TablatureView
+            android:id="@+id/view_tablature"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/view_media"
-            android:clipToPadding="false"
-            android:paddingBottom="@dimen/bu0_25"
-            android:paddingTop="@dimen/bu0_25"
-            android:scrollbars="none">
+            android:layout_above="@+id/view_media" />
 
-            <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingLeft="@dimen/bu0_25"
-                android:paddingRight="@dimen/bu0_25"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:id="@+id/list_notes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-            </HorizontalScrollView>
-        </ScrollView>
     </RelativeLayout>
 </RelativeLayout>

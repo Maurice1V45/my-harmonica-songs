@@ -14,7 +14,9 @@ import android.widget.Toast;
 import com.mivas.myharmonicasongs.MHSApplication;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbSection;
+import com.mivas.myharmonicasongs.listener.SectionDialogListener;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
+import com.mivas.myharmonicasongs.model.CellLine;
 import com.mivas.myharmonicasongs.util.CustomToast;
 
 /**
@@ -26,8 +28,9 @@ public class SectionDialog extends DialogFragment {
     private Button okButton;
     private DbSection dbSection;
     private TextView dialogTitle;
+    private CellLine cellLine;
     private boolean editMode;
-    private SongActivityListener listener;
+    private SectionDialogListener listener;
 
     /**
      * Default constructor
@@ -69,12 +72,12 @@ public class SectionDialog extends DialogFragment {
 
                         // add a song
                         dbSection.setName(sectionNameField.getText().toString());
-                        listener.onSectionAdded(dbSection);
+                        listener.onSectionAdded(dbSection, cellLine);
                     } else {
 
                         // edit a song
                         dbSection.setName(sectionNameField.getText().toString());
-                        listener.onSectionEdit(dbSection);
+                        listener.onSectionEdit(dbSection, cellLine);
                     }
                     dismiss();
                 }
@@ -110,8 +113,12 @@ public class SectionDialog extends DialogFragment {
         this.dbSection = dbSection;
     }
 
-    public void setListener(SongActivityListener listener) {
+    public void setListener(SectionDialogListener listener) {
         this.listener = listener;
+    }
+
+    public void setCellLine(CellLine cellLine) {
+        this.cellLine = cellLine;
     }
 
     public void setEditMode(boolean editMode) {

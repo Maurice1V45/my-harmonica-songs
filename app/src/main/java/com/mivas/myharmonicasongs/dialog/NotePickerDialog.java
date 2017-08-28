@@ -19,24 +19,24 @@ import com.mivas.myharmonicasongs.MHSApplication;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.adapter.NotePickerAdapter;
 import com.mivas.myharmonicasongs.database.model.DbNote;
+import com.mivas.myharmonicasongs.listener.NotePickerAdapterListener;
 import com.mivas.myharmonicasongs.listener.NotePickerDialogListener;
-import com.mivas.myharmonicasongs.listener.SongActivityListener;
-import com.mivas.myharmonicasongs.model.NoteViewHolder;
-import com.mivas.myharmonicasongs.model.RowViewHolder;
+import com.mivas.myharmonicasongs.model.Cell;
+import com.mivas.myharmonicasongs.model.CellLine;
 
 /**
  * Dialog for choosing a harmonica note.
  */
-public class NotePickerDialog extends DialogFragment implements NotePickerDialogListener {
+public class NotePickerDialog extends DialogFragment implements NotePickerAdapterListener {
 
     private DbNote dbNote;
     private RecyclerView notesList;
     private EditText wordField;
-    private SongActivityListener listener;
+    private NotePickerDialogListener listener;
     private View deleteButton;
     private CheckBox showBendingsCheckbox;
-    private NoteViewHolder noteViewHolder;
-    private RowViewHolder rowViewHolder;
+    private Cell cell;
+    private CellLine cellLine;
     private NotePickerAdapter adapter;
     private boolean editMode;
     private boolean newRow;
@@ -66,7 +66,7 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
         deleteButton.setVisibility(editMode ? View.VISIBLE : View.GONE);
         notesList = (RecyclerView) rootView.findViewById(R.id.list_harmonica_notes);
         notesList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL, false));
-        adapter = new NotePickerAdapter(getActivity(), NotePickerDialog.this, dbNote, dbNote.getBend() != 0);
+        adapter = new com.mivas.myharmonicasongs.adapter.NotePickerAdapter(getActivity(), NotePickerDialog.this, dbNote, dbNote.getBend() != 0);
         notesList.setAdapter(adapter);
     }
 
@@ -78,7 +78,7 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
 
             @Override
             public void onClick(View v) {
-                listener.onNoteDeleted(dbNote, noteViewHolder, rowViewHolder);
+                listener.onNoteDeleted(cell, cellLine);
                 dismiss();
             }
         });
@@ -124,9 +124,9 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
         dbNote.setBend(bend);
         dbNote.setWord(wordField.getText().toString());
         if (editMode) {
-            listener.onNoteEdited(dbNote, noteViewHolder);
+            listener.onNoteEdited(cell);
         } else {
-            listener.onNoteAdded(dbNote, newRow, rowViewHolder);
+            listener.onNoteAdded(dbNote, newRow, cellLine);
         }
         dismiss();
     }
@@ -135,7 +135,7 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
         this.dbNote = dbNote;
     }
 
-    public void setListener(SongActivityListener listener) {
+    public void setListener(NotePickerDialogListener listener) {
         this.listener = listener;
     }
 
@@ -147,11 +147,11 @@ public class NotePickerDialog extends DialogFragment implements NotePickerDialog
         this.newRow = newRow;
     }
 
-    public void setRowViewHolder(RowViewHolder rowViewHolder) {
-        this.rowViewHolder = rowViewHolder;
+    public void setCellLine(CellLine cellLine) {
+        this.cellLine = cellLine;
     }
 
-    public void setNoteViewHolder(NoteViewHolder noteViewHolder) {
-        this.noteViewHolder = noteViewHolder;
+    public void setCell(Cell cell) {
+        this.cell = cell;
     }
 }

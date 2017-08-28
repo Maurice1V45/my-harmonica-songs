@@ -1,16 +1,27 @@
 package com.mivas.myharmonicasongs.listener;
 
-/**
- * Listener for {@link com.mivas.myharmonicasongs.dialog.NotePickerDialog}.
- */
+import com.mivas.myharmonicasongs.database.model.DbNote;
+import com.mivas.myharmonicasongs.model.Cell;
+import com.mivas.myharmonicasongs.model.CellLine;
+
 public interface NotePickerDialogListener {
 
     /**
-     * Triggered when a note has been picked.
+     * Triggered when a note was added.
      *
-     * @param note
-     * @param blow
-     * @param bend
+     * @param dbNote
+     * @param newRow True, if the Insert new row option was picked from the options menu.
      */
-    void onNoteSelected(int note, boolean blow, float bend);
+    void onNoteAdded(DbNote dbNote, boolean newRow, CellLine cellLine);
+
+    /**
+     * Triggered when a note was edited.
+     */
+    void onNoteEdited(Cell cell);
+
+    /**
+     * Triggered when a note was deleted.
+     */
+    void onNoteDeleted(Cell cell, CellLine cellLine);
+
 }

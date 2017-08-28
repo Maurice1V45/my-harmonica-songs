@@ -1,9 +1,7 @@
 package com.mivas.myharmonicasongs.adapter;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +9,7 @@ import android.widget.TextView;
 
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbNote;
-import com.mivas.myharmonicasongs.listener.NotePickerDialogListener;
+import com.mivas.myharmonicasongs.listener.NotePickerAdapterListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
 
@@ -24,7 +22,7 @@ import java.util.Map;
 public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.NoteViewHolder> {
 
     private Context context;
-    private NotePickerDialogListener listener;
+    private NotePickerAdapterListener listener;
     private DbNote selectedNote;
     private boolean showBendings = false;
     private int blowSign;
@@ -49,7 +47,7 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
         BENDINGS_MAP.put(10, 1f);
     }
 
-    public NotePickerAdapter(Context context, NotePickerDialogListener listener, DbNote selectedNote, boolean showBendings) {
+    public NotePickerAdapter(Context context, NotePickerAdapterListener listener, DbNote selectedNote, boolean showBendings) {
         this.context = context;
         this.listener = listener;
         this.selectedNote = selectedNote;

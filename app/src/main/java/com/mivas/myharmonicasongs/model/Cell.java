@@ -4,15 +4,15 @@ import android.view.View;
 
 import com.mivas.myharmonicasongs.database.model.DbNote;
 
-public class NoteViewHolder {
+public class Cell {
 
     private DbNote dbNote;
     private View view;
 
-    public NoteViewHolder() {
+    public Cell() {
     }
 
-    public NoteViewHolder(DbNote dbNote, View view) {
+    public Cell(DbNote dbNote, View view) {
         this.dbNote = dbNote;
         this.view = view;
     }
