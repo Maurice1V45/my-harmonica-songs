@@ -1,5 +1,6 @@
 package com.mivas.myharmonicasongs.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.view.menu.MenuBuilder;
@@ -79,7 +80,9 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
     private int MEASURE_SECTION_PADDING_LEFT;
     private int MEASURE_SECTION_PADDING_BOTTOM;
     private int MEASURE_SECTION_SIZE;
-    private int MEASURE_TABLATURE_PADDING;
+    private int MEASURE_TABLATURE_TOP_PADDING;
+    private int MEASURE_TABLATURE_BOTTOM_PADDING;
+    private int MEASURE_TABLATURE_BOTTOM_PADDING_WITH_MEDIA;
 
     public TablatureView(Context context) {
         super(context);
@@ -99,6 +102,7 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
         initViews();
     }
 
+    @SuppressLint("NewApi")
     public TablatureView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.context = context;
@@ -129,7 +133,7 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
         // init the scrollview
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         setLayoutParams(layoutParams);
-        setPadding(0, MEASURE_TABLATURE_PADDING, 0, MEASURE_TABLATURE_PADDING);
+        setPadding(0, MEASURE_TABLATURE_TOP_PADDING, 0, MEASURE_TABLATURE_BOTTOM_PADDING);
         setClipToPadding(false);
         setVerticalScrollBarEnabled(false);
 
@@ -137,7 +141,7 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
         HorizontalScrollView horizontalScrollView = new HorizontalScrollView(context);
         RelativeLayout.LayoutParams horizontalScrollLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         horizontalScrollView.setLayoutParams(horizontalScrollLayoutParams);
-        horizontalScrollView.setPadding(MEASURE_TABLATURE_PADDING, 0, MEASURE_TABLATURE_PADDING, 0);
+        horizontalScrollView.setPadding(MEASURE_TABLATURE_TOP_PADDING, 0, MEASURE_TABLATURE_TOP_PADDING, 0);
         horizontalScrollView.setClipToPadding(false);
         horizontalScrollView.setHorizontalScrollBarEnabled(false);
         addView(horizontalScrollView);
@@ -161,7 +165,9 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
         MEASURE_SECTION_PADDING_LEFT = DimensionUtils.dpToPx(context, 12);
         MEASURE_SECTION_PADDING_BOTTOM = DimensionUtils.dpToPx(context, 4);
         MEASURE_SECTION_SIZE = 24;
-        MEASURE_TABLATURE_PADDING = DimensionUtils.dpToPx(context, 3);
+        MEASURE_TABLATURE_TOP_PADDING = DimensionUtils.dpToPx(context, 3);
+        MEASURE_TABLATURE_BOTTOM_PADDING = DimensionUtils.dpToPx(context, 3);
+        MEASURE_TABLATURE_BOTTOM_PADDING_WITH_MEDIA = DimensionUtils.dpToPx(context, 75);
     }
 
     public void initCustomizations() {
@@ -866,6 +872,10 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
                 }
             }
         }
+    }
+
+    public void setMediaPadding(boolean media) {
+        setPadding(0, MEASURE_TABLATURE_TOP_PADDING, 0, media ? MEASURE_TABLATURE_BOTTOM_PADDING_WITH_MEDIA : MEASURE_TABLATURE_BOTTOM_PADDING);
     }
 
 }

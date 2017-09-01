@@ -8,10 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -23,13 +20,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
-import com.mivas.myharmonicasongs.animation.SlideAnimation;
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SectionDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
@@ -43,15 +37,14 @@ import com.mivas.myharmonicasongs.listener.SongActivityListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
-import com.mivas.myharmonicasongs.util.DimensionUtils;
 import com.mivas.myharmonicasongs.util.ExportHelper;
 import com.mivas.myharmonicasongs.util.NotesShiftUtils;
+import com.mivas.myharmonicasongs.view.MediaPlayerView;
 import com.mivas.myharmonicasongs.view.TablatureView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Activity that displays dbNotes.
@@ -59,19 +52,12 @@ import java.util.concurrent.TimeUnit;
 public class SongActivity extends AppCompatActivity implements SongActivityListener, NotesShiftListener {
 
     private TablatureView tablatureView;
+    private MediaPlayerView mediaPlayerView;
     private DbSong dbSong;
     private List<DbNote> dbNotes = new ArrayList<DbNote>();
     private List<DbSection> dbSections = new ArrayList<DbSection>();
     private TextView noNotesText;
     private View backgroundView;
-    private MediaPlayer mediaPlayer;
-    private ImageView playButton;
-    private SeekBar songProgressBar;
-    private Handler mediaHandler;
-    private TextView mediaCurrentTimeText;
-    private TextView mediaTotalTimeText;
-    private boolean mediaViewDisplayed = false;
-    private View mediaView;
     private BroadcastReceiver customizationReceiver = new BroadcastReceiver() {
 
         @Override
@@ -81,7 +67,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             backgroundView.setBackgroundColor(CustomizationUtils.getBackgroundColor());
         }
     };
-    private Runnable updateSongViewsRunnable;
 
     private static final int REQUEST_CODE_ADD_AUDIO_FILE = 1;
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 2;
@@ -92,7 +77,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         setContentView(R.layout.activity_song);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         initViews();
-        initListeners();
 
         dbSong = SongDbHandler.getSongById(getIntent().getLongExtra(Constants.EXTRA_SONG_ID, 0));
         dbNotes = NoteDbHandler.getNotesBySongId(dbSong.getId());
@@ -108,7 +92,12 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         tablatureView.initialize();
 
         try {
-            initMediaPlayer();
+            mediaPlayerView.setDbSong(dbSong);
+            mediaPlayerView.initialize();
+            if (dbSong.getAudioFile() != null) {
+                tablatureView.setMediaPadding(true);
+                mediaPlayerView.animate(true);
+            }
         } catch (MediaPlayerException e) {
             CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_media_player_init_error, Toast.LENGTH_SHORT).show();
         }
@@ -151,11 +140,12 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 dbSong.setAudioFile(null);
                 SongDbHandler.insertSong(dbSong);
                 CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_audio_file_removed, Toast.LENGTH_SHORT).show();
-                if (mediaView.getVisibility() == View.VISIBLE) {
-                    animateMediaView(false);
+                if (mediaPlayerView.isDisplayed()) {
+                    tablatureView.setMediaPadding(false);
+                    mediaPlayerView.animate(false);
                 }
                 invalidateOptionsMenu();
-                releaseMediaPlayer();
+                mediaPlayerView.release();
                 sendSongsUpdatedBroadcast();
                 return true;
             case R.id.action_customize:
@@ -166,7 +156,8 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 if (dbSong.getAudioFile() == null) {
                     CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_no_audio_file, Toast.LENGTH_SHORT).show();
                 } else {
-                    animateMediaView(!mediaViewDisplayed);
+                    tablatureView.setMediaPadding(!mediaPlayerView.isDisplayed());
+                    mediaPlayerView.animate(!mediaPlayerView.isDisplayed());
                 }
                 return true;
             case R.id.action_share:
@@ -186,13 +177,6 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         }
     }
 
-    private void animateMediaView(boolean expand) {
-        SlideAnimation slideAnimation = new SlideAnimation(mediaView, 100, expand ? SlideAnimation.EXPAND : SlideAnimation.COLLAPSE);
-        slideAnimation.setHeight(DimensionUtils.dpToPx(SongActivity.this, 72));
-        mediaView.startAnimation(slideAnimation);
-        mediaViewDisplayed = !mediaViewDisplayed;
-    }
-
     /**
      * Views initializer.
      */
@@ -201,100 +185,8 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         setSupportActionBar(myToolbar);
         noNotesText = (TextView) findViewById(R.id.text_no_notes);
         backgroundView = findViewById(R.id.view_background);
-        playButton = (ImageView) findViewById(R.id.button_play);
-        songProgressBar = (SeekBar) findViewById(R.id.seek_bar_progress);
-        mediaCurrentTimeText = (TextView) findViewById(R.id.text_current_time);
-        mediaTotalTimeText = (TextView) findViewById(R.id.text_total_time);
-        mediaView = findViewById(R.id.view_media);
         tablatureView = (TablatureView) findViewById(R.id.view_tablature);
-    }
-
-    /**
-     * Listeners initializer.
-     */
-    private void initListeners() {
-        playButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.pause();
-                    playButton.setImageResource(R.drawable.selector_play_button);
-                } else {
-                    mediaPlayer.start();
-                    playButton.setImageResource(R.drawable.selector_pause_button);
-                }
-            }
-        });
-    }
-
-    private void initMediaPlayer() throws MediaPlayerException {
-        if (dbSong.getAudioFile() != null) {
-
-            // prepare song
-            Uri songUri = ExportHelper.getInstance().getAudioFileUri(SongActivity.this, dbSong);
-            mediaPlayer = MediaPlayer.create(SongActivity.this, songUri);
-            if (mediaPlayer == null) {
-                throw new MediaPlayerException();
-            }
-
-            // init progress bar
-            final int finalTime = mediaPlayer.getDuration();
-            songProgressBar.setMax(finalTime);
-            songProgressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    if (fromUser) {
-                        mediaPlayer.seekTo(progress);
-                        updateTimeText(mediaCurrentTimeText, progress);
-                    }
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                }
-            });
-
-            // init time texts and play button
-            updateTimeText(mediaCurrentTimeText, mediaPlayer.getCurrentPosition());
-            updateTimeText(mediaTotalTimeText, finalTime);
-            playButton.setImageResource(R.drawable.selector_play_button);
-
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    playButton.setImageResource(R.drawable.selector_play_button);
-                }
-            });
-
-            // init update handler
-            mediaHandler = new Handler();
-            updateSongViewsRunnable = new Runnable() {
-                public void run() {
-                    int currentTime = mediaPlayer.getCurrentPosition();
-                    songProgressBar.setProgress(currentTime);
-                    updateTimeText(mediaCurrentTimeText, currentTime > finalTime ? finalTime : currentTime);
-                    mediaHandler.postDelayed(this, 100);
-                }
-            };
-            mediaHandler.postDelayed(updateSongViewsRunnable, 100);
-
-        }
-    }
-
-    private void updateTimeText(TextView textView, int time) {
-        textView.setText(String.format("%d:%02d",
-                TimeUnit.MILLISECONDS.toMinutes(time),
-                TimeUnit.MILLISECONDS.toSeconds(time) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time))));
+        mediaPlayerView = (MediaPlayerView) findViewById(R.id.view_media);
     }
 
     @Override
@@ -318,9 +210,10 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                             public void run() {
                                 try {
                                     CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_audio_file_added, Toast.LENGTH_SHORT).show();
-                                    initMediaPlayer();
-                                    if (mediaView.getVisibility() == View.GONE) {
-                                        animateMediaView(true);
+                                    mediaPlayerView.initialize();
+                                    if (!mediaPlayerView.isDisplayed()) {
+                                        tablatureView.setMediaPadding(true);
+                                        mediaPlayerView.animate(true);
                                     }
                                     invalidateOptionsMenu();
                                     sendSongsUpdatedBroadcast();
@@ -342,7 +235,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         ExportHelper.getInstance().removeAudioFile(SongActivity.this, dbSong);
         dbSong.setAudioFile(null);
         SongDbHandler.insertSong(dbSong);
-        releaseMediaPlayer();
+        mediaPlayerView.release();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -383,15 +276,8 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     @Override
     protected void onDestroy() {
         unregisterReceiver(customizationReceiver);
-        releaseMediaPlayer();
+        mediaPlayerView.release();
         super.onDestroy();
-    }
-
-    private void releaseMediaPlayer() {
-        if (mediaPlayer != null) {
-            mediaHandler.removeCallbacks(updateSongViewsRunnable);
-            mediaPlayer.release();
-        }
     }
 
     private void sendSongsUpdatedBroadcast() {
