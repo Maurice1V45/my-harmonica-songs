@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import com.mivas.myharmonicasongs.MHSApplication;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.adapter.NotePickerAdapter;
+import com.mivas.myharmonicasongs.adapter.NotePickerAdapterBends;
 import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.listener.NotePickerAdapterListener;
 import com.mivas.myharmonicasongs.listener.NotePickerDialogListener;
@@ -37,7 +38,7 @@ public class NotePickerDialog extends DialogFragment implements NotePickerAdapte
     private CheckBox showBendingsCheckbox;
     private Cell cell;
     private CellLine cellLine;
-    private NotePickerAdapter adapter;
+    private NotePickerAdapterBends adapter;
     private boolean editMode;
     private boolean newRow;
 
@@ -66,8 +67,11 @@ public class NotePickerDialog extends DialogFragment implements NotePickerAdapte
         deleteButton.setVisibility(editMode ? View.VISIBLE : View.GONE);
         notesList = (RecyclerView) rootView.findViewById(R.id.list_harmonica_notes);
         notesList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL, false));
-        adapter = new com.mivas.myharmonicasongs.adapter.NotePickerAdapter(getActivity(), NotePickerDialog.this, dbNote, dbNote.getBend() != 0);
-        notesList.setAdapter(adapter);
+        if (dbNote.getBend() == 0) {
+            notesList.setAdapter(new NotePickerAdapter(getActivity(), NotePickerDialog.this, dbNote));
+        } else {
+            notesList.setAdapter(new NotePickerAdapterBends(getActivity(), NotePickerDialog.this, dbNote));
+        }
     }
 
     /**
@@ -87,8 +91,11 @@ public class NotePickerDialog extends DialogFragment implements NotePickerAdapte
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 showBendingsCheckbox.setText(isChecked ? R.string.note_picker_dialog_button_hide_bendings : R.string.note_picker_dialog_button_show_bendings);
-                adapter.setShowBendings(isChecked);
-                adapter.notifyDataSetChanged();
+                if (isChecked) {
+                    notesList.setAdapter(new NotePickerAdapterBends(getActivity(), NotePickerDialog.this, dbNote));
+                } else {
+                    notesList.setAdapter(new NotePickerAdapter(getActivity(), NotePickerDialog.this, dbNote));
+                }
             }
         });
     }
