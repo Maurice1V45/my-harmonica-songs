@@ -449,6 +449,7 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
     public void onNoteEdited(Cell cell) {
         DbNote dbNote = cell.getDbNote();
         NoteDbHandler.insertNote(dbNote);
+        cell.getView().setBackground(CustomizationUtils.createNoteBackground(context, dbNote.isBlow() ? blowBackgroundColor : drawBackgroundColor));
         TextView noteTextView = (TextView) ((LinearLayout) cell.getView()).getChildAt(0);
         if (dbNote.isBlow()) {
             CustomizationUtils.styleNoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, blowTextColor);
@@ -457,6 +458,7 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
         }
         TextView wordTextView = (TextView) ((LinearLayout) cell.getView()).getChildAt(1);
         wordTextView.setText(dbNote.getWord());
+        wordTextView.setTextColor(dbNote.isBlow() ? blowTextColor : drawTextColor);
         wordTextView.setVisibility(dbNote.getWord().isEmpty() ? View.GONE : View.VISIBLE);
 
         songActivityListener.onNotesChanged(dbNotes);
