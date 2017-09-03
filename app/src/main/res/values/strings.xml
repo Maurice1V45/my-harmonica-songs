@@ -174,6 +174,10 @@
     <string name="qa_activity_text_a_insert_row">Press and hold the plus button at the end of the first row, then select the Insert row option. Then add a note. This will insert the note between the 2 rows.</string>
     <string name="qa_activity_text_q_copy_paste_notes">How can I copy/paste notes?</string>
     <string name="qa_activity_text_a_copy_paste_notes">Press and hold the plus button at the end of the row you want to copy, then select the Copy row option. Then press and hold another plus button and select Paste row.</string>
+    <string name="qa_activity_text_q_note_shifting">What is note shifting?</string>
+    <string name="qa_activity_text_a_note_shifting">By shifting a note, you increase or decrease its pitch by 1 octave. For example, shifting up a 4 will turn it into a 7. This is useful when you want to play a song at a lower/higher pitch into the same key.</string>
+    <string name="qa_activity_text_q_shift_notes">How do I shift my notes?</string>
+    <string name="qa_activity_text_a_shift_notes">On the tablature screen tap options, then select Shift notes.</string>
     <string name="qa_activity_text_m_sections">SECTIONS</string>
     <string name="qa_activity_text_q_sections">What are sections?</string>
     <string name="qa_activity_text_a_sections">Sections are a group of notes that compose a song. Some common sections would be Verse, Chorus, Bridge, etc.</string>

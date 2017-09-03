@@ -96,7 +96,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             mediaPlayerView.initialize();
             if (dbSong.getAudioFile() != null) {
                 tablatureView.setMediaPadding(true);
-                mediaPlayerView.animate(true);
+                mediaPlayerView.show(true);
             }
         } catch (MediaPlayerException e) {
             CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_media_player_init_error, Toast.LENGTH_SHORT).show();

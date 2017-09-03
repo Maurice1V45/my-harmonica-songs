@@ -188,4 +188,9 @@ public class MediaPlayerView extends RelativeLayout {
     public void setDbSong(DbSong dbSong) {
         this.dbSong = dbSong;
     }
+
+    public void show(boolean show) {
+        mediaViewDisplayed = show;
+        setVisibility(show ? VISIBLE : GONE);
+    }
 }

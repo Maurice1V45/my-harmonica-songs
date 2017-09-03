@@ -219,6 +219,40 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bu1"
+                android:text="@string/qa_activity_text_q_note_shifting"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_36px"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/qa_activity_text_a_note_shifting"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_30px"
+                android:textStyle="italic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bu1"
+                android:text="@string/qa_activity_text_q_shift_notes"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_36px"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/qa_activity_text_a_shift_notes"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_30px"
+                android:textStyle="italic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/bu2"
                 android:text="@string/qa_activity_text_m_sections"

@@ -499,8 +499,14 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
             // delete the section on this row
             DbSection dbSection = getSectionByRow(dbNote.getRow());
             if (dbSection != null) {
+
+                // remove section
                 dbSections.remove(dbSection);
                 SectionDbHandler.deleteSection(dbSection);
+
+                // remove views
+                parentLayout.removeView(cellLine.getSectionCell().getTextView());
+                cellLine.setSectionCell(null);
             }
 
             // decrement the row of the notes below the deleted note
@@ -572,8 +578,14 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
         // delete the section if there is one
         DbSection dbSection = getSectionByRow(row);
         if (dbSection != null) {
+
+            // remove section
             dbSections.remove(dbSection);
             SectionDbHandler.deleteSection(dbSection);
+
+            // remove views
+            parentLayout.removeView(cellLine.getSectionCell().getTextView());
+            cellLine.setSectionCell(null);
         }
 
         // decrement rows and sections
