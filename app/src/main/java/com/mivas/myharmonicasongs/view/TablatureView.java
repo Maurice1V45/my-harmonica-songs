@@ -431,10 +431,11 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
             // create a new cellLine and add the note and a plus on it
             LinearLayout newLayout = new LinearLayout(context);
             newLayout.setOrientation(LinearLayout.HORIZONTAL);
-            int index = cellLines.indexOf(cellLine) + 1;
+            int index = parentLayout.indexOfChild(cellLine.getLayout()) + 1;
             parentLayout.addView(newLayout, index);
             CellLine newCellLine = new CellLine(new ArrayList<Cell>(), newLayout);
-            cellLines.add(index, newCellLine);
+            int cellLinesIndex = cellLines.indexOf(cellLine) + 1;
+            cellLines.add(cellLinesIndex, newCellLine);
             addNoteCell(dbNote, newCellLine);
             addPlusCell(newCellLine);
         } else {
