@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
 import com.mivas.myharmonicasongs.R;
+import com.mivas.myharmonicasongs.animation.GrowAnimation;
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SectionDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbNote;
@@ -83,6 +84,8 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
     private int MEASURE_TABLATURE_TOP_PADDING;
     private int MEASURE_TABLATURE_BOTTOM_PADDING;
     private int MEASURE_TABLATURE_BOTTOM_PADDING_WITH_MEDIA;
+
+    private static final int ANIMATION_SPEED = 2000;
 
     public TablatureView(Context context) {
         super(context);
@@ -196,7 +199,7 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
             parentLayout.addView(row);
             CellLine cellLine = new CellLine(new ArrayList<Cell>(), row);
             cellLines.add(cellLine);
-            addPlusCell(cellLine);
+            addPlusCell(cellLine, false);
         } else {
 
             // i represents the index of the note in the notes list
@@ -216,19 +219,19 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
             // check if row has a section and display it
             DbSection dbSection = getSectionByRow(thisNote.getRow());
             if (dbSection != null) {
-                addSectionCell(dbSection, cellLine);
+                addSectionCell(dbSection, cellLine, false);
             }
 
             while (i < dbNotes.size()) {
 
                 // add the current note to the horizontal linear layout
-                addNoteCell(thisNote, cellLine);
+                addNoteCell(thisNote, cellLine, false);
 
                 // if there is no next note or if this note is the last on this row
                 if (nextNote == null || (nextNote.getRow() != thisNote.getRow())) {
 
                     // add a plus note
-                    addPlusCell(cellLine);
+                    addPlusCell(cellLine, false);
 
                     // create a new horizontal linear layout
                     row = new LinearLayout(context);
@@ -241,7 +244,7 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
                     if (nextNote != null) {
                         dbSection = getSectionByRow(nextNote.getRow());
                         if (dbSection != null) {
-                            addSectionCell(dbSection, cellLine);
+                            addSectionCell(dbSection, cellLine, false);
                         }
                     }
 
@@ -249,7 +252,7 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
                     if (i == dbNotes.size() - 1) {
 
                         // add a last plus
-                        addPlusCell(cellLine);
+                        addPlusCell(cellLine, false);
                     }
                 }
 
@@ -264,7 +267,7 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
         //toggleNoNotesText();
     }
 
-    private void addPlusCell(final CellLine cellLine) {
+    private void addPlusCell(final CellLine cellLine, boolean animate) {
 
         // set add note layout properties
         final RelativeLayout parent = new RelativeLayout(context);
@@ -278,7 +281,7 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
         RelativeLayout.LayoutParams plusImageLayoutParams = new RelativeLayout.LayoutParams(MEASURE_PLUS_SIZE, MEASURE_PLUS_SIZE);
         plusImageLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         plusImage.setLayoutParams(plusImageLayoutParams);
-        plusImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        plusImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         plusImage.setImageResource(R.drawable.selector_round_plus);
         parent.addView(plusImage);
 
@@ -393,7 +396,16 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
             }
         });
 
+        // set animation
+        if (animate) {
+            GrowAnimation growAnimation = new GrowAnimation(parent, ANIMATION_SPEED, GrowAnimation.EXPAND);
+            growAnimation.setWidth(MEASURE_CELL_WIDTH);
+            growAnimation.setHeight(MEASURE_CELL_HEIGHT);
+            parent.startAnimation(growAnimation);
+        }
+
         songActivityListener.onNotesChanged(dbNotes);
+
     }
 
     /**
@@ -436,11 +448,11 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
             CellLine newCellLine = new CellLine(new ArrayList<Cell>(), newLayout);
             int cellLinesIndex = cellLines.indexOf(cellLine) + 1;
             cellLines.add(cellLinesIndex, newCellLine);
-            addNoteCell(dbNote, newCellLine);
-            addPlusCell(newCellLine);
+            addNoteCell(dbNote, newCellLine, true);
+            addPlusCell(newCellLine, true);
         } else {
-            addNoteCell(dbNote, cellLine);
-            addLastPlus(cellLine);
+            addNoteCell(dbNote, cellLine, true);
+            addLastPlus(cellLine, true);
         }
 
         songActivityListener.onNotesChanged(dbNotes);
@@ -538,7 +550,7 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
     public void onSectionAdded(DbSection dbSection, CellLine cellLine) {
         dbSections.add(dbSection);
         SectionDbHandler.insertSection(dbSection);
-        addSectionCell(dbSection, cellLine);
+        addSectionCell(dbSection, cellLine, true);
     }
 
     @Override
@@ -656,9 +668,9 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
 
             // add cells
             for (DbNote pastedNote : pastedNotes) {
-                addNoteCell(pastedNote, cellLine);
+                addNoteCell(pastedNote, cellLine, true);
             }
-            addLastPlus(cellLine);
+            addLastPlus(cellLine, true);
         }
     }
 
@@ -700,12 +712,13 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
         }
     }
 
-    private void addNoteCell(final DbNote dbNote, final CellLine cellLine) {
+    private void addNoteCell(final DbNote dbNote, final CellLine cellLine, boolean animate) {
 
         // set note layout properties
         LinearLayout noteLayout = new LinearLayout(context);
         LinearLayout.LayoutParams noteLayoutParams = new LinearLayout.LayoutParams(MEASURE_CELL_WIDTH, MEASURE_CELL_HEIGHT);
         noteLayoutParams.setMargins(MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN);
+        noteLayoutParams.gravity = Gravity.CENTER;
         noteLayout.setLayoutParams(noteLayoutParams);
         noteLayout.setGravity(Gravity.CENTER_VERTICAL);
         noteLayout.setOrientation(LinearLayout.VERTICAL);
@@ -759,9 +772,17 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
                 dialog.show(((Activity) context).getFragmentManager(), Constants.TAG_HARMONICA_NOTES_DIALOG);
             }
         });
+
+        // set animation
+        if (animate) {
+            GrowAnimation growAnimation = new GrowAnimation(noteLayout, ANIMATION_SPEED, GrowAnimation.EXPAND);
+            growAnimation.setWidth(MEASURE_CELL_WIDTH);
+            growAnimation.setHeight(MEASURE_CELL_HEIGHT);
+            noteLayout.startAnimation(growAnimation);
+        }
     }
 
-    private void addSectionCell(DbSection dbSection, CellLine cellLine) {
+    private void addSectionCell(DbSection dbSection, CellLine cellLine, boolean animate) {
 
         // set section view properties
         TextView sectionText = new TextView(context);
@@ -772,6 +793,12 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
         parentLayout.addView(sectionText, parentLayout.indexOfChild(cellLine.getLayout()));
         SectionCell sectionCell = new SectionCell(dbSection, sectionText);
         cellLine.setSectionCell(sectionCell);
+
+        // set animation
+        if (animate) {
+            GrowAnimation growAnimation = new GrowAnimation(sectionText, ANIMATION_SPEED, GrowAnimation.EXPAND);
+            sectionText.startAnimation(growAnimation);
+        }
     }
 
     /**
@@ -800,7 +827,7 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
         };
     }
 
-    private void addLastPlus(CellLine cellLine) {
+    private void addLastPlus(CellLine cellLine, boolean animate) {
         if (cellLines.indexOf(cellLine) == (cellLines.size() - 1)) {
 
             // add a plus note on next row
@@ -809,7 +836,7 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
             parentLayout.addView(lastRow);
             CellLine lastCellLine = new CellLine(new ArrayList<Cell>(), lastRow);
             cellLines.add(lastCellLine);
-            addPlusCell(lastCellLine);
+            addPlusCell(lastCellLine, animate);
         }
     }
 
