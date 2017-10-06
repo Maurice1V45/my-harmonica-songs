@@ -2,14 +2,30 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/text_key"
+    <LinearLayout
+        android:id="@+id/view_parent"
         android:layout_width="@dimen/bu4"
-        android:layout_margin="@dimen/bu0_25"
         android:layout_height="@dimen/bu4"
+        android:layout_margin="@dimen/bu0_25"
+        android:orientation="vertical"
         android:background="@drawable/selector_harmonica_note"
         android:clickable="true"
-        android:gravity="center"
-        android:textSize="@dimen/text_size_48px" />
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/text_key"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_48px" />
+
+        <TextView
+            android:id="@+id/text_minor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="min"
+            android:layout_marginTop="@dimen/bu0_5_negative"
+            android:textSize="@dimen/text_size_20px" />
+
+    </LinearLayout>
 
 </RelativeLayout>

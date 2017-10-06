@@ -5,7 +5,9 @@
     <dimen name="bu0_33">4dp</dimen>
     <dimen name="bu0_33_negative">-4dp</dimen>
     <dimen name="bu0_5">6dp</dimen>
+    <dimen name="bu0_5_negative">-6dp</dimen>
     <dimen name="bu0_66">8dp</dimen>
+    <dimen name="bu0_66_negative">-8dp</dimen>
     <dimen name="bu0_75">9dp</dimen>
     <dimen name="bu1">12dp</dimen>
     <dimen name="bu1_negative">-12dp</dimen>

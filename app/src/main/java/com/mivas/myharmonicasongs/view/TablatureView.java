@@ -374,21 +374,6 @@ public class TablatureView extends ScrollView implements NotePickerDialogListene
 
             @Override
             public void onClick(View v) {
-                int row = 0;
-                int column = 0;
-
-                List<Cell> cells = cellLine.getCells();
-                if (cells.size() <= 1) {
-
-                    // this is the last plus in the tab
-                    row = cellLines.size() - 1;
-                } else {
-
-                    // get last note in the row
-                    Cell lastNoteCell = cells.get(cells.size() - 2);
-                    row = lastNoteCell.getDbNote().getRow();
-                    column = lastNoteCell.getDbNote().getColumn() + 1;
-                }
                 onAddNoteCommand(cellLine, cell);
             }
         });

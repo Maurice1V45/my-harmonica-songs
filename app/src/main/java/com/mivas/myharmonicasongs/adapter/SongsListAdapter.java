@@ -48,11 +48,16 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
         // set song key, audio file, title and author
         holder.keyText.setText(SongKeyUtils.getKey(dbSong.getKey()));
         int key = dbSong.getKey();
-        if (key == 1 || key == 3 || key == 6 || key == 8 || key == 10) {
-            holder.keyText.setTextSize(30);
-        } else {
+        if (key == 0 || key == 2 || key == 4 || key == 5 || key == 7 || key == 9 || key == 11) {
             holder.keyText.setTextSize(35);
+        } else if (key == 1 || key == 3 || key == 6 || key == 8 || key == 10) {
+            holder.keyText.setTextSize(30);
+        } else if (key == 12 || key == 14 || key == 16 || key == 17 || key == 19 || key == 21 || key == 23) {
+            holder.keyText.setTextSize(30);
+        } else if (key == 13 || key == 15 || key == 18 || key == 20 || key == 22) {
+            holder.keyText.setTextSize(28);
         }
+        holder.minorText.setVisibility(key > 11 ? View.VISIBLE : View.GONE);
         holder.audioFileIcon.setVisibility(dbSong.getAudioFile() == null ? View.GONE : View.VISIBLE);
         holder.titleText.setText(dbSong.getTitle());
         if (dbSong.getAuthor().isEmpty()) {
@@ -115,6 +120,7 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
         TextView titleText;
         TextView authorText;
         TextView keyText;
+        TextView minorText;
         View moreButton;
         View songView;
         View audioFileIcon;
@@ -124,6 +130,7 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
             titleText = (TextView) itemView.findViewById(R.id.text_title);
             authorText = (TextView) itemView.findViewById(R.id.text_author);
             keyText = (TextView) itemView.findViewById(R.id.text_key);
+            minorText = (TextView) itemView.findViewById(R.id.text_minor);
             moreButton = itemView.findViewById(R.id.button_more);
             songView = itemView.findViewById(R.id.view_song);
             audioFileIcon = itemView.findViewById(R.id.icon_audio_file);

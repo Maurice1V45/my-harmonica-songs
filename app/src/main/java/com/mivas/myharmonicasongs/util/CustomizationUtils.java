@@ -55,6 +55,14 @@ public class CustomizationUtils {
         return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_SECTION_TEXT_COLOR, Constants.DEFAULT_SECTION_TEXT_COLOR);
     }
 
+    public static boolean getShowBends() {
+        return PreferencesUtils.getPreferences().getBoolean(Constants.PREF_CURRENT_SHOW_BENDS, Constants.DEFAULT_SHOW_BENDS);
+    }
+
+    public static boolean getShowMediaPlayer() {
+        return PreferencesUtils.getPreferences().getBoolean(Constants.PREF_CURRENT_SHOW_MEDIA_PLAYER, Constants.DEFAULT_SHOW_MEDIA_PLAYER);
+    }
+
     public static StateListDrawable createNoteBackground(Context context, int backgroundColor) {
         StateListDrawable stateListDrawable = new StateListDrawable();
         GradientDrawable normalShape = new GradientDrawable();

@@ -66,11 +66,13 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_songs"
             android:layout_width="match_parent"
-            android:layout_below="@+id/view_search"
             android:layout_height="match_parent"
+            android:layout_below="@+id/view_search"
             android:clipToPadding="false"
             android:paddingBottom="@dimen/bu0_33"
-            android:paddingTop="@dimen/bu0_33" />
+            android:paddingTop="@dimen/bu0_33"
+            android:scrollbarThumbVertical="@drawable/scrollbar_white"
+            android:scrollbars="vertical" />
     </RelativeLayout>
 
 

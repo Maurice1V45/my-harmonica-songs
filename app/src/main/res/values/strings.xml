@@ -52,7 +52,7 @@
     <string name="song_activity_toast_permission_needed">Permission needed to add audio file</string>
     <string name="song_activity_toast_add_audio_file_error">Error adding audio file</string>
     <string name="song_activity_toast_no_audio_file">No audio file added</string>
-    <string name="song_activity_toast_adding_audio_file">Adding audio file…</string>
+    <string name="song_activity_text_adding_audio_file">Adding audio file…</string>
     <string name="song_activity_toast_audio_file_added">Audio file added</string>
     <string name="song_activity_toast_audio_file_removed">Audio file removed</string>
     <string name="song_activity_toast_media_player_init_error">Error initializing media player</string>
@@ -123,10 +123,16 @@
 
     <!-- Customize Activity -->
     <string name="customize_activity_text_customize">Customize</string>
+    <string name="customize_activity_text_tablature">TABLATURE</string>
     <string name="customize_activity_text_blow_note">Blow note</string>
     <string name="customize_activity_text_draw_note">Draw note</string>
     <string name="customize_activity_text_section">Section</string>
     <string name="customize_activity_text_chorus">Chorus</string>
+    <string name="customize_activity_text_general">GENERAL</string>
+    <string name="customize_activity_text_always_show_bends">Always show bends</string>
+    <string name="customize_activity_text_always_show_bends_description">Bend notes will be displayed by default when you open the note picker</string>
+    <string name="customize_activity_text_always_show_media_player">Always show media player</string>
+    <string name="customize_activity_text_always_show_media_player_description">Media player will be displayed by default when you open a song</string>
     <string name="customize_activity_background_color">Background color</string>
     <string name="customize_activity_background_color_title">Choose background color</string>
     <string name="customize_activity_menu_reset">Reset</string>

@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +41,8 @@ public class CustomizeActivity extends AppCompatActivity {
     private TextView sectionText;
     private View backgroundColorView;
     private View backgroundColorColorView;
+    private Switch showBendsSwitch;
+    private Switch showMediaPlayerSwitch;
     private BroadcastReceiver customizationReceiver = new BroadcastReceiver() {
 
         @Override
@@ -89,6 +93,8 @@ public class CustomizeActivity extends AppCompatActivity {
                         PreferencesUtils.storePreference(Constants.PREF_CURRENT_SECTION_STYLE, Constants.DEFAULT_SECTION_STYLE);
                         PreferencesUtils.storePreference(Constants.PREF_CURRENT_SECTION_TEXT_COLOR, Constants.DEFAULT_SECTION_TEXT_COLOR);
                         PreferencesUtils.storePreference(Constants.PREF_CURRENT_BACKGROUND_COLOR, Constants.DEFAULT_BACKGROUND_COLOR);
+                        PreferencesUtils.storePreference(Constants.PREF_CURRENT_SHOW_BENDS, Constants.DEFAULT_SHOW_BENDS);
+                        PreferencesUtils.storePreference(Constants.PREF_CURRENT_SHOW_MEDIA_PLAYER, Constants.DEFAULT_SHOW_MEDIA_PLAYER);
 
                         // show toast
                         CustomToast.makeText(CustomizeActivity.this, R.string.customize_activity_toast_customizations_reset, Toast.LENGTH_SHORT).show();
@@ -136,6 +142,8 @@ public class CustomizeActivity extends AppCompatActivity {
         sectionText = (TextView) findViewById(R.id.text_section);
         backgroundColorView = findViewById(R.id.view_background_color);
         backgroundColorColorView = findViewById(R.id.view_background_color_color);
+        showBendsSwitch = (Switch) findViewById(R.id.switch_show_bends);
+        showMediaPlayerSwitch = (Switch) findViewById(R.id.switch_show_media_player);
     }
 
     /**
@@ -193,6 +201,20 @@ public class CustomizeActivity extends AppCompatActivity {
                         .show();
             }
         });
+        showBendsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                PreferencesUtils.storePreference(Constants.PREF_CURRENT_SHOW_BENDS, isChecked);
+            }
+        });
+        showMediaPlayerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                PreferencesUtils.storePreference(Constants.PREF_CURRENT_SHOW_MEDIA_PLAYER, isChecked);
+            }
+        });
     }
 
     private void startCustomizeNoteActivity(boolean blow) {
@@ -208,6 +230,8 @@ public class CustomizeActivity extends AppCompatActivity {
         drawNoteBackground.setBackground(CustomizationUtils.createSimpleBackground(CustomizeActivity.this, 6, CustomizationUtils.getDrawBackgroundColor()));
         CustomizationUtils.styleSectionText(sectionText, CustomizationUtils.getSectionStyle(), CustomizationUtils.getSectionTextColor());
         backgroundColorColorView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeActivity.this, 6, CustomizationUtils.getBackgroundColor()));
+        showBendsSwitch.setChecked(CustomizationUtils.getShowBends());
+        showMediaPlayerSwitch.setChecked(CustomizationUtils.getShowMediaPlayer());
     }
 
     @Override

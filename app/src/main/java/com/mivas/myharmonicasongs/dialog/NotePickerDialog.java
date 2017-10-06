@@ -24,6 +24,7 @@ import com.mivas.myharmonicasongs.listener.NotePickerAdapterListener;
 import com.mivas.myharmonicasongs.listener.NotePickerDialogListener;
 import com.mivas.myharmonicasongs.model.Cell;
 import com.mivas.myharmonicasongs.model.CellLine;
+import com.mivas.myharmonicasongs.util.CustomizationUtils;
 
 /**
  * Dialog for choosing a harmonica note.
@@ -41,6 +42,7 @@ public class NotePickerDialog extends DialogFragment implements NotePickerAdapte
     private NotePickerAdapterBends adapter;
     private boolean editMode;
     private boolean newRow;
+    private boolean showBends;
 
     /**
      * Default constructor
@@ -56,21 +58,24 @@ public class NotePickerDialog extends DialogFragment implements NotePickerAdapte
      */
     private void initViews(View rootView) {
         wordField = (EditText) rootView.findViewById(R.id.field_word);
-        wordField.setText(dbNote.getWord());
+        if (dbNote.getWord() != null) {
+            wordField.setText(dbNote.getWord());
+        }
         wordField.setHintTextColor(ContextCompat.getColor(getActivity(), R.color.greyDD));
         if (dbNote.getColumn() == 0) {
             wordField.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         }
         showBendingsCheckbox = (CheckBox) rootView.findViewById(R.id.checkbox_show_bendings);
-        showBendingsCheckbox.setChecked(dbNote.getBend() != 0);
+        showBendingsCheckbox.setChecked(showBends || dbNote.getBend() != 0);
+        showBendingsCheckbox.setText(showBendingsCheckbox.isChecked() ? R.string.note_picker_dialog_button_hide_bendings : R.string.note_picker_dialog_button_show_bendings);
         deleteButton = rootView.findViewById(R.id.button_delete);
         deleteButton.setVisibility(editMode ? View.VISIBLE : View.GONE);
         notesList = (RecyclerView) rootView.findViewById(R.id.list_harmonica_notes);
         notesList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL, false));
-        if (dbNote.getBend() == 0) {
-            notesList.setAdapter(new NotePickerAdapter(getActivity(), NotePickerDialog.this, dbNote));
-        } else {
+        if (showBends || dbNote.getBend() != 0) {
             notesList.setAdapter(new NotePickerAdapterBends(getActivity(), NotePickerDialog.this, dbNote));
+        } else {
+            notesList.setAdapter(new NotePickerAdapter(getActivity(), NotePickerDialog.this, dbNote));
         }
     }
 
@@ -103,6 +108,7 @@ public class NotePickerDialog extends DialogFragment implements NotePickerAdapte
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_note_picker, container);
+        showBends = CustomizationUtils.getShowBends();
         initViews(view);
         initListeners();
         return view;

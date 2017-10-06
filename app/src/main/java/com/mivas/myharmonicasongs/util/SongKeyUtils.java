@@ -22,6 +22,18 @@ public class SongKeyUtils {
         keysMap.put(9, "A");
         keysMap.put(10, "Bb");
         keysMap.put(11, "B");
+        keysMap.put(12, "C");
+        keysMap.put(13, "Db");
+        keysMap.put(14, "D");
+        keysMap.put(15, "Eb");
+        keysMap.put(16, "E");
+        keysMap.put(17, "F");
+        keysMap.put(18, "F#");
+        keysMap.put(19, "G");
+        keysMap.put(20, "Ab");
+        keysMap.put(21, "A");
+        keysMap.put(22, "Bb");
+        keysMap.put(23, "B");
     }
 
     public static String getKey(int position) {

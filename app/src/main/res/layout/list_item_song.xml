@@ -11,20 +11,29 @@
         android:background="@drawable/selector_song_list_item"
         android:clickable="true">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/icon_song"
             android:layout_width="@dimen/bu5"
-            android:layout_height="@dimen/bu5">
+            android:layout_height="@dimen/bu5"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/text_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_80px"
                 android:textStyle="bold" />
-        </RelativeLayout>
+
+            <TextView
+                android:id="@+id/text_minor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bu0_66_negative"
+                android:text="min"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_26px" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/icon_audio_file"

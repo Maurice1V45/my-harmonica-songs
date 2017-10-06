@@ -31,6 +31,16 @@
             android:orientation="vertical"
             android:scrollbars="none">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/bu1_5"
+                android:layout_marginTop="@dimen/bu2"
+                android:text="@string/customize_activity_text_tablature"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_30px"
+                android:textStyle="bold" />
+
             <RelativeLayout
                 android:id="@+id/view_blow_note"
                 android:layout_width="match_parent"
@@ -162,6 +172,108 @@
                     android:id="@+id/view_background_color_color"
                     android:layout_width="@dimen/bu4"
                     android:layout_height="@dimen/bu4"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/bu1" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/bu1_5"
+                android:layout_marginTop="@dimen/bu2"
+                android:text="@string/customize_activity_text_general"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_30px"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="@dimen/bu1_5"
+                    android:layout_marginRight="@dimen/bu5"
+                    android:layout_marginTop="@dimen/bu1_5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/customize_activity_text_always_show_bends"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_34px" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/customize_activity_text_always_show_bends_description"
+                        android:textColor="@color/grey77"
+                        android:textSize="@dimen/text_size_28px" />
+                </LinearLayout>
+
+                <Switch
+                    android:id="@+id/switch_show_bends"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/bu1" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="@dimen/bu1_5"
+                    android:layout_marginRight="@dimen/bu5"
+                    android:layout_marginTop="@dimen/bu1_5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/customize_activity_text_always_show_media_player"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_34px" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/customize_activity_text_always_show_media_player_description"
+                        android:textColor="@color/grey77"
+                        android:textSize="@dimen/text_size_28px" />
+                </LinearLayout>
+
+                <Switch
+                    android:id="@+id/switch_show_media_player"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/bu1" />

@@ -1,6 +1,7 @@
 package com.mivas.myharmonicasongs;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,6 +44,7 @@ public class SettingsActivity extends AppCompatActivity {
     private View rateAppView;
     private View feedbackView;
     private TextView versionText;
+    private ProgressDialog progressDialog;
 
     private static final int REQUEST_CODE_RESTORE_SONGS = 1;
     private static final int REQUEST_CODE_STORAGE_PERMISSION_RESTORE = 2;
@@ -100,8 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                backupView.setClickable(false);
-                CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_preparing_backup, Toast.LENGTH_SHORT).show();
+                showProgress(getString(R.string.settings_activity_toast_preparing_backup));
                 Thread thread = new Thread() {
 
                     @Override
@@ -113,7 +114,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                             @Override
                             public void run() {
-                                backupView.setClickable(true);
+                                progressDialog.dismiss();
                             }
                         });
                     }
@@ -211,7 +212,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_RESTORE_SONGS && resultCode == RESULT_OK) {
             try {
                 if (ExportHelper.getInstance().isMhsFile(SettingsActivity.this, data.getData())) {
-                    CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_restoring_songs, Toast.LENGTH_SHORT).show();
+                    showProgress(getString(R.string.settings_activity_toast_restoring_songs));
                     Thread thread = new Thread() {
 
                         @Override
@@ -221,11 +222,19 @@ public class SettingsActivity extends AppCompatActivity {
                                 String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
                                 ExportHelper.getInstance().removeAllAudioFiles(SettingsActivity.this);
                                 ExportHelper.getInstance().importSongs(fileJson, true);
+                                runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        progressDialog.dismiss();
+                                    }
+                                });
                             } catch (Exception e) {
                                 runOnUiThread(new Runnable() {
 
                                     @Override
                                     public void run() {
+                                        progressDialog.dismiss();
                                         CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_restore_error, Toast.LENGTH_SHORT).show();
                                     }
                                 });
@@ -242,7 +251,7 @@ public class SettingsActivity extends AppCompatActivity {
         } else if (requestCode == REQUEST_CODE_IMPORT_SONG && resultCode == RESULT_OK) {
             try {
                 if (ExportHelper.getInstance().isMhsFile(SettingsActivity.this, data.getData())) {
-                    CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_importing_song, Toast.LENGTH_SHORT).show();
+                    showProgress(getString(R.string.settings_activity_toast_importing_song));
                     Thread thread = new Thread() {
 
                         @Override
@@ -251,11 +260,19 @@ public class SettingsActivity extends AppCompatActivity {
                                 InputStream inputStream = getContentResolver().openInputStream(data.getData());
                                 String fileJson = CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
                                 ExportHelper.getInstance().importSongs(fileJson, false);
+                                runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        progressDialog.dismiss();
+                                    }
+                                });
                             } catch (Exception e) {
                                 runOnUiThread(new Runnable() {
 
                                     @Override
                                     public void run() {
+                                        progressDialog.dismiss();
                                         CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_import_error, Toast.LENGTH_SHORT).show();
                                     }
                                 });
@@ -298,6 +315,15 @@ public class SettingsActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    private void showProgress(String message) {
+        progressDialog = new ProgressDialog(SettingsActivity.this);
+        progressDialog.setMessage(message);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
     }
 
 }

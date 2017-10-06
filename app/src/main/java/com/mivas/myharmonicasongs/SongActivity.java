@@ -1,6 +1,7 @@
 package com.mivas.myharmonicasongs;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -58,6 +59,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     private List<DbSection> dbSections = new ArrayList<DbSection>();
     private TextView noNotesText;
     private View backgroundView;
+    private ProgressDialog progressDialog;
     private BroadcastReceiver customizationReceiver = new BroadcastReceiver() {
 
         @Override
@@ -94,7 +96,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         try {
             mediaPlayerView.setDbSong(dbSong);
             mediaPlayerView.initialize();
-            if (dbSong.getAudioFile() != null) {
+            if (dbSong.getAudioFile() != null && CustomizationUtils.getShowMediaPlayer()) {
                 tablatureView.setMediaPadding(true);
                 mediaPlayerView.show(true);
             }
@@ -192,7 +194,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         if (requestCode == REQUEST_CODE_ADD_AUDIO_FILE && resultCode == RESULT_OK) {
-            CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_adding_audio_file, Toast.LENGTH_SHORT).show();
+            showProgress(getString(R.string.song_activity_text_adding_audio_file));
             Thread thread = new Thread() {
 
                 @Override
@@ -209,12 +211,13 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                             @Override
                             public void run() {
                                 try {
-                                    CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_audio_file_added, Toast.LENGTH_SHORT).show();
                                     mediaPlayerView.initialize();
                                     if (!mediaPlayerView.isDisplayed()) {
                                         tablatureView.setMediaPadding(true);
                                         mediaPlayerView.animate(true);
                                     }
+                                    progressDialog.dismiss();
+                                    CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_audio_file_added, Toast.LENGTH_SHORT).show();
                                     invalidateOptionsMenu();
                                     sendSongsUpdatedBroadcast();
                                 } catch (Exception e) {
@@ -239,6 +242,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                progressDialog.dismiss();
                 CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_add_audio_file_error, Toast.LENGTH_SHORT).show();
             }
         });
@@ -342,5 +346,14 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         } else {
             noNotesText.setVisibility(View.GONE);
         }
+    }
+
+    private void showProgress(String message) {
+        progressDialog = new ProgressDialog(SongActivity.this);
+        progressDialog.setMessage(message);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
     }
 }

@@ -43,6 +43,8 @@ public class Constants {
     public static final int DEFAULT_BACKGROUND_COLOR = 0xffdddddd;
     public static final int DEFAULT_SECTION_STYLE = 0;
     public static final int DEFAULT_SECTION_TEXT_COLOR = 0xff000000;
+    public static final boolean DEFAULT_SHOW_BENDS = false;
+    public static final boolean DEFAULT_SHOW_MEDIA_PLAYER = false;
 
     /* Current customizations */
     public static final String PREF_CURRENT_NOTE_BLOW_SIGN = "pref_current_note_blow_sign";
@@ -56,6 +58,8 @@ public class Constants {
     public static final String PREF_CURRENT_BACKGROUND_COLOR = "pref_current_background_color";
     public static final String PREF_CURRENT_SECTION_STYLE = "pref_current_section_style";
     public static final String PREF_CURRENT_SECTION_TEXT_COLOR = "pref_current_section_text_color";
+    public static final String PREF_CURRENT_SHOW_BENDS = "pref_current_show_bends";
+    public static final String PREF_CURRENT_SHOW_MEDIA_PLAYER = "pref_current_show_media_player";
 
     /* Misc */
     public static final String SEPARATOR_AUDIO_FILE = "%&#";
