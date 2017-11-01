@@ -73,7 +73,12 @@ public class CustomizationUtils {
         pressedShape.setShape(GradientDrawable.RECTANGLE);
         pressedShape.setCornerRadius(DimensionUtils.dpToPx(context, 6));
         pressedShape.setColor(Constants.DEFAULT_NOTE_BACKGROUND_COLOR_PRESSED);
+        GradientDrawable selectedShape = new GradientDrawable();
+        selectedShape.setShape(GradientDrawable.RECTANGLE);
+        selectedShape.setCornerRadius(DimensionUtils.dpToPx(context, 6));
+        selectedShape.setColor(Constants.DEFAULT_COLOR_PRIMARY);
         stateListDrawable.addState(new int[] {android.R.attr.state_pressed}, pressedShape);
+        stateListDrawable.addState(new int[] {android.R.attr.state_selected}, selectedShape);
         stateListDrawable.addState(new int[] {}, normalShape);
         return stateListDrawable;
     }
@@ -98,6 +103,20 @@ public class CustomizationUtils {
         int[][] states = new int[][] {
                 new int[] {android.R.attr.state_pressed},
                 new int[] {-android.R.attr.state_pressed}
+        };
+
+        int[] colors = new int[] {
+                Constants.DEFAULT_COLOR_WHITE,
+                textColor
+        };
+
+        return new ColorStateList(states, colors);
+    }
+
+    public static ColorStateList createNoteTextColor(int textColor) {
+        int[][] states = new int[][] {
+                new int[] {android.R.attr.state_selected},
+                new int[] {-android.R.attr.state_selected}
         };
 
         int[] colors = new int[] {

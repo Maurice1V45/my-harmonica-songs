@@ -1,14 +1,21 @@
 package com.mivas.myharmonicasongs.animation;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 
+import com.mivas.myharmonicasongs.listener.CellAnimationListener;
+import com.mivas.myharmonicasongs.model.Cell;
+import com.mivas.myharmonicasongs.model.CellLine;
+
 /**
  * Animation for expand/collapse.
  */
-public class GrowAnimation extends Animation {
+public class CellAnimation extends Animation {
 
     public final static int EXPAND = 0;
     public final static int COLLAPSE = 1;
@@ -17,11 +24,12 @@ public class GrowAnimation extends Animation {
     private int endWidth;
     private int endHeight;
     private int type;
+    private CellAnimationListener listener;
     private LinearLayout.LayoutParams layoutParams;
 
-    public GrowAnimation(View view, int duration, int type) {
+    public CellAnimation(View view, int type) {
 
-        setDuration(duration);
+        setDuration(300);
         this.view = view;
         this.endWidth = view.getWidth();
         this.endHeight = view.getHeight();
@@ -57,6 +65,9 @@ public class GrowAnimation extends Animation {
                 view.requestLayout();
             } else {
                 view.setVisibility(View.GONE);
+                if (listener != null) {
+                    listener.onAnimationEnded();
+                }
             }
         }
     }
@@ -67,5 +78,9 @@ public class GrowAnimation extends Animation {
 
     public void setHeight(int endHeight) {
         this.endHeight = endHeight;
+    }
+
+    public void setListener(CellAnimationListener listener) {
+        this.listener = listener;
     }
 }

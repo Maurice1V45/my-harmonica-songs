@@ -26,6 +26,10 @@
             android:name=".SongActivity"
             android:configChanges="orientation|screenSize" />
         <activity
+            android:name=".SongActivity2"
+            android:windowSoftInputMode="adjustPan"
+            android:configChanges="orientation|screenSize" />
+        <activity
             android:name=".CreditsActivity"
             android:configChanges="orientation|screenSize" />
         <activity

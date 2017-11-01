@@ -1,6 +1,6 @@
 package com.mivas.myharmonicasongs.listener;
 
-public interface NotesShiftListener {
+public interface NotesShiftDialogListener {
 
     void onNotesShiftedUp();
     void onNotesShiftedDown();

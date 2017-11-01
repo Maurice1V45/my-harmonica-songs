@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         refreshSongsList();
 
         // open song
-        Intent intent = new Intent(MainActivity.this, SongActivity.class);
+        Intent intent = new Intent(MainActivity.this, SongActivity2.class);
         intent.putExtra(Constants.EXTRA_SONG_ID, dbSong.getId());
         startActivity(intent);
     }
@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
 
     @Override
     public void onSongSelected(DbSong dbSong) {
-        Intent intent = new Intent(MainActivity.this, SongActivity.class);
+        Intent intent = new Intent(MainActivity.this, SongActivity2.class);
         intent.putExtra(Constants.EXTRA_SONG_ID, dbSong.getId());
         startActivity(intent);
     }

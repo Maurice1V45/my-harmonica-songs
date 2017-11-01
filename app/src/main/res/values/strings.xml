@@ -62,11 +62,18 @@
     <string name="song_activity_shift_warning_dialog_title" formatted="false">Shift only %d notes?</string>
     <string name="song_activity_shift_warning_dialog_description" formatted="false">%d out of %d notes cannot be shifted. Do you want to shift the other %d notes?</string>
 
-    <!-- Note Picker Dialog -->
-    <string name="note_picker_dialog_button_delete">Delete</string>
-    <string name="note_picker_dialog_hint_syllable">Syllable</string>
+    <!-- Note Picker View -->
     <string name="note_picker_dialog_button_show_bendings">Show bends</string>
     <string name="note_picker_dialog_button_hide_bendings">Hide bends</string>
+    <string name="note_picker_view_button_text">Text</string>
+    <string name="note_picker_view_button_bends">Bends</string>
+    <string name="note_picker_view_button_copy">Copy</string>
+    <string name="note_picker_view_button_paste">Paste</string>
+    <string name="note_picker_view_button_insert">Insert</string>
+    <string name="note_picker_view_button_section">Section</string>
+    <string name="note_picker_view_button_delete">Delete</string>
+    <string name="note_picker_view_hint_text">Note text…</string>
+    <string name="note_picker_view_hint_section_text">Section text…</string>
 
     <!-- Section Dialog -->
     <string name="section_dialog_hint_section_name">Section name</string>
@@ -80,6 +87,12 @@
     <string name="notes_shift_dialog_eligible_notes">notes eligible</string>
     <string name="notes_shift_dialog_no">No</string>
     <string name="notes_shift_dialog_all">All</string>
+
+    <!-- Insert Note Dialog -->
+    <string name="insert_note_dialog_text_left">Left</string>
+    <string name="insert_note_dialog_text_right">Right</string>
+    <string name="insert_note_dialog_text_top">Top</string>
+    <string name="insert_note_dialog_text_bottom">Bottom</string>
 
     <!-- Settings Activity -->
     <string name="settings_activity_text_settings">Settings</string>

@@ -52,6 +52,7 @@
     <dimen name="bu20">240dp</dimen>
     <dimen name="bu22">264dp</dimen>
     <dimen name="bu24">288dp</dimen>
+    <dimen name="bu26">312dp</dimen>
     <dimen name="bu33">396dp</dimen>
     <dimen name="bu34">408dp</dimen>
     <dimen name="text_size_20px">10sp</dimen>

@@ -115,4 +115,7 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
         holder.borderRight.setVisibility(hole == 10 ? View.VISIBLE : View.GONE);
     }
 
+    public void setSelectedNote(DbNote selectedNote) {
+        this.selectedNote = selectedNote;
+    }
 }

@@ -17,6 +17,7 @@ public class Constants {
     public static final String TAG_SECTION_DIALOG = "tag_section_dialog";
     public static final String TAG_HARMONICA_NOTES_DIALOG = "tag_harmonica_notes_dialog";
     public static final String TAG_NOTES_SHIFT_DIALOG = "tag_notes_shift_dialog";
+    public static final String TAG_INSERT_NOTE_DIALOG = "tag_insert_note_dialog";
 
     /* Extras */
     public static final String EXTRA_SONG_ID = "extra_song_id";

@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bu5"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/bu0_5"
+            android:paddingLeft="@dimen/bu0_25"
+            android:paddingRight="@dimen/bu0_25"
+            android:paddingTop="@dimen/bu0_5">
+
+            <LinearLayout
+                android:id="@+id/button_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/bu0_25"
+                android:layout_marginRight="@dimen/bu0_25"
+                android:layout_weight="1"
+                android:background="@drawable/selector_note_picker_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/bu1_5"
+                    android:layout_height="@dimen/bu1_5"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_text" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/bu0_25"
+                    android:text="@string/note_picker_view_button_text"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_20px" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/button_bends"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/bu0_25"
+                android:layout_marginRight="@dimen/bu0_25"
+                android:layout_weight="1"
+                android:background="@drawable/selector_note_picker_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/bu1_5"
+                    android:layout_height="@dimen/bu1_5"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_bends" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/bu0_25"
+                    android:text="@string/note_picker_view_button_bends"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_20px" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/button_copy"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/bu0_25"
+                android:layout_marginRight="@dimen/bu0_25"
+                android:layout_weight="1"
+                android:background="@drawable/selector_note_picker_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/bu1_5"
+                    android:layout_height="@dimen/bu1_5"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_copy2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/bu0_25"
+                    android:text="@string/note_picker_view_button_copy"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_20px" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/button_paste"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/bu0_25"
+                android:layout_marginRight="@dimen/bu0_25"
+                android:layout_weight="1"
+                android:background="@drawable/selector_note_picker_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/bu1_5"
+                    android:layout_height="@dimen/bu1_5"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_paste2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/bu0_25"
+                    android:text="@string/note_picker_view_button_paste"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_20px" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/button_insert"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/bu0_25"
+                android:layout_marginRight="@dimen/bu0_25"
+                android:layout_weight="1"
+                android:background="@drawable/selector_note_picker_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/bu1_5"
+                    android:layout_height="@dimen/bu1_5"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_insert2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/bu0_25"
+                    android:text="@string/note_picker_view_button_insert"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_20px" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/button_section"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/bu0_25"
+                android:layout_marginRight="@dimen/bu0_25"
+                android:layout_weight="1"
+                android:background="@drawable/selector_note_picker_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/bu1_5"
+                    android:layout_height="@dimen/bu1_5"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_section" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/bu0_25"
+                    android:text="@string/note_picker_view_button_section"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_20px" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/button_delete"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/bu0_25"
+                android:layout_marginRight="@dimen/bu0_25"
+                android:layout_weight="1"
+                android:background="@drawable/selector_note_picker_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/bu1_5"
+                    android:layout_height="@dimen/bu1_5"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_delete" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/bu0_25"
+                    android:text="@string/note_picker_view_button_delete"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_20px" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_harmonica_notes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/header"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/bu0_5"
+            android:layout_marginTop="@dimen/bu0_5"
+            android:clipToPadding="false"
+            android:paddingLeft="@dimen/bu0_5"
+            android:paddingRight="@dimen/bu0_5" />
+
+        <RelativeLayout
+            android:id="@+id/layout_text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bu5"
+            android:background="@color/colorPrimary"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/field_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_margin="@dimen/bu0_5"
+                android:background="@drawable/shape_note_picker_button"
+                android:gravity="center_vertical"
+                android:hint="@string/note_picker_view_hint_text"
+                android:imeOptions="actionNext"
+                android:inputType="textVisiblePassword"
+                android:maxLength="15"
+                android:maxLines="1"
+                android:paddingBottom="@dimen/bu0_5"
+                android:paddingLeft="@dimen/bu1"
+                android:paddingRight="@dimen/bu1"
+                android:paddingTop="@dimen/bu0_5"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/text_size_30px" />
+
+            <RelativeLayout
+                android:id="@+id/button_clear"
+                android:layout_width="@dimen/bu4"
+                android:layout_height="@dimen/bu4"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/bu0_5"
+                android:clickable="true">
+
+                <ImageView
+                    android:layout_width="@dimen/bu2"
+                    android:layout_height="@dimen/bu2"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/selector_clear_button" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_section_text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bu5"
+            android:background="@color/colorPrimary"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/field_section_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_margin="@dimen/bu0_5"
+                android:background="@drawable/shape_note_picker_button"
+                android:gravity="center_vertical"
+                android:hint="@string/note_picker_view_hint_section_text"
+                android:imeOptions="actionDone"
+                android:inputType="textVisiblePassword"
+                android:maxLines="1"
+                android:paddingBottom="@dimen/bu0_5"
+                android:paddingLeft="@dimen/bu1"
+                android:paddingRight="@dimen/bu1"
+                android:paddingTop="@dimen/bu0_5"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/text_size_30px" />
+
+            <RelativeLayout
+                android:id="@+id/button_section_clear"
+                android:layout_width="@dimen/bu4"
+                android:layout_height="@dimen/bu4"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/bu0_5"
+                android:clickable="true">
+
+                <ImageView
+                    android:layout_width="@dimen/bu2"
+                    android:layout_height="@dimen/bu2"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/selector_clear_button" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

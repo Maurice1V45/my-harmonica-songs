@@ -36,7 +36,7 @@
                 android:layout_height="@dimen/bu6"
                 android:layout_marginTop="@dimen/bu1"
                 android:scaleType="fitXY"
-                android:src="@drawable/icon_octave_up" />
+                android:src="@drawable/icon_arrow_up" />
 
             <TextView
                 android:id="@+id/text_eligible_notes_increase"
@@ -87,7 +87,7 @@
                 android:layout_height="@dimen/bu6"
                 android:layout_marginTop="@dimen/bu1"
                 android:scaleType="fitXY"
-                android:src="@drawable/icon_octave_down" />
+                android:src="@drawable/icon_arrow_down" />
 
             <TextView
                 android:id="@+id/text_eligible_notes_decrease"

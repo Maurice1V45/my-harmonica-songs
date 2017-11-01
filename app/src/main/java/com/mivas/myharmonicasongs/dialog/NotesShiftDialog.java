@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbNote;
-import com.mivas.myharmonicasongs.listener.NotesShiftListener;
+import com.mivas.myharmonicasongs.listener.NotesShiftDialogListener;
 import com.mivas.myharmonicasongs.util.NotesShiftUtils;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class NotesShiftDialog extends DialogFragment {
     private View decreaseView;
     private TextView increaseEligibleText;
     private TextView decreaseEligibleText;
-    private NotesShiftListener listener;
+    private NotesShiftDialogListener listener;
     private List<DbNote> dbNotes;
     private int increaseEligible;
     private int decreaseEligible;
@@ -45,8 +45,8 @@ public class NotesShiftDialog extends DialogFragment {
     private void initViews(View rootView) {
         increaseView = rootView.findViewById(R.id.view_increase_notes);
         decreaseView = rootView.findViewById(R.id.view_decrease_notes);
-        increaseEligibleText = (TextView) rootView.findViewById(R.id.text_eligible_notes_increase);
-        decreaseEligibleText = (TextView) rootView.findViewById(R.id.text_eligible_notes_decrease);
+        increaseEligibleText = rootView.findViewById(R.id.text_eligible_notes_increase);
+        decreaseEligibleText = rootView.findViewById(R.id.text_eligible_notes_decrease);
     }
 
     /**
@@ -134,7 +134,7 @@ public class NotesShiftDialog extends DialogFragment {
         }
     }
 
-    public void setListener(NotesShiftListener listener) {
+    public void setListener(NotesShiftDialogListener listener) {
         this.listener = listener;
     }
 

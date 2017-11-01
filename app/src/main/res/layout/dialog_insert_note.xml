@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="@dimen/bu26"
+        android:layout_height="@dimen/bu26"
+        android:padding="@dimen/bu0_5">
+
+        <LinearLayout
+            android:id="@+id/view_note_left"
+            android:layout_width="@dimen/bu8"
+            android:layout_height="@dimen/bu8"
+            android:layout_centerVertical="true"
+            android:background="@drawable/selector_notes_shift"
+            android:clickable="true"
+            android:elevation="@dimen/bu0_5"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/bu0_5">
+
+            <ImageView
+                android:layout_width="@dimen/bu3"
+                android:layout_height="@dimen/bu3"
+                android:layout_marginTop="@dimen/bu1"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_arrow_left" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bu0_5"
+                android:gravity="center_horizontal"
+                android:text="@string/insert_note_dialog_text_left"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_34px" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/view_note_right"
+            android:layout_width="@dimen/bu8"
+            android:layout_height="@dimen/bu8"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/selector_notes_shift"
+            android:clickable="true"
+            android:elevation="@dimen/bu0_5"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/bu0_5">
+
+            <ImageView
+                android:layout_width="@dimen/bu3"
+                android:layout_height="@dimen/bu3"
+                android:layout_marginTop="@dimen/bu1"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_arrow_right" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bu0_5"
+                android:gravity="center_horizontal"
+                android:text="@string/insert_note_dialog_text_right"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_34px" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/view_note_top"
+            android:layout_width="@dimen/bu8"
+            android:layout_height="@dimen/bu8"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/selector_notes_shift"
+            android:clickable="true"
+            android:elevation="@dimen/bu0_5"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/bu0_5">
+
+            <ImageView
+                android:layout_width="@dimen/bu3"
+                android:layout_height="@dimen/bu3"
+                android:layout_marginTop="@dimen/bu1"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_arrow_up" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bu0_5"
+                android:gravity="center_horizontal"
+                android:text="@string/insert_note_dialog_text_top"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_34px" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/view_note_bottom"
+            android:layout_width="@dimen/bu8"
+            android:layout_height="@dimen/bu8"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/selector_notes_shift"
+            android:clickable="true"
+            android:elevation="@dimen/bu0_5"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/bu0_5">
+
+            <ImageView
+                android:layout_width="@dimen/bu3"
+                android:layout_height="@dimen/bu3"
+                android:layout_marginTop="@dimen/bu1"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_arrow_down" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bu0_5"
+                android:gravity="center_horizontal"
+                android:text="@string/insert_note_dialog_text_bottom"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_34px" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</RelativeLayout>
