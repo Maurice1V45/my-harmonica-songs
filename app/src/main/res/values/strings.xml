@@ -29,7 +29,7 @@
     <string name="song_dialog_text_key">Key</string>
 
     <!-- Song Activity -->
-    <string name="song_activity_text_no_notes">Press \"+\" to add a note.\nLong press \"+\" for more options.</string>
+    <string name="song_activity_text_no_notes">Press \"+\" to add a note</string>
     <string name="song_activity_menu_edit">Edit</string>
     <string name="song_activity_menu_delete">Delete</string>
     <string name="song_activity_menu_add_note">Add note</string>

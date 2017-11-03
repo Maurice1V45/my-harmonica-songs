@@ -13,6 +13,8 @@ import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.listener.InsertNoteDialogListener;
 import com.mivas.myharmonicasongs.listener.NotesShiftDialogListener;
+import com.mivas.myharmonicasongs.model.Cell;
+import com.mivas.myharmonicasongs.model.CellLine;
 import com.mivas.myharmonicasongs.util.NotesShiftUtils;
 
 import java.util.List;
@@ -20,6 +22,12 @@ import java.util.List;
 public class InsertNoteDialog extends DialogFragment {
 
     private InsertNoteDialogListener listener;
+    private CellLine cellLine;
+    private Cell cell;
+    private View leftView;
+    private View rightView;
+    private View topView;
+    private View bottomView;
 
     /**
      * Default constructor
@@ -34,13 +42,48 @@ public class InsertNoteDialog extends DialogFragment {
      * @param rootView
      */
     private void initViews(View rootView) {
+        leftView = rootView.findViewById(R.id.view_note_left);
+        rightView = rootView.findViewById(R.id.view_note_right);
+        topView = rootView.findViewById(R.id.view_note_top);
+        bottomView = rootView.findViewById(R.id.view_note_bottom);
     }
 
     /**
      * Listeners initializer
      */
     private void initListeners() {
+        leftView.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                listener.onLeftSelected();
+                dismiss();
+            }
+        });
+        rightView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                listener.onRightSelected();
+                dismiss();
+            }
+        });
+        topView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                listener.onTopSelected();
+                dismiss();
+            }
+        });
+        bottomView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                listener.onBottomSelected();
+                dismiss();
+            }
+        });
     }
 
     @Override
@@ -48,6 +91,7 @@ public class InsertNoteDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_insert_note, container);
         initViews(view);
         initListeners();
+        initEligibles();
         return view;
     }
 
@@ -64,5 +108,16 @@ public class InsertNoteDialog extends DialogFragment {
         this.listener = listener;
     }
 
+    public void setCellLine(CellLine cellLine) {
+        this.cellLine = cellLine;
+    }
 
+    public void setCell(Cell cell) {
+        this.cell = cell;
+    }
+
+    private void initEligibles() {
+        rightView.setEnabled(cellLine.getCells().indexOf(cell) < cellLine.getCells().size() - 1);
+        bottomView.setEnabled(cellLine.getCells().size() > 1);
+    }
 }

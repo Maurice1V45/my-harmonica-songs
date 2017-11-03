@@ -5,17 +5,12 @@ package com.mivas.myharmonicasongs.util;
  */
 public class Constants {
 
-    /* API Keys */
-    public static final String API_KEY_FEEDBACK = "AF-36D7346A96D7-B6";
-
     /* Preferences */
     public static final String PREFERENCES = "prefs";
     public static final String PREF_FIRST_RUN = "pref_first_run";
 
     /* Dialog tags */
     public static final String TAG_SONG_DIALOG = "tag_song_dialog";
-    public static final String TAG_SECTION_DIALOG = "tag_section_dialog";
-    public static final String TAG_HARMONICA_NOTES_DIALOG = "tag_harmonica_notes_dialog";
     public static final String TAG_NOTES_SHIFT_DIALOG = "tag_notes_shift_dialog";
     public static final String TAG_INSERT_NOTE_DIALOG = "tag_insert_note_dialog";
 
@@ -37,7 +32,7 @@ public class Constants {
     public static final int DEFAULT_NOTE_DRAW_STYLE = 0;
     public static final int DEFAULT_NOTE_DRAW_TEXT_COLOR = 0xff000000;
     public static final int DEFAULT_NOTE_DRAW_BACKGROUND_COLOR = 0xffffffff;
-    public static final int DEFAULT_NOTE_BACKGROUND_COLOR_PRESSED = 0xffaaaaaa;
+    public static final int DEFAULT_NOTE_BACKGROUND_COLOR_PRESSED = 0xffcccccc;
     public static final int DEFAULT_COLOR_PRIMARY = 0xffad0556;
     public static final int DEFAULT_COLOR_BLACK = 0xff000000;
     public static final int DEFAULT_COLOR_WHITE = 0xffffffff;

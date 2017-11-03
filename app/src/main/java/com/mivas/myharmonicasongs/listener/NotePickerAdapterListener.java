@@ -1,10 +1,5 @@
 package com.mivas.myharmonicasongs.listener;
 
-import com.mivas.myharmonicasongs.dialog.NotePickerDialog;
-
-/**
- * Listener for {@link NotePickerDialog}.
- */
 public interface NotePickerAdapterListener {
 
     /**

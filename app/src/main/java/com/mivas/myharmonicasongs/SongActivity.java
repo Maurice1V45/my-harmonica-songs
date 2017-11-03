@@ -41,6 +41,7 @@ import com.mivas.myharmonicasongs.util.CustomizationUtils;
 import com.mivas.myharmonicasongs.util.ExportHelper;
 import com.mivas.myharmonicasongs.util.NotesShiftUtils;
 import com.mivas.myharmonicasongs.view.MediaPlayerView;
+import com.mivas.myharmonicasongs.view.NotePickerView;
 import com.mivas.myharmonicasongs.view.TablatureView;
 
 import java.io.InputStream;
@@ -76,7 +77,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_song);
+        setContentView(R.layout.activity_song2);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         initViews();
 
@@ -93,6 +94,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         tablatureView.setSongActivityListener(SongActivity.this);
         tablatureView.initialize();
 
+        // init media player
         try {
             mediaPlayerView.setDbSong(dbSong);
             mediaPlayerView.initialize();
@@ -103,6 +105,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         } catch (MediaPlayerException e) {
             CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_media_player_init_error, Toast.LENGTH_SHORT).show();
         }
+
         registerReceiver(customizationReceiver, new IntentFilter(Constants.INTENT_CUSTOMIZATIONS_UPDATED));
     }
 
@@ -183,12 +186,12 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
      * Views initializer.
      */
     private void initViews() {
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-        noNotesText = (TextView) findViewById(R.id.text_no_notes);
+        noNotesText = findViewById(R.id.text_no_notes);
         backgroundView = findViewById(R.id.view_background);
-        tablatureView = (TablatureView) findViewById(R.id.view_tablature);
-        mediaPlayerView = (MediaPlayerView) findViewById(R.id.view_media);
+        tablatureView = findViewById(R.id.view_tablature);
+        mediaPlayerView = findViewById(R.id.view_media);
     }
 
     @Override
@@ -355,5 +358,26 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        NotePickerView notePickerView = tablatureView.getNotePickerView();
+        if (notePickerView.isNotePickerDisplayed()) {
+            if (notePickerView.getTextLayout().getVisibility() == View.VISIBLE) {
+                notePickerView.getTextLayout().setVisibility(View.GONE);
+                notePickerView.getNotesLayout().setVisibility(View.VISIBLE);
+                notePickerView.animate(true);
+            } else if (notePickerView.getSectionTextLayout().getVisibility() == View.VISIBLE) {
+                notePickerView.getSectionTextLayout().setVisibility(View.GONE);
+                notePickerView.getNotesLayout().setVisibility(View.VISIBLE);
+                notePickerView.animate(true);
+            } else {
+                notePickerView.animate(false);
+                tablatureView.onNotePickerClosed();
+            }
+        } else {
+            super.onBackPressed();
+        }
     }
 }

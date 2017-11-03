@@ -1,16 +1,12 @@
 package com.mivas.myharmonicasongs.view;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v7.view.menu.MenuBuilder;
-import android.support.v7.view.menu.MenuPopupHelper;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
@@ -31,20 +27,15 @@ import com.mivas.myharmonicasongs.database.handler.SectionDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.database.model.DbSection;
 import com.mivas.myharmonicasongs.database.model.DbSong;
-import com.mivas.myharmonicasongs.dialog.NotePickerDialog;
-import com.mivas.myharmonicasongs.dialog.SectionDialog;
 import com.mivas.myharmonicasongs.listener.CellAnimationListener;
 import com.mivas.myharmonicasongs.listener.NotePickerViewListener;
-import com.mivas.myharmonicasongs.listener.SectionDialogListener;
 import com.mivas.myharmonicasongs.listener.SongActivityListener;
 import com.mivas.myharmonicasongs.model.Cell;
 import com.mivas.myharmonicasongs.model.CellLine;
 import com.mivas.myharmonicasongs.model.SectionCell;
-import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
 import com.mivas.myharmonicasongs.util.DimensionUtils;
-import com.mivas.myharmonicasongs.util.KeyboardUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +43,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-public class TablatureView extends RelativeLayout implements NotePickerViewListener, SectionDialogListener {
+public class TablatureView extends RelativeLayout implements NotePickerViewListener {
 
     private Context context;
     private LinearLayout parentLayout;
@@ -90,10 +81,8 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     private int MEASURE_SECTION_PADDING_LEFT;
     private int MEASURE_SECTION_PADDING_BOTTOM;
     private int MEASURE_SECTION_SIZE;
-    private int MEASURE_TABLATURE_TOP_PADDING;
-    private int MEASURE_TABLATURE_BOTTOM_PADDING;
+    private int MEASURE_TABLATURE_PADDING;
     private int MEASURE_TABLATURE_BOTTOM_PADDING_WITH_MEDIA;
-    private int MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING;
     private int MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER;
     private int MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER_BENDS;
 
@@ -151,7 +140,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         verticalScrollView = new ScrollView(context);
         RelativeLayout.LayoutParams verticalScrollLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         verticalScrollView.setLayoutParams(verticalScrollLayoutParams);
-        verticalScrollView.setPadding(0, MEASURE_TABLATURE_TOP_PADDING, 0, MEASURE_TABLATURE_BOTTOM_PADDING);
+        verticalScrollView.setPadding(0, MEASURE_TABLATURE_PADDING, 0, MEASURE_TABLATURE_PADDING);
         verticalScrollView.setClipToPadding(false);
         verticalScrollView.setVerticalScrollBarEnabled(false);
         addView(verticalScrollView);
@@ -160,7 +149,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         HorizontalScrollView horizontalScrollView = new HorizontalScrollView(context);
         RelativeLayout.LayoutParams horizontalScrollLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         horizontalScrollView.setLayoutParams(horizontalScrollLayoutParams);
-        horizontalScrollView.setPadding(MEASURE_TABLATURE_TOP_PADDING, 0, MEASURE_TABLATURE_TOP_PADDING, 0);
+        horizontalScrollView.setPadding(MEASURE_TABLATURE_PADDING, 0, MEASURE_TABLATURE_PADDING, 0);
         horizontalScrollView.setClipToPadding(false);
         horizontalScrollView.setHorizontalScrollBarEnabled(false);
         verticalScrollView.addView(horizontalScrollView);
@@ -192,10 +181,8 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         MEASURE_SECTION_PADDING_LEFT = DimensionUtils.dpToPx(context, 12);
         MEASURE_SECTION_PADDING_BOTTOM = DimensionUtils.dpToPx(context, 4);
         MEASURE_SECTION_SIZE = 24;
-        MEASURE_TABLATURE_TOP_PADDING = DimensionUtils.dpToPx(context, 3);
-        MEASURE_TABLATURE_BOTTOM_PADDING = DimensionUtils.dpToPx(context, 3);
+        MEASURE_TABLATURE_PADDING = DimensionUtils.dpToPx(context, 3);
         MEASURE_TABLATURE_BOTTOM_PADDING_WITH_MEDIA = DimensionUtils.dpToPx(context, 75);
-        MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING = 0;
         MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER = DimensionUtils.dpToPx(context, 200);
         MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER_BENDS = DimensionUtils.dpToPx(context, 422);
     }
@@ -252,7 +239,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
             while (i < dbNotes.size()) {
 
                 // add the current note to the horizontal linear layout
-                addNoteCell(thisNote, cellLine, false);
+                addNoteCell(thisNote, cellLine, false, false);
 
                 // if there is no next note or if this note is the last on this row
                 if (nextNote == null || (nextNote.getRow() != thisNote.getRow())) {
@@ -292,131 +279,6 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
 
     }
 
-    private void addPlusCell(final CellLine cellLine, boolean animate) {
-
-        // set add note layout properties
-        final RelativeLayout parent = new RelativeLayout(context);
-        LinearLayout.LayoutParams parentLayoutParams = new LinearLayout.LayoutParams(MEASURE_CELL_WIDTH, MEASURE_CELL_HEIGHT);
-        parentLayoutParams.setMargins(MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN);
-        parent.setLayoutParams(parentLayoutParams);
-        parent.setClickable(true);
-
-        // set plus image properties
-        ImageView plusImage = new ImageView(context);
-        RelativeLayout.LayoutParams plusImageLayoutParams = new RelativeLayout.LayoutParams(MEASURE_PLUS_SIZE, MEASURE_PLUS_SIZE);
-        plusImageLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-        plusImage.setLayoutParams(plusImageLayoutParams);
-        plusImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        plusImage.setImageResource(R.drawable.selector_round_plus);
-        parent.addView(plusImage);
-
-        // add view holder
-        cellLine.getLayout().addView(parent);
-        final Cell cell = new Cell(null, parent);
-        cellLine.addCell(cell);
-
-        parent.setOnLongClickListener(new View.OnLongClickListener() {
-
-            @Override
-            public boolean onLongClick(View v) {
-                int row = 0;
-                int column = 0;
-                boolean isLastPlus = false; // last plus in the tablature
-
-                List<Cell> cells = cellLine.getCells();
-                if (cells.size() <= 1) {
-
-                    // this is the last plus in the tab
-                    isLastPlus = true;
-                    row = cellLines.size() - 1;
-                } else {
-
-                    // get last note in the row
-                    Cell lastNoteCell = cells.get(cells.size() - 2);
-                    row = lastNoteCell.getDbNote().getRow();
-                    column = lastNoteCell.getDbNote().getColumn() + 1;
-                }
-
-                DbSection dbSection = getSectionByRow(row);
-
-                // set long press listener with options menu
-                final MenuBuilder menuBuilder = new MenuBuilder(context);
-                menuBuilder.setOptionalIconsVisible(true);
-                MenuInflater inflater = new MenuInflater(context);
-                inflater.inflate(R.menu.menu_note_options, menuBuilder);
-                final MenuPopupHelper optionsMenu = new MenuPopupHelper(context, menuBuilder, parent);
-                menuBuilder.findItem(R.id.action_delete_row).setVisible(column != 0);
-                menuBuilder.findItem(R.id.action_insert_row).setVisible(!isLastPlus);
-                menuBuilder.findItem(R.id.action_copy_row).setVisible(column != 0);
-                menuBuilder.findItem(R.id.action_paste_row).setVisible(copiedNotes.size() != 0);
-                menuBuilder.findItem(R.id.action_add_section).setVisible(dbSection == null && !isLastPlus);
-                menuBuilder.findItem(R.id.action_edit_section).setVisible(dbSection != null);
-                menuBuilder.findItem(R.id.action_delete_section).setVisible(dbSection != null);
-                menuBuilder.setCallback(new MenuBuilder.Callback() {
-
-                    @Override
-                    public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_add_note:
-                                onAddNoteCommand(cellLine, cell);
-                                break;
-                            case R.id.action_delete_row:
-                                onDeleteRowCommand(cellLine);
-                                break;
-                            case R.id.action_insert_row:
-                                onNewRowCommand(cellLine);
-                                break;
-                            case R.id.action_copy_row:
-                                onCopyRowCommand(cellLine);
-                                break;
-                            case R.id.action_paste_row:
-                                onPasteRowCommand(cellLine);
-                                break;
-                            case R.id.action_add_section:
-                                onAddSectionCommand(cellLine);
-                                break;
-                            case R.id.action_edit_section:
-                                onEditSectionCommand(cellLine);
-                                break;
-                            case R.id.action_delete_section:
-                                onDeleteSectionCommand(cellLine);
-                                break;
-                            default:
-                                break;
-                        }
-                        return false;
-                    }
-
-                    @Override
-                    public void onMenuModeChange(MenuBuilder menu) {
-
-                    }
-                });
-                optionsMenu.show();
-                return true;
-            }
-        });
-
-        // set click listener
-        parent.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                onAddNoteCommand(cellLine, cell);
-            }
-        });
-
-        // perform animation
-        if (animate) {
-            CellAnimation cellAnimation = new CellAnimation(parent, SlideAnimation.EXPAND);
-            cellAnimation.setWidth(MEASURE_CELL_WIDTH);
-            cellAnimation.setHeight(MEASURE_CELL_HEIGHT);
-            parent.startAnimation(cellAnimation);
-        }
-
-        songActivityListener.onNotesChanged(dbNotes);
-    }
-
     /**
      * TODO maybe delete this
      * Searches if there is a section on the specified row and returns it.
@@ -434,37 +296,15 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     }
 
     @Override
-    public void onNoteAdded(DbNote dbNote, boolean newRow, CellLine cellLine) {
-        if (newRow) {
-            ActiveAndroid.beginTransaction();
-            incrementRows(dbNote.getRow());
-            incrementSections(dbNote.getRow());
-            ActiveAndroid.setTransactionSuccessful();
-            ActiveAndroid.endTransaction();
-        }
+    public void onNoteAdded(CellLine cellLine, Cell cell, DbNote dbNote) {
+        addNoteCell(dbNote, cellLine, true, false);
+        addLastPlus(cellLine);
 
         dbNotes.add(dbNote);
         NoteDbHandler.insertNote(dbNote);
         Collections.sort(dbNotes, notesComparator);
 
-        if (newRow) {
-
-            // create a new cellLine and add the note and a plus on it
-            LinearLayout newLayout = new LinearLayout(context);
-            newLayout.setOrientation(LinearLayout.HORIZONTAL);
-            int index = parentLayout.indexOfChild(cellLine.getLayout()) + 1;
-            parentLayout.addView(newLayout, index);
-            CellLine newCellLine = new CellLine(new ArrayList<Cell>(), newLayout);
-            int cellLinesIndex = cellLines.indexOf(cellLine) + 1;
-            cellLines.add(cellLinesIndex, newCellLine);
-            addNoteCell(dbNote, newCellLine, true);
-            addPlusCell(newCellLine, true);
-        } else {
-            addNoteCell(dbNote, cellLine, true);
-            addLastPlus(cellLine);
-        }
-
-        jumpToLastCell(cellLine);
+        jumpToCell(cellLine, cell);
 
         songActivityListener.onNotesChanged(dbNotes);
     }
@@ -473,19 +313,20 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     public void onNoteEdited(CellLine cellLine, Cell cell) {
         DbNote dbNote = cell.getDbNote();
         NoteDbHandler.insertNote(dbNote);
-        cell.getView().setBackground(CustomizationUtils.createNoteBackground(context, dbNote.isBlow() ? blowBackgroundColor : drawBackgroundColor));
-        TextView noteTextView = (TextView) ((LinearLayout) cell.getView()).getChildAt(0);
-        if (dbNote.isBlow()) {
-            CustomizationUtils.styleNoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, CustomizationUtils.createNoteTextColor(blowTextColor));
-        } else {
-            CustomizationUtils.styleNoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, CustomizationUtils.createNoteTextColor(drawTextColor));
-        }
-        TextView wordTextView = (TextView) ((LinearLayout) cell.getView()).getChildAt(1);
-        wordTextView.setText(dbNote.getWord());
-        wordTextView.setTextColor(CustomizationUtils.createNoteTextColor(dbNote.isBlow() ? blowTextColor : drawTextColor));
-        wordTextView.setVisibility(dbNote.getWord() != null && !dbNote.getWord().isEmpty() ? View.VISIBLE : View.GONE);
+        updateCellViews(cell);
 
-        jumpToNextCell(cellLine, cell);
+        jumpToNextCell(cellLine, cell, true);
+
+        songActivityListener.onNotesChanged(dbNotes);
+    }
+
+    @Override
+    public void onNoteTextChanged(CellLine cellLine, Cell cell) {
+        DbNote dbNote = cell.getDbNote();
+        NoteDbHandler.insertNote(dbNote);
+        updateCellViews(cell);
+
+        jumpToNextCell(cellLine, cell, false);
 
         songActivityListener.onNotesChanged(dbNotes);
     }
@@ -704,11 +545,11 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     }
 
     @Override
-    public void onNotesCopied(CellLine cellLine) {
+    public void onNotesCopied(CellLine cellLine, Cell cell) {
         copiedNotes.clear();
-        for (Cell cell : cellLine.getCells()) {
-            if (cell.getDbNote() != null) {
-                copiedNotes.add(new DbNote(cell.getDbNote()));
+        for (Cell copiedCell : cellLine.getCells()) {
+            if (copiedCell.getDbNote() != null) {
+                copiedNotes.add(new DbNote(copiedCell.getDbNote()));
             }
         }
         int copedNotesNr = copiedNotes.size();
@@ -717,6 +558,8 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         } else {
             CustomToast.makeText(context, copedNotesNr + " " + context.getString(R.string.song_activity_toast_notes_copied), Toast.LENGTH_SHORT).show();
         }
+
+        jumpToCell(cellLine, cell);
     }
 
     @Override
@@ -729,25 +572,14 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
             ActiveAndroid.beginTransaction();
             int currentColumn = cellLine.getCells().indexOf(cell);
 
-            // increment columns of notes after this one
-            List<DbNote> notesToIncrement = new ArrayList<>();
-            for (int i = 0; i < cellLine.getCells().size(); i++) {
-                Cell currentCell = cellLine.getCells().get(i);
-                if (currentCell.getDbNote() != null && i >= currentColumn) {
-                    notesToIncrement.add(currentCell.getDbNote());
-                }
-            }
-            incrementNoteColumns(notesToIncrement, copiedNotes.size());
-
             // add pasted notes
             int row = cellLines.indexOf(cellLine);
-            List<DbNote> pastedNotes = new ArrayList<DbNote>();
             for (DbNote copiedNote : copiedNotes) {
                 DbNote pastedNote = new DbNote(copiedNote);
                 pastedNote.setRow(row);
                 pastedNote.setColumn(currentColumn);
+                addNoteCell(pastedNote, cellLine, true, false);
                 dbNotes.add(pastedNote);
-                pastedNotes.add(pastedNote);
                 NoteDbHandler.insertNote(pastedNote);
                 currentColumn++;
             }
@@ -755,20 +587,67 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
             ActiveAndroid.endTransaction();
             Collections.sort(dbNotes, notesComparator);
 
-            // add cells
-            for (DbNote pastedNote : pastedNotes) {
-                addNoteCell(pastedNote, cellLine, true);
-            }
             addLastPlus(cellLine);
 
-            jumpToCurrentCell(cellLine);
+            jumpToCell(cellLine, cell);
         }
+    }
+
+    @Override
+    public void onNoteInserted(CellLine cellLine, DbNote dbNote) {
+
+        addNoteCell(dbNote, cellLine, true, true);
+
+        // insert note into db
+        dbNotes.add(dbNote);
+        NoteDbHandler.insertNote(dbNote);
+        Collections.sort(dbNotes, notesComparator);
+
+        addLastPlus(cellLine);
+
+        songActivityListener.onNotesChanged(dbNotes);
+    }
+
+    @Override
+    public void onRowInserted(CellLine cellLine, DbNote dbNote, boolean top) {
+        ActiveAndroid.beginTransaction();
+        int row = top ? cellLines.indexOf(cellLine) : cellLines.indexOf(cellLine) + 1;
+        dbNote.setRow(row);
+
+        incrementRows(row);
+        incrementSections(row);
+
+        // create a new cellLine and add the note and a plus on it
+        LinearLayout newLayout = new LinearLayout(context);
+        newLayout.setOrientation(LinearLayout.HORIZONTAL);
+        int index = parentLayout.indexOfChild(cellLine.getLayout());
+        if (top && cellLine.getSectionCell() != null && cellLine.getSectionCell().getDbSection() != null) {
+            index -= 1;
+        } else if (!top) {
+            index += 1;
+        }
+
+        parentLayout.addView(newLayout, index);
+        CellLine newCellLine = new CellLine(new ArrayList<Cell>(), newLayout);
+        int cellLinesIndex = top ? cellLines.indexOf(cellLine) : cellLines.indexOf(cellLine) + 1;
+        cellLines.add(cellLinesIndex, newCellLine);
+        addPlusCell(newCellLine, true);
+        addNoteCell(dbNote, newCellLine, true, true);
+        addLastPlus(newCellLine);
+
+        dbNotes.add(dbNote);
+        NoteDbHandler.insertNote(dbNote);
+        Collections.sort(dbNotes, notesComparator);
+
+        songActivityListener.onNotesChanged(dbNotes);
+
+        ActiveAndroid.setTransactionSuccessful();
+        ActiveAndroid.endTransaction();
     }
 
     @Override
     public void onSectionAdded(DbSection dbSection, CellLine cellLine) {
         dbSection.setRow(cellLines.indexOf(cellLine));
-        dbSection.setSongId(dbSong.getId());
         dbSections.add(dbSection);
         SectionDbHandler.insertSection(dbSection);
         addSectionCell(dbSection, cellLine, false);
@@ -809,184 +688,22 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         }
     }
 
-    @Override
-    public void onSectionEdit(DbSection dbSection, CellLine cellLine) {
-        SectionDbHandler.insertSection(dbSection);
-        TextView sectionTextView = cellLine.getSectionCell().getTextView();
-        sectionTextView.setText(dbSection.getName());
-    }
-
-    private void onAddNoteCommand(CellLine cellLine, Cell cell) {
-        DbNote dbNote = new DbNote();
-        dbNote.setRow(cellLines.indexOf(cellLine));
-        dbNote.setColumn(cellLine.getCells().indexOf(cell));
-        dbNote.setSongId(dbSong.getId());
-        notePickerView.setDbNote(dbNote);
-        notePickerView.setListener(TablatureView.this);
-        notePickerView.setEditMode(false);
-        notePickerView.setNewRow(false);
-        notePickerView.setCellLine(cellLine);
-        notePickerView.setCell(cell);
-        notePickerView.initialize();
-        setVerticalScrollBottomPadding(true, notePickerView.isShowBends());
-        smoothScrollToCellLine(cellLine);
-        setSelectedCell(cell);
-        if (!notePickerView.isNotePickerDisplayed()) {
-            notePickerView.animate(true);
-        }
-    }
-
-    private void onDeleteRowCommand(CellLine cellLine) {
-
-        int row = cellLines.indexOf(cellLine);
-        ActiveAndroid.beginTransaction();
-
-        // delete all notes on the row
-        Iterator<DbNote> iterator = dbNotes.iterator();
-        while (iterator.hasNext()) {
-            DbNote note = iterator.next();
-            if (note.getRow() == row) {
-                iterator.remove();
-                NoteDbHandler.deleteNote(note);
-            }
-        }
-
-        // delete the section if there is one
-        DbSection dbSection = getSectionByRow(row);
-        if (dbSection != null) {
-
-            // remove section
-            dbSections.remove(dbSection);
-            SectionDbHandler.deleteSection(dbSection);
-
-            // remove views
-            parentLayout.removeView(cellLine.getSectionCell().getTextView());
-            cellLine.setSectionCell(null);
-        }
-
-        // decrement rows and sections
-        decrementRows(row);
-        decrementSections(row);
-        ActiveAndroid.setTransactionSuccessful();
-        ActiveAndroid.endTransaction();
-
-        // remove cellLine
-        parentLayout.removeView(cellLine.getLayout());
-        cellLines.remove(cellLine);
-    }
-
-    private void onNewRowCommand(CellLine cellLine) {
-        DbNote dbNote = new DbNote();
-        dbNote.setRow(cellLines.indexOf(cellLine) + 1);
-        dbNote.setColumn(0);
-        dbNote.setSongId(dbSong.getId());
-        NotePickerDialog dialog = new NotePickerDialog();
-        dialog.setDbNote(dbNote);
-        //dialog.setListener(TablatureView.this);
-        dialog.setEditMode(false);
-        dialog.setNewRow(true);
-        dialog.setCellLine(cellLine);
-        dialog.show(((Activity) context).getFragmentManager(), Constants.TAG_HARMONICA_NOTES_DIALOG);
-    }
-
-    private void onCopyRowCommand(CellLine cellLine) {
-        copiedNotes.clear();
-        for (Cell cell : cellLine.getCells()) {
-            if (cell.getDbNote() != null) {
-                copiedNotes.add(new DbNote(cell.getDbNote()));
-            }
-        }
-        int copedNotesNr = copiedNotes.size();
-        if (copedNotesNr == 1) {
-            CustomToast.makeText(context, copedNotesNr + " " + context.getString(R.string.song_activity_toast_note_copied), Toast.LENGTH_SHORT).show();
+    private void updateCellViews(Cell cell) {
+        DbNote dbNote = cell.getDbNote();
+        cell.getView().setBackground(CustomizationUtils.createNoteBackground(context, dbNote.isBlow() ? blowBackgroundColor : drawBackgroundColor));
+        TextView noteTextView = (TextView) ((LinearLayout) cell.getView()).getChildAt(0);
+        if (dbNote.isBlow()) {
+            CustomizationUtils.styleNoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, CustomizationUtils.createNoteTextColor(blowTextColor));
         } else {
-            CustomToast.makeText(context, copedNotesNr + " " + context.getString(R.string.song_activity_toast_notes_copied), Toast.LENGTH_SHORT).show();
+            CustomizationUtils.styleNoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, CustomizationUtils.createNoteTextColor(drawTextColor));
         }
+        TextView wordTextView = (TextView) ((LinearLayout) cell.getView()).getChildAt(1);
+        wordTextView.setText(dbNote.getWord());
+        wordTextView.setTextColor(CustomizationUtils.createNoteTextColor(dbNote.isBlow() ? blowTextColor : drawTextColor));
+        wordTextView.setVisibility(dbNote.getWord() != null && !dbNote.getWord().isEmpty() ? View.VISIBLE : View.GONE);
     }
 
-    private void onPasteRowCommand(CellLine cellLine) {
-        if (copiedNotes.isEmpty()) {
-            Toast.makeText(context, R.string.song_activity_toast_no_notes_copied, Toast.LENGTH_SHORT).show();
-        } else {
-
-            // add notes into db
-            ActiveAndroid.beginTransaction();
-            int currentColumn = cellLine.getCells().size() - 1;
-            int row = cellLines.indexOf(cellLine);
-            List<DbNote> pastedNotes = new ArrayList<DbNote>();
-            for (DbNote copiedNote : copiedNotes) {
-                DbNote pastedNote = new DbNote(copiedNote);
-                pastedNote.setRow(row);
-                pastedNote.setColumn(currentColumn);
-                dbNotes.add(pastedNote);
-                pastedNotes.add(pastedNote);
-                NoteDbHandler.insertNote(pastedNote);
-                currentColumn++;
-            }
-            ActiveAndroid.setTransactionSuccessful();
-            ActiveAndroid.endTransaction();
-            Collections.sort(dbNotes, notesComparator);
-
-            // add cells
-            for (DbNote pastedNote : pastedNotes) {
-                addNoteCell(pastedNote, cellLine, false);
-            }
-            addLastPlus(cellLine);
-        }
-    }
-
-    private void onAddSectionCommand(CellLine cellLine) {
-        SectionDialog sectionDialog = new SectionDialog();
-        DbSection dbSection = new DbSection();
-        dbSection.setRow(cellLines.indexOf(cellLine));
-        dbSection.setSongId(dbSong.getId());
-        sectionDialog.setDbSection(dbSection);
-        sectionDialog.setListener(TablatureView.this);
-        sectionDialog.setEditMode(false);
-        sectionDialog.setCellLine(cellLine);
-        sectionDialog.show(((Activity) context).getFragmentManager(), Constants.TAG_SECTION_DIALOG);
-    }
-
-    private void onEditSectionCommand(CellLine cellLine) {
-        DbSection dbSection = cellLine.getSectionCell().getDbSection();
-        if (dbSection != null) {
-            SectionDialog sectionDialog = new SectionDialog();
-            sectionDialog.setDbSection(dbSection);
-            sectionDialog.setListener(TablatureView.this);
-            sectionDialog.setEditMode(true);
-            sectionDialog.setCellLine(cellLine);
-            sectionDialog.show(((Activity) context).getFragmentManager(), Constants.TAG_SECTION_DIALOG);
-        }
-    }
-
-    private void onDeleteSectionCommand(final CellLine cellLine) {
-        DbSection dbSection = cellLine.getSectionCell().getDbSection();
-        if (dbSection != null) {
-
-            // remove section
-            dbSections.remove(dbSection);
-            SectionDbHandler.deleteSection(dbSection);
-
-            SectionAnimation sectionAnimation = new SectionAnimation(cellLine.getSectionCell().getTextView(), SlideAnimation.COLLAPSE);
-            sectionAnimation.setListener(new CellAnimationListener() {
-
-                @Override
-                public void onAnimationEnded() {
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            parentLayout.removeView(cellLine.getSectionCell().getSectionView());
-                            cellLine.setSectionCell(null);
-                        }
-                    });
-                }
-            });
-            cellLine.getSectionCell().getTextView().startAnimation(sectionAnimation);
-        }
-    }
-
-    private void addNoteCell(final DbNote dbNote, final CellLine cellLine, boolean animate) {
+    private void addNoteCell(final DbNote dbNote, final CellLine cellLine, boolean animate, boolean select) {
 
         // set note layout properties
         LinearLayout noteLayout = new LinearLayout(context);
@@ -1026,6 +743,15 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         wordText.setVisibility(dbNote.getWord() != null && !dbNote.getWord().isEmpty() ? View.VISIBLE : View.GONE);
         noteLayout.addView(wordText);
 
+        // increment notes to the right
+        for (int i = dbNote.getColumn(); i < cellLine.getCells().size(); i++) {
+            DbNote rightNote = cellLine.getCells().get(i).getDbNote();
+            if (rightNote != null) {
+                rightNote.setColumn(rightNote.getColumn() + 1);
+                rightNote.save();
+            }
+        }
+
         // add note to parent
         cellLine.getLayout().addView(noteLayout, dbNote.getColumn());
         final Cell cell = new Cell(dbNote, noteLayout);
@@ -1037,18 +763,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
 
             @Override
             public void onClick(View v) {
-                setSelectedCell(cell);
-                notePickerView.setDbNote(dbNote);
-                notePickerView.setListener(TablatureView.this);
-                notePickerView.setEditMode(true);
-                notePickerView.setCell(cell);
-                notePickerView.setCellLine(cellLine);
-                notePickerView.initialize();
-                setVerticalScrollBottomPadding(true, notePickerView.isShowBends());
-                smoothScrollToCellLine(cellLine);
-                if (!notePickerView.isNotePickerDisplayed()) {
-                    notePickerView.animate(true);
-                }
+                selectNoteCell(cellLine, cell);
             }
         });
 
@@ -1059,29 +774,85 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
             cellAnimation.setHeight(MEASURE_CELL_HEIGHT);
             noteLayout.startAnimation(cellAnimation);
         }
+
+        // select note
+        if (select) {
+            selectNoteCell(cellLine, cell);
+        }
+
     }
 
-    private void jumpToLastCell(CellLine cellLine) {
-        int lastCellIndex = cellLine.getCells().size() - 1;
-        Cell lastCell = cellLine.getCells().get(lastCellIndex);
-        setSelectedCell(lastCell);
+    private void addPlusCell(final CellLine cellLine, boolean animate) {
 
+        // set add note layout properties
+        final RelativeLayout plusLayout = new RelativeLayout(context);
+        LinearLayout.LayoutParams parentLayoutParams = new LinearLayout.LayoutParams(MEASURE_CELL_WIDTH, MEASURE_CELL_HEIGHT);
+        parentLayoutParams.setMargins(MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN);
+        plusLayout.setLayoutParams(parentLayoutParams);
+        plusLayout.setClickable(true);
+
+        // set plus image properties
+        ImageView plusImage = new ImageView(context);
+        RelativeLayout.LayoutParams plusImageLayoutParams = new RelativeLayout.LayoutParams(MEASURE_PLUS_SIZE, MEASURE_PLUS_SIZE);
+        plusImageLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        plusImage.setLayoutParams(plusImageLayoutParams);
+        plusImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        plusImage.setImageResource(R.drawable.selector_round_plus);
+        plusLayout.addView(plusImage);
+
+        // add view holder
+        cellLine.getLayout().addView(plusLayout);
+        final Cell cell = new Cell(null, plusLayout);
+        cellLine.addCell(cell);
+
+        // set click listener
+        plusLayout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                selectPlusCell(cellLine, cell);
+            }
+        });
+
+        // perform animation
+        if (animate) {
+            animateExpandCell(plusLayout);
+        }
+
+        songActivityListener.onNotesChanged(dbNotes);
+    }
+
+    private void animateExpandCell(View layout) {
+        CellAnimation cellAnimation = new CellAnimation(layout, SlideAnimation.EXPAND);
+        cellAnimation.setWidth(MEASURE_CELL_WIDTH);
+        cellAnimation.setHeight(MEASURE_CELL_HEIGHT);
+        layout.startAnimation(cellAnimation);
+    }
+
+    private void selectNoteCell(CellLine cellLine, Cell cell) {
+        initializeNotePicker(cellLine, cell, cell.getDbNote(), false);
+        selectAndScrollCell(cellLine, cell);
+    }
+
+    private void selectPlusCell(CellLine cellLine, Cell cell) {
         DbNote dbNote = new DbNote();
         dbNote.setRow(cellLines.indexOf(cellLine));
-        dbNote.setColumn(lastCellIndex);
+        dbNote.setColumn(cellLine.getCells().indexOf(cell));
         dbNote.setSongId(dbSong.getId());
-        notePickerView.setDbNote(dbNote);
-        notePickerView.setListener(TablatureView.this);
-        notePickerView.setEditMode(false);
-        notePickerView.setNewRow(false);
-        notePickerView.setCellLine(cellLine);
-        notePickerView.setCell(cellLine.getCells().get(lastCellIndex));
-        notePickerView.initialize();
-        setVerticalScrollBottomPadding(true, notePickerView.isShowBends());
-        smoothScrollToCellLine(cellLine);
+        initializeNotePicker(cellLine, cell, dbNote, true);
+        selectAndScrollCell(cellLine, cell);
     }
 
-    private void jumpToNextCell(CellLine cellLine, Cell cell) {
+    private void selectAndScrollCell(CellLine cellLine, Cell cell) {
+        setSelectedCell(cell);
+        setVerticalScrollBottomPadding(true, notePickerView.isShowBends());
+        smoothScrollToCellLine(cellLine);
+        if (!notePickerView.isNotePickerDisplayed()) {
+            notePickerView.animate(true);
+        }
+    }
+
+    private void jumpToNextCell(CellLine cellLine, Cell cell, boolean scroll) {
         int currentCellIndex = cellLine.getCells().indexOf(cell);
         int nextCellIndex = currentCellIndex + 1;
         if (nextCellIndex >= cellLine.getCells().size()) {
@@ -1095,19 +866,21 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         dbNote.setRow(cellLines.indexOf(cellLine));
         dbNote.setColumn(nextCellIndex);
         dbNote.setSongId(dbSong.getId());
-        notePickerView.setDbNote(dbNote);
-        notePickerView.setListener(TablatureView.this);
-        notePickerView.setEditMode(!isPlus);
-        notePickerView.setNewRow(false);
-        notePickerView.setCellLine(cellLine);
-        notePickerView.setCell(nextCell);
-        notePickerView.initialize();
+        initializeNotePicker(cellLine, nextCell, dbNote, isPlus);
         setVerticalScrollBottomPadding(true, notePickerView.isShowBends());
-        smoothScrollToCellLine(cellLine);
+        if (scroll) {
+            smoothScrollToCellLine(cellLine);
+        }
     }
 
-    private void jumpToCurrentCell(CellLine cellLine) {
-        notePickerView.initialize();
+    private void jumpToCell(CellLine cellLine, Cell cell) {
+        setSelectedCell(cell);
+        boolean isPlus = cell.getDbNote() == null;
+        DbNote dbNote = isPlus ? new DbNote() : cell.getDbNote();
+        dbNote.setRow(cellLines.indexOf(cellLine));
+        dbNote.setColumn(cellLine.getCells().indexOf(cell));
+        dbNote.setSongId(dbSong.getId());
+        initializeNotePicker(cellLine, cell, dbNote, isPlus);
         setVerticalScrollBottomPadding(true, notePickerView.isShowBends());
         smoothScrollToCellLine(cellLine);
     }
@@ -1126,13 +899,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         dbNote.setRow(cellLines.indexOf(cellLine));
         dbNote.setColumn(previousCellIndex);
         dbNote.setSongId(dbSong.getId());
-        notePickerView.setDbNote(dbNote);
-        notePickerView.setListener(TablatureView.this);
-        notePickerView.setEditMode(!isPlus);
-        notePickerView.setNewRow(false);
-        notePickerView.setCellLine(cellLine);
-        notePickerView.setCell(previousCell);
-        notePickerView.initialize();
+        initializeNotePicker(cellLine, previousCell, dbNote, isPlus);
         setVerticalScrollBottomPadding(true, notePickerView.isShowBends());
         smoothScrollToCellLine(cellLine);
     }
@@ -1201,13 +968,6 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
             CellLine lastCellLine = new CellLine(new ArrayList<Cell>(), lastRow);
             cellLines.add(lastCellLine);
             addPlusCell(lastCellLine, true);
-        }
-    }
-
-    private void incrementNoteColumns(List<DbNote> dbNotes, int count) {
-        for (DbNote dbNote : dbNotes) {
-            dbNote.setColumn(dbNote.getColumn() + count);
-            NoteDbHandler.insertNote(dbNote);
         }
     }
 
@@ -1288,7 +1048,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     }
 
     public void setMediaPadding(boolean media) {
-        setPadding(0, MEASURE_TABLATURE_TOP_PADDING, 0, media ? MEASURE_TABLATURE_BOTTOM_PADDING_WITH_MEDIA : MEASURE_TABLATURE_BOTTOM_PADDING);
+        setPadding(0, 0, 0, media ? MEASURE_TABLATURE_BOTTOM_PADDING_WITH_MEDIA : 0);
     }
 
     public NotePickerView getNotePickerView() {
@@ -1296,6 +1056,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     }
 
     public void onNotePickerClosed() {
+        notePickerView.setEnabled(false);
         if (selectedCell != null) {
             selectedCell.getView().setSelected(false);
             selectedCell = null;
@@ -1314,12 +1075,21 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     private void setVerticalScrollBottomPadding(boolean notePicker, boolean bends) {
         if (notePicker) {
             if (bends) {
-                verticalScrollView.setPadding(0, MEASURE_TABLATURE_TOP_PADDING, 0, MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER_BENDS + MEASURE_TABLATURE_BOTTOM_PADDING);
+                verticalScrollView.setPadding(0, MEASURE_TABLATURE_PADDING, 0, MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER_BENDS + MEASURE_TABLATURE_PADDING);
             } else {
-                verticalScrollView.setPadding(0, MEASURE_TABLATURE_TOP_PADDING, 0, MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER + MEASURE_TABLATURE_BOTTOM_PADDING);
+                verticalScrollView.setPadding(0, MEASURE_TABLATURE_PADDING, 0, MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER + MEASURE_TABLATURE_PADDING);
             }
         } else {
-            verticalScrollView.setPadding(0, MEASURE_TABLATURE_TOP_PADDING, 0, MEASURE_TABLATURE_BOTTOM_PADDING);
+            ValueAnimator animator = ValueAnimator.ofInt(verticalScrollView.getPaddingBottom(), MEASURE_TABLATURE_PADDING);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    verticalScrollView.setPadding(0, MEASURE_TABLATURE_PADDING, 0, (Integer) valueAnimator.getAnimatedValue());
+                }
+            });
+            animator.setDuration(150);
+            animator.start();
         }
     }
 
@@ -1330,5 +1100,15 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
                 verticalScrollView.smoothScrollTo(0, cellLine.getLayout().getTop());
             }
         });
+    }
+
+    private void initializeNotePicker(CellLine cellLine, Cell cell, DbNote dbNote, boolean isPlus) {
+        notePickerView.setDbNote(dbNote);
+        notePickerView.setListener(TablatureView.this);
+        notePickerView.setEditMode(!isPlus);
+        notePickerView.setCopiedNotes(!copiedNotes.isEmpty());
+        notePickerView.setCellLine(cellLine);
+        notePickerView.setCell(cell);
+        notePickerView.initialize();
     }
 }

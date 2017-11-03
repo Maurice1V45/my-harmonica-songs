@@ -212,4 +212,5 @@ public class NotePickerAdapterBends extends RecyclerView.Adapter<NotePickerAdapt
     public void setSelectedNote(DbNote selectedNote) {
         this.selectedNote = selectedNote;
     }
+
 }

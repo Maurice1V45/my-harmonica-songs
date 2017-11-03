@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -197,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         refreshSongsList();
 
         // open song
-        Intent intent = new Intent(MainActivity.this, SongActivity2.class);
+        Intent intent = new Intent(MainActivity.this, SongActivity.class);
         intent.putExtra(Constants.EXTRA_SONG_ID, dbSong.getId());
         startActivity(intent);
     }
@@ -247,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
 
     @Override
     public void onSongSelected(DbSong dbSong) {
-        Intent intent = new Intent(MainActivity.this, SongActivity2.class);
+        Intent intent = new Intent(MainActivity.this, SongActivity.class);
         intent.putExtra(Constants.EXTRA_SONG_ID, dbSong.getId());
         startActivity(intent);
     }
