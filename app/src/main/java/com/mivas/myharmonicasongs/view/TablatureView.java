@@ -310,23 +310,16 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     }
 
     @Override
-    public void onNoteEdited(CellLine cellLine, Cell cell) {
+    public void onNoteEdited(CellLine cellLine, Cell cell, boolean moveToNext) {
         DbNote dbNote = cell.getDbNote();
         NoteDbHandler.insertNote(dbNote);
         updateCellViews(cell);
 
-        jumpToNextCell(cellLine, cell, true);
-
-        songActivityListener.onNotesChanged(dbNotes);
-    }
-
-    @Override
-    public void onNoteTextChanged(CellLine cellLine, Cell cell) {
-        DbNote dbNote = cell.getDbNote();
-        NoteDbHandler.insertNote(dbNote);
-        updateCellViews(cell);
-
-        jumpToNextCell(cellLine, cell, false);
+        if (moveToNext) {
+            jumpToNextCell(cellLine, cell);
+        } else {
+            jumpToCell(cellLine, cell);
+        }
 
         songActivityListener.onNotesChanged(dbNotes);
     }
@@ -852,7 +845,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         }
     }
 
-    private void jumpToNextCell(CellLine cellLine, Cell cell, boolean scroll) {
+    private void jumpToNextCell(CellLine cellLine, Cell cell) {
         int currentCellIndex = cellLine.getCells().indexOf(cell);
         int nextCellIndex = currentCellIndex + 1;
         if (nextCellIndex >= cellLine.getCells().size()) {
@@ -868,9 +861,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         dbNote.setSongId(dbSong.getId());
         initializeNotePicker(cellLine, nextCell, dbNote, isPlus);
         setVerticalScrollBottomPadding(true, notePickerView.isShowBends());
-        if (scroll) {
-            smoothScrollToCellLine(cellLine);
-        }
+        smoothScrollToCellLine(cellLine);
     }
 
     private void jumpToCell(CellLine cellLine, Cell cell) {
@@ -1056,6 +1047,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     }
 
     public void onNotePickerClosed() {
+        notePickerView.setNotePickerDisplayed(false);
         notePickerView.setEnabled(false);
         if (selectedCell != null) {
             selectedCell.getView().setSelected(false);

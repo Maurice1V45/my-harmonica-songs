@@ -8,8 +8,7 @@ import com.mivas.myharmonicasongs.model.CellLine;
 public interface NotePickerViewListener {
 
     void onNoteAdded(CellLine cellLine, Cell cell, DbNote dbNote);
-    void onNoteEdited(CellLine cellLine, Cell cell);
-    void onNoteTextChanged(CellLine cellLine, Cell cell);
+    void onNoteEdited(CellLine cellLine, Cell cell, boolean moveToNext);
     void onNoteDeleted(CellLine cellLine, Cell cell);
     void onBendsSelected(boolean bends, CellLine cellLine);
     void onRowDeleted(CellLine cellLine);

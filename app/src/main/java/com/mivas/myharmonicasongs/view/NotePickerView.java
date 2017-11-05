@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -47,10 +48,12 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
     private View deleteButton;
     private View textLayout;
     private EditText textField;
-    private View clearButton;
+    private View cancelButton;
+    private View doneButton;
     private View sectionTextLayout;
     private EditText sectionTextField;
-    private View sectionClearButton;
+    private View sectionCancelButton;
+    private View sectionDoneButton;
     private Cell cell;
     private CellLine cellLine;
     private boolean editMode;
@@ -92,10 +95,12 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
         deleteButton = findViewById(R.id.button_delete);
         textLayout = findViewById(R.id.layout_text);
         textField = findViewById(R.id.field_text);
-        clearButton = findViewById(R.id.button_clear);
+        cancelButton = findViewById(R.id.button_cancel);
+        doneButton = findViewById(R.id.button_done);
         sectionTextLayout = findViewById(R.id.layout_section_text);
         sectionTextField = findViewById(R.id.field_section_text);
-        sectionClearButton = findViewById(R.id.button_section_clear);
+        sectionCancelButton = findViewById(R.id.button_section_cancel);
+        sectionDoneButton = findViewById(R.id.button_section_done);
         notesLayout = findViewById(R.id.layout_notes);
         notesList = findViewById(R.id.list_harmonica_notes);
         notesList.setLayoutManager(new LinearLayoutManager(context, LinearLayout.HORIZONTAL, false));
@@ -136,11 +141,15 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
             }
         }
         if (editMode) {
+            if (cellLine.getCells().indexOf(cell) == 0) {
+                textField.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+            } else {
+                textField.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            }
             textField.setText(dbNote.getWord() != null && !dbNote.getWord().isEmpty() ? dbNote.getWord() : "");
             textField.setSelection(textField.getText().length());
         } else {
-            KeyboardUtils.closeKeyboard((Activity) context);
-            textLayout.setVisibility(View.GONE);
+            closeTextMode(true);
         }
         if (cellLine.getSectionCell() != null && cellLine.getSectionCell().getDbSection() != null) {
             sectionTextField.setText(cellLine.getSectionCell().getDbSection().getName());
@@ -148,11 +157,9 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
         } else {
             sectionTextField.setText("");
         }
-        /*if (textField.getVisibility() == View.VISIBLE || sectionTextField.getVisibility() == View.VISIBLE) {
-            notesLayout.setVisibility(View.GONE);
-        } else {
-            notesLayout.setVisibility(View.VISIBLE);
-        }*/
+        if (lastPlus) {
+            closeSectionTextMode(true);
+        }
     }
 
     private void initListeners() {
@@ -236,17 +243,26 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     dbNote.setWord(textField.getText().toString());
-                    listener.onNoteTextChanged(cellLine, cell);
+                    listener.onNoteEdited(cellLine, cell, true);
                 }
                 return true;
             }
         });
-        clearButton.setOnClickListener(new OnClickListener() {
+        cancelButton.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 dbNote.setWord(null);
-                listener.onNoteTextChanged(cellLine, cell);
+                listener.onNoteEdited(cellLine, cell, true);
+            }
+        });
+        doneButton.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                dbNote.setWord(textField.getText().toString());
+                closeTextMode(true);
+                listener.onNoteEdited(cellLine, cell, false);
             }
         });
         sectionTextField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -254,32 +270,42 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    if (cellLine.getSectionCell() == null || cellLine.getSectionCell().getDbSection() == null) {
-                        DbSection dbSection = new DbSection();
-                        dbSection.setName(sectionTextField.getText().toString());
-                        dbSection.setSongId(dbNote.getSongId());
-                        listener.onSectionAdded(dbSection, cellLine);
-                    } else {
-                        DbSection dbSection = cellLine.getSectionCell().getDbSection();
-                        dbSection.setName(sectionTextField.getText().toString());
-                        dbSection.setSongId(dbNote.getSongId());
-                        listener.onSectionEdited(dbSection, cellLine);
-                    }
-                    KeyboardUtils.closeKeyboard((Activity) context);
-                    sectionTextLayout.setVisibility(View.GONE);
+                    addEditSection();
+                    closeSectionTextMode(true);
                 }
                 return false;
             }
         });
-        sectionClearButton.setOnClickListener(new OnClickListener() {
+        sectionCancelButton.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 listener.onSectionDeleted(cellLine);
-                KeyboardUtils.closeKeyboard((Activity) context);
-                sectionTextLayout.setVisibility(View.GONE);
+                closeSectionTextMode(true);
             }
         });
+        sectionDoneButton.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                addEditSection();
+                closeSectionTextMode(true);
+            }
+        });
+    }
+
+    private void addEditSection() {
+        if (cellLine.getSectionCell() == null || cellLine.getSectionCell().getDbSection() == null) {
+            DbSection dbSection = new DbSection();
+            dbSection.setName(sectionTextField.getText().toString());
+            dbSection.setSongId(dbNote.getSongId());
+            listener.onSectionAdded(dbSection, cellLine);
+        } else {
+            DbSection dbSection = cellLine.getSectionCell().getDbSection();
+            dbSection.setName(sectionTextField.getText().toString());
+            dbSection.setSongId(dbNote.getSongId());
+            listener.onSectionEdited(dbSection, cellLine);
+        }
     }
 
     @Override
@@ -289,7 +315,7 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
             dbNote.setBlow(blow);
             dbNote.setBend(bend);
             if (editMode) {
-                listener.onNoteEdited(cellLine, cell);
+                listener.onNoteEdited(cellLine, cell, true);
             } else {
                 listener.onNoteAdded(cellLine, cell, dbNote);
             }
@@ -318,6 +344,10 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
 
     public boolean isNotePickerDisplayed() {
         return notePickerDisplayed;
+    }
+
+    public void setNotePickerDisplayed(boolean notePickerDisplayed) {
+        this.notePickerDisplayed = notePickerDisplayed;
     }
 
     public View getTextLayout() {
@@ -422,5 +452,28 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
         insertButton.setEnabled(enabled);
         sectionButton.setEnabled(enabled);
         deleteButton.setEnabled(enabled);
+    }
+
+    public void closeTextMode(boolean animateNotePicker) {
+        if (textLayout.getVisibility() == View.VISIBLE) {
+            KeyboardUtils.closeKeyboard((Activity) context);
+            textLayout.setVisibility(View.GONE);
+            notesLayout.setVisibility(View.VISIBLE);
+            if (animateNotePicker) {
+                animate(true);
+            }
+        }
+
+    }
+
+    public void closeSectionTextMode(boolean animateNotePicker) {
+        if (sectionTextLayout.getVisibility() == View.VISIBLE) {
+            KeyboardUtils.closeKeyboard((Activity) context);
+            sectionTextLayout.setVisibility(View.GONE);
+            notesLayout.setVisibility(View.VISIBLE);
+            if (animateNotePicker) {
+                animate(true);
+            }
+        }
     }
 }

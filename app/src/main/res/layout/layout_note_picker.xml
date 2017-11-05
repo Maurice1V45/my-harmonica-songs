@@ -241,6 +241,42 @@
         android:background="@color/colorPrimary"
         android:visibility="gone">
 
+        <RelativeLayout
+            android:id="@+id/button_done"
+            android:layout_width="@dimen/bu4"
+            android:layout_height="@dimen/bu4"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/bu0_5"
+            android:background="@drawable/selector_note_picker_button"
+            android:clickable="true">
+
+            <ImageView
+                android:layout_width="@dimen/bu2"
+                android:layout_height="@dimen/bu2"
+                android:layout_centerInParent="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/selector_check_button" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/button_cancel"
+            android:layout_width="@dimen/bu4"
+            android:layout_height="@dimen/bu4"
+            android:layout_toLeftOf="@id/button_done"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/bu0_5"
+            android:background="@drawable/selector_note_picker_button"
+            android:clickable="true">
+
+            <ImageView
+                android:layout_width="@dimen/bu2"
+                android:layout_height="@dimen/bu2"
+                android:layout_centerInParent="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/selector_cancel_button" />
+        </RelativeLayout>
+
         <EditText
             android:id="@+id/field_text"
             android:layout_width="match_parent"
@@ -249,7 +285,8 @@
             android:layout_alignParentStart="true"
             android:layout_marginBottom="@dimen/bu0_5"
             android:layout_marginLeft="@dimen/bu0_5"
-            android:layout_marginRight="@dimen/bu5"
+            android:layout_toLeftOf="@id/button_cancel"
+            android:layout_marginRight="@dimen/bu0_5"
             android:layout_marginTop="@dimen/bu0_5"
             android:background="@drawable/shape_note_picker_button"
             android:gravity="center_vertical"
@@ -267,23 +304,6 @@
             android:textCursorDrawable="@null"
             android:textSize="@dimen/text_size_30px" />
 
-        <RelativeLayout
-            android:id="@+id/button_clear"
-            android:layout_width="@dimen/bu4"
-            android:layout_height="@dimen/bu4"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/bu0_5"
-            android:background="@drawable/selector_note_picker_button"
-            android:clickable="true">
-
-            <ImageView
-                android:layout_width="@dimen/bu2"
-                android:layout_height="@dimen/bu2"
-                android:layout_centerInParent="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/selector_clear_button" />
-        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -293,33 +313,8 @@
         android:background="@color/colorPrimary"
         android:visibility="gone">
 
-        <EditText
-            android:id="@+id/field_section_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="@dimen/bu0_5"
-            android:layout_marginLeft="@dimen/bu0_5"
-            android:layout_marginRight="@dimen/bu5"
-            android:layout_marginTop="@dimen/bu0_5"
-            android:background="@drawable/shape_note_picker_button"
-            android:gravity="center_vertical"
-            android:hint="@string/note_picker_view_hint_section_text"
-            android:imeOptions="actionDone"
-            android:inputType="textVisiblePassword"
-            android:maxLines="1"
-            android:paddingBottom="@dimen/bu0_5"
-            android:paddingLeft="@dimen/bu1"
-            android:paddingRight="@dimen/bu1"
-            android:paddingTop="@dimen/bu0_5"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:textCursorDrawable="@null"
-            android:textSize="@dimen/text_size_30px" />
-
         <RelativeLayout
-            android:id="@+id/button_section_clear"
+            android:id="@+id/button_section_done"
             android:layout_width="@dimen/bu4"
             android:layout_height="@dimen/bu4"
             android:layout_alignParentRight="true"
@@ -333,7 +328,51 @@
                 android:layout_height="@dimen/bu2"
                 android:layout_centerInParent="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/selector_clear_button" />
+                android:src="@drawable/selector_check_button" />
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/button_section_cancel"
+            android:layout_width="@dimen/bu4"
+            android:layout_height="@dimen/bu4"
+            android:layout_toLeftOf="@+id/button_section_done"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/bu0_5"
+            android:background="@drawable/selector_note_picker_button"
+            android:clickable="true">
+
+            <ImageView
+                android:layout_width="@dimen/bu2"
+                android:layout_height="@dimen/bu2"
+                android:layout_centerInParent="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/selector_cancel_button" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/field_section_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="@dimen/bu0_5"
+            android:layout_marginLeft="@dimen/bu0_5"
+            android:layout_marginRight="@dimen/bu0_5"
+            android:layout_toLeftOf="@+id/button_section_cancel"
+            android:layout_marginTop="@dimen/bu0_5"
+            android:background="@drawable/shape_note_picker_button"
+            android:gravity="center_vertical"
+            android:hint="@string/note_picker_view_hint_section_text"
+            android:imeOptions="actionDone"
+            android:inputType="textVisiblePassword|textCapSentences"
+            android:maxLines="1"
+            android:paddingBottom="@dimen/bu0_5"
+            android:paddingLeft="@dimen/bu1"
+            android:paddingRight="@dimen/bu1"
+            android:paddingTop="@dimen/bu0_5"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/text_size_30px" />
     </RelativeLayout>
 </RelativeLayout>

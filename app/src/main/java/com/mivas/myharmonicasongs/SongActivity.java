@@ -130,6 +130,9 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        tablatureView.getNotePickerView().closeTextMode(false);
+        tablatureView.getNotePickerView().closeSectionTextMode(false);
+        closeNotePicker();
 
         // handle item selection
         switch (item.getItemId()) {
@@ -373,11 +376,17 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
                 notePickerView.getNotesLayout().setVisibility(View.VISIBLE);
                 notePickerView.animate(true);
             } else {
-                notePickerView.animate(false);
-                tablatureView.onNotePickerClosed();
+                closeNotePicker();
             }
         } else {
             super.onBackPressed();
+        }
+    }
+
+    private void closeNotePicker() {
+        if (tablatureView.getNotePickerView().isNotePickerDisplayed()) {
+            tablatureView.getNotePickerView().animate(false);
+            tablatureView.onNotePickerClosed();
         }
     }
 }
