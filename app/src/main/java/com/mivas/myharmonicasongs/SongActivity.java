@@ -40,6 +40,7 @@ import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
 import com.mivas.myharmonicasongs.util.ExportHelper;
 import com.mivas.myharmonicasongs.util.NotesShiftUtils;
+import com.mivas.myharmonicasongs.util.SongKeyUtils;
 import com.mivas.myharmonicasongs.view.MediaPlayerView;
 import com.mivas.myharmonicasongs.view.NotePickerView;
 import com.mivas.myharmonicasongs.view.TablatureView;
@@ -84,7 +85,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         dbSong = SongDbHandler.getSongById(getIntent().getLongExtra(Constants.EXTRA_SONG_ID, 0));
         dbNotes = NoteDbHandler.getNotesBySongId(dbSong.getId());
         dbSections = SectionDbHandler.getSectionsBySongId(dbSong.getId());
-        getSupportActionBar().setTitle(dbSong.getTitle());
+        setSongTitle();
         backgroundView.setBackgroundColor(CustomizationUtils.getBackgroundColor());
 
         // init tablature
@@ -388,5 +389,15 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
             tablatureView.getNotePickerView().animate(false);
             tablatureView.onNotePickerClosed();
         }
+    }
+
+    private void setSongTitle() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(dbSong.getTitle()).append(" (").append(SongKeyUtils.getKey(dbSong.getKey()));
+        if (dbSong.getKey() > 11) {
+            builder.append("min");
+        }
+        builder.append(")");
+        getSupportActionBar().setTitle(builder.toString());
     }
 }

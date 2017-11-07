@@ -140,7 +140,6 @@ public class CustomizeNoteActivity extends AppCompatActivity implements Customiz
                             public void onClick(DialogInterface dialogInterface, int selectedColor, Integer[] integers) {
                                 changesMade = true;
                                 if (blow) {
-                                    Log.w("asd", selectedColor + "");
                                     blowTextColor = selectedColor;
                                     PreferencesUtils.storePreference(Constants.PREF_CURRENT_NOTE_BLOW_TEXT_COLOR, selectedColor);
                                 } else {

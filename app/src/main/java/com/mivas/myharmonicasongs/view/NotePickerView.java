@@ -142,9 +142,9 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
         }
         if (editMode) {
             if (cellLine.getCells().indexOf(cell) == 0) {
-                textField.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+                textField.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
             } else {
-                textField.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                textField.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
             }
             textField.setText(dbNote.getWord() != null && !dbNote.getWord().isEmpty() ? dbNote.getWord() : "");
             textField.setSelection(textField.getText().length());
@@ -340,6 +340,10 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
 
     public void setCell(Cell cell) {
         this.cell = cell;
+    }
+
+    public void setShowBends(boolean showBends) {
+        this.showBends = showBends;
     }
 
     public boolean isNotePickerDisplayed() {

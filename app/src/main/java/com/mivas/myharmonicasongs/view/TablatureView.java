@@ -5,7 +5,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -276,6 +278,8 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
                 nextNote = i < (dbNotes.size() - 1) ? dbNotes.get(i + 1) : null;
             }
         }
+
+        notePickerView.setShowBends(CustomizationUtils.getShowBends());
 
     }
 

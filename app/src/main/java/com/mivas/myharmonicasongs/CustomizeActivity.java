@@ -100,8 +100,7 @@ public class CustomizeActivity extends AppCompatActivity {
                         CustomToast.makeText(CustomizeActivity.this, R.string.customize_activity_toast_customizations_reset, Toast.LENGTH_SHORT).show();
 
                         // send broadcast
-                        Intent intent = new Intent(Constants.INTENT_CUSTOMIZATIONS_UPDATED);
-                        sendBroadcast(intent);
+                        sendCustomizationsUpdatedBroadcast();
 
                         dialog.dismiss();
                     }
@@ -190,11 +189,7 @@ public class CustomizeActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int selectedColor, Integer[] integers) {
                                 PreferencesUtils.storePreference(Constants.PREF_CURRENT_BACKGROUND_COLOR, selectedColor);
-
-                                // send broadcast receiver
-                                Intent intent = new Intent();
-                                intent.setAction(Constants.INTENT_CUSTOMIZATIONS_UPDATED);
-                                sendBroadcast(intent);
+                                sendCustomizationsUpdatedBroadcast();
                             }
                         })
                         .build()
@@ -206,6 +201,7 @@ public class CustomizeActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 PreferencesUtils.storePreference(Constants.PREF_CURRENT_SHOW_BENDS, isChecked);
+                sendCustomizationsUpdatedBroadcast();
             }
         });
         showMediaPlayerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -213,6 +209,7 @@ public class CustomizeActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 PreferencesUtils.storePreference(Constants.PREF_CURRENT_SHOW_MEDIA_PLAYER, isChecked);
+                sendCustomizationsUpdatedBroadcast();
             }
         });
     }
@@ -238,6 +235,12 @@ public class CustomizeActivity extends AppCompatActivity {
     protected void onDestroy() {
         unregisterReceiver(customizationReceiver);
         super.onDestroy();
+    }
+
+    private void sendCustomizationsUpdatedBroadcast() {
+        Intent intent = new Intent();
+        intent.setAction(Constants.INTENT_CUSTOMIZATIONS_UPDATED);
+        sendBroadcast(intent);
     }
 
 }
