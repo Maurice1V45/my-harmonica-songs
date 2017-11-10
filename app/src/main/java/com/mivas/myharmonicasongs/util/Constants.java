@@ -41,6 +41,10 @@ public class Constants {
     public static final int DEFAULT_SECTION_TEXT_COLOR = 0xff000000;
     public static final boolean DEFAULT_SHOW_BENDS = false;
     public static final boolean DEFAULT_SHOW_MEDIA_PLAYER = false;
+    public static final boolean DEFAULT_SHOW_SECTION_BAR = true;
+    public static final int DEFAULT_SECTION_BAR_STYLE = 0;
+    public static final int DEFAULT_SECTION_BAR_TEXT_COLOR = 0xff000000;
+    public static final int DEFAULT_SECTION_BAR_BACKGROUND = 0xffffffff;
 
     /* Current customizations */
     public static final String PREF_CURRENT_NOTE_BLOW_SIGN = "pref_current_note_blow_sign";
@@ -56,6 +60,10 @@ public class Constants {
     public static final String PREF_CURRENT_SECTION_TEXT_COLOR = "pref_current_section_text_color";
     public static final String PREF_CURRENT_SHOW_BENDS = "pref_current_show_bends";
     public static final String PREF_CURRENT_SHOW_MEDIA_PLAYER = "pref_current_show_media_player";
+    public static final String PREF_CURRENT_SHOW_SECTION_BAR = "pref_current_show_section_bar";
+    public static final String PREF_CURRENT_SECTION_BAR_STYLE = "pref_current_section_bar_style";
+    public static final String PREF_CURRENT_SECTION_BAR_TEXT_COLOR = "pref_current_section_bar_text_color";
+    public static final String PREF_CURRENT_SECTION_BAR_BACKGROUND = "pref_current_section_bar_background";
 
     /* Misc */
     public static final String SEPARATOR_AUDIO_FILE = "%&#";

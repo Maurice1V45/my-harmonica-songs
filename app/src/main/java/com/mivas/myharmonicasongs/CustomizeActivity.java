@@ -39,6 +39,8 @@ public class CustomizeActivity extends AppCompatActivity {
     private TextView drawNoteText;
     private View sectionView;
     private TextView sectionText;
+    private View sectionBarView;
+    private TextView sectionBarText;
     private View backgroundColorView;
     private View backgroundColorColorView;
     private Switch showBendsSwitch;
@@ -95,6 +97,10 @@ public class CustomizeActivity extends AppCompatActivity {
                         PreferencesUtils.storePreference(Constants.PREF_CURRENT_BACKGROUND_COLOR, Constants.DEFAULT_BACKGROUND_COLOR);
                         PreferencesUtils.storePreference(Constants.PREF_CURRENT_SHOW_BENDS, Constants.DEFAULT_SHOW_BENDS);
                         PreferencesUtils.storePreference(Constants.PREF_CURRENT_SHOW_MEDIA_PLAYER, Constants.DEFAULT_SHOW_MEDIA_PLAYER);
+                        PreferencesUtils.storePreference(Constants.PREF_CURRENT_SHOW_SECTION_BAR, Constants.DEFAULT_SHOW_SECTION_BAR);
+                        PreferencesUtils.storePreference(Constants.PREF_CURRENT_SECTION_BAR_STYLE, Constants.DEFAULT_SECTION_BAR_STYLE);
+                        PreferencesUtils.storePreference(Constants.PREF_CURRENT_SECTION_BAR_TEXT_COLOR, Constants.DEFAULT_SECTION_BAR_TEXT_COLOR);
+                        PreferencesUtils.storePreference(Constants.PREF_CURRENT_SECTION_BAR_BACKGROUND, Constants.DEFAULT_SECTION_BAR_BACKGROUND);
 
                         // show toast
                         CustomToast.makeText(CustomizeActivity.this, R.string.customize_activity_toast_customizations_reset, Toast.LENGTH_SHORT).show();
@@ -127,22 +133,24 @@ public class CustomizeActivity extends AppCompatActivity {
      * Views initializer.
      */
     private void initViews() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         blowNoteView = findViewById(R.id.view_blow_note);
         blowNoteBackground = findViewById(R.id.view_blow_background);
-        blowNoteText = (TextView) findViewById(R.id.text_blow_note);
+        blowNoteText = findViewById(R.id.text_blow_note);
         drawNoteView = findViewById(R.id.view_draw_note);
         drawNoteBackground = findViewById(R.id.view_draw_background);
-        drawNoteText = (TextView) findViewById(R.id.text_draw_note);
+        drawNoteText = findViewById(R.id.text_draw_note);
         sectionView = findViewById(R.id.view_section);
-        sectionText = (TextView) findViewById(R.id.text_section);
+        sectionText = findViewById(R.id.text_section);
+        sectionBarView = findViewById(R.id.view_section_bar);
+        sectionBarText = findViewById(R.id.text_section_bar);
         backgroundColorView = findViewById(R.id.view_background_color);
         backgroundColorColorView = findViewById(R.id.view_background_color_color);
-        showBendsSwitch = (Switch) findViewById(R.id.switch_show_bends);
-        showMediaPlayerSwitch = (Switch) findViewById(R.id.switch_show_media_player);
+        showBendsSwitch = findViewById(R.id.switch_show_bends);
+        showMediaPlayerSwitch = findViewById(R.id.switch_show_media_player);
     }
 
     /**
@@ -170,6 +178,15 @@ public class CustomizeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CustomizeActivity.this, CustomizeSectionActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        sectionBarView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CustomizeActivity.this, CustomizeSectionBarActivity.class);
                 startActivity(intent);
             }
         });
@@ -226,6 +243,13 @@ public class CustomizeActivity extends AppCompatActivity {
         CustomizationUtils.styleNoteText(drawNoteText, 4, 0, CustomizationUtils.getDrawSign(), CustomizationUtils.getDrawStyle(), CustomizationUtils.getDrawTextColor());
         drawNoteBackground.setBackground(CustomizationUtils.createSimpleBackground(CustomizeActivity.this, 6, CustomizationUtils.getDrawBackgroundColor()));
         CustomizationUtils.styleSectionText(sectionText, CustomizationUtils.getSectionStyle(), CustomizationUtils.getSectionTextColor());
+        if (CustomizationUtils.getShowSectionBar()) {
+            sectionBarText.setVisibility(View.VISIBLE);
+            CustomizationUtils.styleSectionBarText(sectionBarText, CustomizationUtils.getSectionBarStyle(), CustomizationUtils.getSectionBarTextColor());
+            sectionBarText.setBackground(CustomizationUtils.createSectionBarSimpleBackground(CustomizeActivity.this, CustomizationUtils.getSectionBarBackground()));
+        } else {
+            sectionBarText.setVisibility(View.GONE);
+        }
         backgroundColorColorView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeActivity.this, 6, CustomizationUtils.getBackgroundColor()));
         showBendsSwitch.setChecked(CustomizationUtils.getShowBends());
         showMediaPlayerSwitch.setChecked(CustomizationUtils.getShowMediaPlayer());

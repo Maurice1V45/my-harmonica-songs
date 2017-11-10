@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
+import com.mivas.myharmonicasongs.animation.SectionBarAnimation;
+import com.mivas.myharmonicasongs.animation.SlideAnimation;
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SectionDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
@@ -34,15 +36,19 @@ import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.dialog.NotesShiftDialog;
 import com.mivas.myharmonicasongs.exception.MediaPlayerException;
 import com.mivas.myharmonicasongs.listener.NotesShiftDialogListener;
-import com.mivas.myharmonicasongs.listener.SongActivityListener;
+import com.mivas.myharmonicasongs.listener.SectionBarListener;
+import com.mivas.myharmonicasongs.listener.TablatureListener;
+import com.mivas.myharmonicasongs.model.CellLine;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
+import com.mivas.myharmonicasongs.util.DimensionUtils;
 import com.mivas.myharmonicasongs.util.ExportHelper;
 import com.mivas.myharmonicasongs.util.NotesShiftUtils;
 import com.mivas.myharmonicasongs.util.SongKeyUtils;
 import com.mivas.myharmonicasongs.view.MediaPlayerView;
 import com.mivas.myharmonicasongs.view.NotePickerView;
+import com.mivas.myharmonicasongs.view.SectionBarView;
 import com.mivas.myharmonicasongs.view.TablatureView;
 
 import java.io.InputStream;
@@ -52,25 +58,40 @@ import java.util.List;
 /**
  * Activity that displays dbNotes.
  */
-public class SongActivity extends AppCompatActivity implements SongActivityListener, NotesShiftDialogListener {
+public class SongActivity extends AppCompatActivity implements TablatureListener, NotesShiftDialogListener, SectionBarListener {
 
     private TablatureView tablatureView;
     private MediaPlayerView mediaPlayerView;
+    private SectionBarView sectionBarView;
     private DbSong dbSong;
     private List<DbNote> dbNotes = new ArrayList<DbNote>();
     private List<DbSection> dbSections = new ArrayList<DbSection>();
     private TextView noNotesText;
     private View backgroundView;
     private ProgressDialog progressDialog;
+    private boolean showSectionBar;
     private BroadcastReceiver customizationReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             tablatureView.initCustomizations();
             tablatureView.initialize();
+            showSectionBar = CustomizationUtils.getShowSectionBar();
+            sectionBarView.initCustomizations();
+            showSectionBar();
             backgroundView.setBackgroundColor(CustomizationUtils.getBackgroundColor());
         }
     };
+
+    private void showSectionBar() {
+        if (showSectionBar && dbSections.size() > 0) {
+            sectionBarView.setVisibility(View.VISIBLE);
+            sectionBarView.setCellLines(tablatureView.getCellLines());
+            sectionBarView.initialize();
+        } else {
+            sectionBarView.setVisibility(View.GONE);
+        }
+    }
 
     private static final int REQUEST_CODE_ADD_AUDIO_FILE = 1;
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 2;
@@ -78,7 +99,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_song2);
+        setContentView(R.layout.activity_song);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         initViews();
 
@@ -92,8 +113,13 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         tablatureView.setDbSong(dbSong);
         tablatureView.setDbNotes(dbNotes);
         tablatureView.setDbSections(dbSections);
-        tablatureView.setSongActivityListener(SongActivity.this);
+        tablatureView.setListener(SongActivity.this);
         tablatureView.initialize();
+
+        // init section bar
+        sectionBarView.setListener(SongActivity.this);
+        showSectionBar = CustomizationUtils.getShowSectionBar();
+        showSectionBar();
 
         // init media player
         try {
@@ -194,6 +220,7 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         setSupportActionBar(myToolbar);
         noNotesText = findViewById(R.id.text_no_notes);
         backgroundView = findViewById(R.id.view_background);
+        sectionBarView = findViewById(R.id.view_section_bar);
         tablatureView = findViewById(R.id.view_tablature);
         mediaPlayerView = findViewById(R.id.view_media);
     }
@@ -399,5 +426,30 @@ public class SongActivity extends AppCompatActivity implements SongActivityListe
         }
         builder.append(")");
         getSupportActionBar().setTitle(builder.toString());
+    }
+
+
+    @Override
+    public void onSectionSelected(CellLine cellLine) {
+        tablatureView.smoothScrollToCellLine(cellLine);
+    }
+
+    @Override
+    public void onSectionsChanged(List<DbSection> dbSections) {
+        if (showSectionBar) {
+            if (!dbSections.isEmpty()) {
+                sectionBarView.setCellLines(tablatureView.getCellLines());
+                sectionBarView.initialize();
+                if (sectionBarView.getVisibility() == View.GONE) {
+                    SectionBarAnimation sectionBarAnimation = new SectionBarAnimation(sectionBarView, 300, SlideAnimation.EXPAND);
+                    sectionBarAnimation.setHeight(DimensionUtils.dpToPx(SongActivity.this, 30));
+                    sectionBarView.startAnimation(sectionBarAnimation);
+                }
+            } else {
+                SectionBarAnimation sectionBarAnimation = new SectionBarAnimation(sectionBarView, 200, SlideAnimation.COLLAPSE);
+                sectionBarAnimation.setHeight(DimensionUtils.dpToPx(SongActivity.this, 30));
+                sectionBarView.startAnimation(sectionBarAnimation);
+            }
+        }
     }
 }

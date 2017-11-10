@@ -44,6 +44,9 @@
         <activity
             android:name=".CustomizeSectionActivity"
             android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".CustomizeSectionBarActivity"
+            android:configChanges="orientation|screenSize" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

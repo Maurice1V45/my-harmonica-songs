@@ -153,6 +153,43 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/view_section_bar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu5"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu1_5"
+                    android:text="@string/customize_activity_text_section_bar"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_34px" />
+
+                <TextView
+                    android:id="@+id/text_section_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/bu1"
+                    android:paddingBottom="@dimen/bu0_5"
+                    android:paddingLeft="@dimen/bu1_5"
+                    android:paddingRight="@dimen/bu1_5"
+                    android:paddingTop="@dimen/bu0_5"
+                    android:text="@string/customize_activity_text_chorus"
+                    android:textSize="@dimen/text_size_26px" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/view_background_color"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/bu5"

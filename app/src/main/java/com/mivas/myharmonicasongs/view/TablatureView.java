@@ -5,9 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +29,7 @@ import com.mivas.myharmonicasongs.database.model.DbSection;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.listener.CellAnimationListener;
 import com.mivas.myharmonicasongs.listener.NotePickerViewListener;
-import com.mivas.myharmonicasongs.listener.SongActivityListener;
+import com.mivas.myharmonicasongs.listener.TablatureListener;
 import com.mivas.myharmonicasongs.model.Cell;
 import com.mivas.myharmonicasongs.model.CellLine;
 import com.mivas.myharmonicasongs.model.SectionCell;
@@ -55,7 +53,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     private DbSong dbSong;
     private List<CellLine> cellLines = new ArrayList<CellLine>();
     private Comparator notesComparator;
-    private SongActivityListener songActivityListener;
+    private TablatureListener listener;
     private NotePickerView notePickerView;
     private ScrollView verticalScrollView;
     private Cell selectedCell;
@@ -125,8 +123,8 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         this.dbSections = dbSections;
     }
 
-    public void setSongActivityListener(SongActivityListener songActivityListener) {
-        this.songActivityListener = songActivityListener;
+    public void setListener(TablatureListener listener) {
+        this.listener = listener;
     }
 
     private void initViews() {
@@ -310,7 +308,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
 
         jumpToCell(cellLine, cell);
 
-        songActivityListener.onNotesChanged(dbNotes);
+        listener.onNotesChanged(dbNotes);
     }
 
     @Override
@@ -325,7 +323,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
             jumpToCell(cellLine, cell);
         }
 
-        songActivityListener.onNotesChanged(dbNotes);
+        listener.onNotesChanged(dbNotes);
     }
 
     @Override
@@ -378,6 +376,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
                 SectionDbHandler.deleteSection(dbSection);
 
                 // play animation
+                final View sectionView = cellLine.getSectionCell().getSectionView();
                 SectionAnimation sectionAnimation = new SectionAnimation(cellLine.getSectionCell().getTextView(), SlideAnimation.COLLAPSE);
                 sectionAnimation.setListener(new CellAnimationListener() {
 
@@ -387,13 +386,13 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
 
                             @Override
                             public void run() {
-                                parentLayout.removeView(cellLine.getSectionCell().getSectionView());
-                                cellLine.setSectionCell(null);
+                                parentLayout.removeView(sectionView);
                             }
                         });
                     }
                 });
                 cellLine.getSectionCell().getTextView().startAnimation(sectionAnimation);
+                cellLine.setSectionCell(null);
 
             }
 
@@ -411,6 +410,8 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
 
             // remove the cellLine
             cellLines.remove(cellLine);
+
+            listener.onSectionsChanged(dbSections);
         }
         ActiveAndroid.setTransactionSuccessful();
         ActiveAndroid.endTransaction();
@@ -453,7 +454,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
             plusView.startAnimation(plusAnimation);
         }
 
-        songActivityListener.onNotesChanged(dbNotes);
+        listener.onNotesChanged(dbNotes);
     }
 
     @Override
@@ -482,13 +483,16 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
 
         // delete the section if there is one
         DbSection dbSection = getSectionByRow(row);
+        boolean sectionRemoved = false;
         if (dbSection != null) {
+            sectionRemoved = true;
 
             // remove section
             dbSections.remove(dbSection);
             SectionDbHandler.deleteSection(dbSection);
 
             // play animation
+            final View sectionView = cellLine.getSectionCell().getSectionView();
             SectionAnimation sectionAnimation = new SectionAnimation(cellLine.getSectionCell().getTextView(), SlideAnimation.COLLAPSE);
             sectionAnimation.setListener(new CellAnimationListener() {
 
@@ -498,13 +502,13 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
 
                         @Override
                         public void run() {
-                            parentLayout.removeView(cellLine.getSectionCell().getSectionView());
-                            cellLine.setSectionCell(null);
+                            parentLayout.removeView(sectionView);
                         }
                     });
                 }
             });
             cellLine.getSectionCell().getTextView().startAnimation(sectionAnimation);
+            cellLine.setSectionCell(null);
 
         }
 
@@ -538,7 +542,11 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
             cell.getView().startAnimation(cellAnimation);
         }
 
-        songActivityListener.onNotesChanged(dbNotes);
+
+        if (sectionRemoved) {
+            listener.onSectionsChanged(dbSections);
+        }
+        listener.onNotesChanged(dbNotes);
     }
 
     @Override
@@ -602,7 +610,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
 
         addLastPlus(cellLine);
 
-        songActivityListener.onNotesChanged(dbNotes);
+        listener.onNotesChanged(dbNotes);
     }
 
     @Override
@@ -636,7 +644,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         NoteDbHandler.insertNote(dbNote);
         Collections.sort(dbNotes, notesComparator);
 
-        songActivityListener.onNotesChanged(dbNotes);
+        listener.onNotesChanged(dbNotes);
 
         ActiveAndroid.setTransactionSuccessful();
         ActiveAndroid.endTransaction();
@@ -648,6 +656,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         dbSections.add(dbSection);
         SectionDbHandler.insertSection(dbSection);
         addSectionCell(dbSection, cellLine, false);
+        listener.onSectionsChanged(dbSections);
     }
 
     @Override
@@ -655,6 +664,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         SectionDbHandler.insertSection(dbSection);
         TextView sectionTextView = cellLine.getSectionCell().getTextView();
         sectionTextView.setText(dbSection.getName());
+        listener.onSectionsChanged(dbSections);
     }
 
     @Override
@@ -666,6 +676,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
             dbSections.remove(dbSection);
             SectionDbHandler.deleteSection(dbSection);
 
+            final View sectionView = cellLine.getSectionCell().getSectionView();
             SectionAnimation sectionAnimation = new SectionAnimation(cellLine.getSectionCell().getTextView(), SlideAnimation.COLLAPSE);
             sectionAnimation.setListener(new CellAnimationListener() {
 
@@ -675,13 +686,15 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
 
                         @Override
                         public void run() {
-                            parentLayout.removeView(cellLine.getSectionCell().getSectionView());
-                            cellLine.setSectionCell(null);
+                            parentLayout.removeView(sectionView);
+
                         }
                     });
                 }
             });
             cellLine.getSectionCell().getTextView().startAnimation(sectionAnimation);
+            cellLine.setSectionCell(null);
+            listener.onSectionsChanged(dbSections);
         }
     }
 
@@ -816,7 +829,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
             animateExpandCell(plusLayout);
         }
 
-        songActivityListener.onNotesChanged(dbNotes);
+        listener.onNotesChanged(dbNotes);
     }
 
     private void animateExpandCell(View layout) {
@@ -1089,7 +1102,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         }
     }
 
-    private void smoothScrollToCellLine(final CellLine cellLine) {
+    public void smoothScrollToCellLine(final CellLine cellLine) {
         verticalScrollView.post(new Runnable() {
             @Override
             public void run() {
@@ -1107,4 +1120,9 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         notePickerView.setCell(cell);
         notePickerView.initialize();
     }
+
+    public List<CellLine> getCellLines() {
+        return cellLines;
+    }
+
 }

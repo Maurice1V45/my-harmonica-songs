@@ -35,10 +35,23 @@
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_42px" />
 
+        <com.mivas.myharmonicasongs.view.SectionBarView
+            android:id="@+id/view_section_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bu2_5" />
+
         <com.mivas.myharmonicasongs.view.TablatureView
             android:id="@+id/view_tablature"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_below="@+id/view_section_bar" />
+
+        <com.mivas.myharmonicasongs.view.NotePickerView
+            android:id="@+id/view_note_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone" />
 
         <com.mivas.myharmonicasongs.view.MediaPlayerView
             android:id="@+id/view_media"

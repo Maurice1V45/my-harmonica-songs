@@ -140,6 +140,7 @@
     <string name="customize_activity_text_blow_note">Blow note</string>
     <string name="customize_activity_text_draw_note">Draw note</string>
     <string name="customize_activity_text_section">Section</string>
+    <string name="customize_activity_text_section_bar">Section bar</string>
     <string name="customize_activity_text_chorus">Chorus</string>
     <string name="customize_activity_text_general">GENERAL</string>
     <string name="customize_activity_text_always_show_bends">Always show bends</string>
@@ -170,6 +171,17 @@
     <string name="customize_section_activity_text_style">Style</string>
     <string name="customize_section_activity_text_text_color">Text color</string>
     <string name="customize_section_activity_text_color_title">Choose text color</string>
+
+    <!-- Customize Section Bar Activity-->
+    <string name="customize_section_bar_activity_title">Customize Section Bar</string>
+    <string name="customize_section_bar_activity_text_chorus">Chorus</string>
+    <string name="customize_section_bar_activity_text_preview">(preview)</string>
+    <string name="customize_section_bar_activity_text_show">Show section bar</string>
+    <string name="customize_section_bar_activity_text_style">Style</string>
+    <string name="customize_section_bar_activity_text_text_color">Text color</string>
+    <string name="customize_section_bar_activity_text_background_color">Background Color</string>
+    <string name="customize_section_bar_activity_text_color_title">Choose text color</string>
+    <string name="customize_section_bar_activity_background_color_title">Choose background color</string>
 
     <!-- QA Activity -->
     <string name="qa_activity_text_title">Questions &amp; answers</string>

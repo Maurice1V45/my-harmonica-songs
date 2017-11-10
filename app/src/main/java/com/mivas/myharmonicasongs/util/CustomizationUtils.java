@@ -63,6 +63,22 @@ public class CustomizationUtils {
         return PreferencesUtils.getPreferences().getBoolean(Constants.PREF_CURRENT_SHOW_MEDIA_PLAYER, Constants.DEFAULT_SHOW_MEDIA_PLAYER);
     }
 
+    public static boolean getShowSectionBar() {
+        return PreferencesUtils.getPreferences().getBoolean(Constants.PREF_CURRENT_SHOW_SECTION_BAR, Constants.DEFAULT_SHOW_SECTION_BAR);
+    }
+
+    public static int getSectionBarBackground() {
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_SECTION_BAR_BACKGROUND, Constants.DEFAULT_SECTION_BAR_BACKGROUND);
+    }
+
+    public static int getSectionBarTextColor() {
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_SECTION_BAR_TEXT_COLOR, Constants.DEFAULT_SECTION_BAR_TEXT_COLOR);
+    }
+
+    public static int getSectionBarStyle() {
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_SECTION_BAR_STYLE, Constants.DEFAULT_SECTION_BAR_STYLE);
+    }
+
     public static StateListDrawable createNoteBackground(Context context, int backgroundColor) {
         StateListDrawable stateListDrawable = new StateListDrawable();
         GradientDrawable normalShape = new GradientDrawable();
@@ -77,9 +93,9 @@ public class CustomizationUtils {
         selectedShape.setShape(GradientDrawable.RECTANGLE);
         selectedShape.setCornerRadius(DimensionUtils.dpToPx(context, 6));
         selectedShape.setColor(Constants.DEFAULT_COLOR_PRIMARY);
-        stateListDrawable.addState(new int[] {android.R.attr.state_pressed}, pressedShape);
-        stateListDrawable.addState(new int[] {android.R.attr.state_selected}, selectedShape);
-        stateListDrawable.addState(new int[] {}, normalShape);
+        stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, pressedShape);
+        stateListDrawable.addState(new int[]{android.R.attr.state_selected}, selectedShape);
+        stateListDrawable.addState(new int[]{}, normalShape);
         return stateListDrawable;
     }
 
@@ -94,18 +110,48 @@ public class CustomizationUtils {
         pressedShape.setShape(GradientDrawable.RECTANGLE);
         pressedShape.setCornerRadius(DimensionUtils.dpToPx(context, 12));
         pressedShape.setColor(Constants.DEFAULT_COLOR_PRIMARY);
-        stateListDrawable.addState(new int[] {android.R.attr.state_pressed}, pressedShape);
-        stateListDrawable.addState(new int[] {}, normalShape);
+        stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, pressedShape);
+        stateListDrawable.addState(new int[]{}, normalShape);
+        return stateListDrawable;
+    }
+
+    public static StateListDrawable createSectionBarBackground(Context context, int backgroundColor) {
+        StateListDrawable stateListDrawable = new StateListDrawable();
+        GradientDrawable normalShape = new GradientDrawable();
+        normalShape.setShape(GradientDrawable.RECTANGLE);
+        int dp6 = DimensionUtils.dpToPx(context, 6);
+        normalShape.setCornerRadii(new float[] {0, 0, 0, 0, dp6, dp6, dp6, dp6});
+        normalShape.setColor(backgroundColor);
+        GradientDrawable pressedShape = new GradientDrawable();
+        pressedShape.setShape(GradientDrawable.RECTANGLE);
+        pressedShape.setCornerRadii(new float[] {0, 0, 0, 0, dp6, dp6, dp6, dp6});
+        pressedShape.setColor(Constants.DEFAULT_COLOR_PRIMARY);
+        stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, pressedShape);
+        stateListDrawable.addState(new int[]{}, normalShape);
         return stateListDrawable;
     }
 
     public static ColorStateList createNotePickerTextColor(Context context, int textColor) {
-        int[][] states = new int[][] {
-                new int[] {android.R.attr.state_pressed},
-                new int[] {-android.R.attr.state_pressed}
+        int[][] states = new int[][]{
+                new int[]{android.R.attr.state_pressed},
+                new int[]{-android.R.attr.state_pressed}
         };
 
-        int[] colors = new int[] {
+        int[] colors = new int[]{
+                Constants.DEFAULT_COLOR_WHITE,
+                textColor
+        };
+
+        return new ColorStateList(states, colors);
+    }
+
+    public static ColorStateList createSectionBarTextColor(Context context, int textColor) {
+        int[][] states = new int[][]{
+                new int[]{android.R.attr.state_pressed},
+                new int[]{-android.R.attr.state_pressed}
+        };
+
+        int[] colors = new int[]{
                 Constants.DEFAULT_COLOR_WHITE,
                 textColor
         };
@@ -114,12 +160,12 @@ public class CustomizationUtils {
     }
 
     public static ColorStateList createNoteTextColor(int textColor) {
-        int[][] states = new int[][] {
-                new int[] {android.R.attr.state_selected},
-                new int[] {-android.R.attr.state_selected}
+        int[][] states = new int[][]{
+                new int[]{android.R.attr.state_selected},
+                new int[]{-android.R.attr.state_selected}
         };
 
-        int[] colors = new int[] {
+        int[] colors = new int[]{
                 Constants.DEFAULT_COLOR_WHITE,
                 textColor
         };
@@ -135,6 +181,15 @@ public class CustomizationUtils {
         return shape;
     }
 
+    public static GradientDrawable createSectionBarSimpleBackground(Context context, int backgroundColor) {
+        GradientDrawable shape = new GradientDrawable();
+        shape.setShape(GradientDrawable.RECTANGLE);
+        int dp6 = DimensionUtils.dpToPx(context, 6);
+        shape.setCornerRadii(new float[] {0, 0, 0, 0, dp6, dp6, dp6, dp6});
+        shape.setColor(backgroundColor);
+        return shape;
+    }
+
     public static void styleNoteText(TextView textView, int hole, float bending, int sign, int style, int textColor) {
         textView.setText(getNoteText(hole, sign, bending));
         StyleUtils.setStyle(textView, style);
@@ -143,6 +198,16 @@ public class CustomizationUtils {
 
     public static void styleNoteText(TextView textView, int hole, float bending, int sign, int style, ColorStateList colorStateList) {
         textView.setText(getNoteText(hole, sign, bending));
+        StyleUtils.setStyle(textView, style);
+        textView.setTextColor(colorStateList);
+    }
+
+    public static void styleSectionBarText(TextView textView, int style, int textColor) {
+        StyleUtils.setStyle(textView, style);
+        textView.setTextColor(textColor);
+    }
+
+    public static void styleSectionBarText(TextView textView, int style, ColorStateList colorStateList) {
         StyleUtils.setStyle(textView, style);
         textView.setTextColor(colorStateList);
     }
