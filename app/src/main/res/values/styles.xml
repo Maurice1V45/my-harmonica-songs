@@ -10,7 +10,7 @@
 
     </style>
 
-    <style name="CustomDialog" parent="AppTheme" >
+    <style name="CustomDialog" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowIsFloating">true</item>
@@ -23,6 +23,11 @@
 
     <style name="ToolbarBackArrow" parent="AppTheme">
         <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
+    <style name="TimeNumberPicker" parent="AppTheme">
+        <item name="android:textSize">@dimen/text_size_30px</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
     </style>
 
 </resources>

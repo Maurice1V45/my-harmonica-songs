@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -15,10 +16,15 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.mivas.myharmonicasongs.R;
+import com.mivas.myharmonicasongs.database.handler.ScrollTimerDbHandler;
+import com.mivas.myharmonicasongs.database.model.DbScrollTimer;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.exception.MediaPlayerException;
+import com.mivas.myharmonicasongs.listener.MediaPlayerListener;
 import com.mivas.myharmonicasongs.util.ExportHelper;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -34,6 +40,9 @@ public class MediaPlayerView extends RelativeLayout {
     private DbSong dbSong;
     private Runnable updateSongViewsRunnable;
     private boolean mediaViewDisplayed = false;
+    private List<DbScrollTimer> dbScrollTimers;
+    private DbScrollTimer currentScrollTimer;
+    private MediaPlayerListener listener;
 
     public MediaPlayerView(Context context) {
         super(context);
@@ -59,10 +68,10 @@ public class MediaPlayerView extends RelativeLayout {
     private void initViews() {
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.layout_media_player, this, true);
-        playButton = (ImageView) findViewById(R.id.button_play);
-        progressBar = (SeekBar) findViewById(R.id.seek_bar_progress);
-        currentTimeText = (TextView) findViewById(R.id.text_current_time);
-        totalTimeText = (TextView) findViewById(R.id.text_total_time);
+        playButton = findViewById(R.id.button_play);
+        progressBar = findViewById(R.id.seek_bar_progress);
+        currentTimeText = findViewById(R.id.text_current_time);
+        totalTimeText = findViewById(R.id.text_total_time);
         setVisibility(GONE);
     }
 
@@ -112,7 +121,7 @@ public class MediaPlayerView extends RelativeLayout {
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-
+                    refreshScrollTimers();
                 }
             });
 
@@ -129,6 +138,12 @@ public class MediaPlayerView extends RelativeLayout {
                 }
             });
 
+            // init scroll timers
+            dbScrollTimers = ScrollTimerDbHandler.getScrollTimersBySongId(dbSong.getId());
+            if (!dbScrollTimers.isEmpty()) {
+                currentScrollTimer = dbScrollTimers.get(0);
+            }
+
             // init update handler
             mediaHandler = new Handler();
             updateSongViewsRunnable = new Runnable() {
@@ -136,6 +151,12 @@ public class MediaPlayerView extends RelativeLayout {
                     int currentTime = mediaPlayer.getCurrentPosition();
                     progressBar.setProgress(currentTime);
                     updateTimeText(currentTimeText, currentTime > finalTime ? finalTime : currentTime);
+
+                    if (currentScrollTimer != null && currentTime > currentScrollTimer.getTime()) {
+                        listener.onScrollToSection(currentScrollTimer.getSectionId());
+                        dbScrollTimers.remove(0);
+                        currentScrollTimer = dbScrollTimers.isEmpty() ? null : dbScrollTimers.get(0);
+                    }
                     mediaHandler.postDelayed(this, 100);
                 }
             };
@@ -143,6 +164,20 @@ public class MediaPlayerView extends RelativeLayout {
 
         }
     }
+
+    public void refreshScrollTimers() {
+        int mediaPlayerTime = mediaPlayer.getCurrentPosition();
+        dbScrollTimers = ScrollTimerDbHandler.getScrollTimersBySongId(dbSong.getId());
+        Iterator<DbScrollTimer> iterator = dbScrollTimers.iterator();
+        while (iterator.hasNext()) {
+            DbScrollTimer dbScrollTimer = iterator.next();
+            if (dbScrollTimer.getTime() < mediaPlayerTime) {
+                iterator.remove();
+            }
+        }
+        currentScrollTimer = dbScrollTimers.isEmpty() ? null : dbScrollTimers.get(0);
+    }
+
 
     public void animate(final boolean expand) {
         Animation animation = AnimationUtils.loadAnimation(getContext(), expand ? R.anim.anim_bottom_up : R.anim.anim_bottom_down);
@@ -192,5 +227,9 @@ public class MediaPlayerView extends RelativeLayout {
     public void show(boolean show) {
         mediaViewDisplayed = show;
         setVisibility(show ? VISIBLE : GONE);
+    }
+
+    public void setListener(MediaPlayerListener listener) {
+        this.listener = listener;
     }
 }

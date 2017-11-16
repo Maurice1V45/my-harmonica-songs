@@ -42,21 +42,14 @@
     <string name="song_activity_menu_delete_section">Delete section tag</string>
     <string name="song_activity_menu_share">Share</string>
     <string name="song_activity_menu_customize">Customize</string>
-    <string name="song_activity_menu_add_audio_file">Add audio file</string>
-    <string name="song_activity_menu_remove_audio_file">Remove audio file</string>
+    <string name="song_activity_menu_instrumental">Instrumental</string>
     <string name="song_activity_menu_toggle_media">Show/Hide Media player</string>
     <string name="song_activity_menu_shift_notes">Shift notes</string>
     <string name="song_activity_toast_note_copied">note copied</string>
     <string name="song_activity_toast_notes_copied">notes copied</string>
     <string name="song_activity_toast_no_notes_copied">No notes copied</string>
-    <string name="song_activity_toast_permission_needed">Permission needed to add audio file</string>
-    <string name="song_activity_toast_add_audio_file_error">Error adding audio file</string>
     <string name="song_activity_toast_no_audio_file">No audio file added</string>
-    <string name="song_activity_text_adding_audio_file">Adding audio file…</string>
-    <string name="song_activity_toast_audio_file_added">Audio file added</string>
-    <string name="song_activity_toast_audio_file_removed">Audio file removed</string>
     <string name="song_activity_toast_media_player_init_error">Error initializing media player</string>
-    <string name="song_activity_toast_error_no_filepicker_app">No file picker app available on the device</string>
     <string name="song_activity_toast_notes_shifted">Notes shifted</string>
     <string name="song_activity_text_share_to">Share with…</string>
     <string name="song_activity_shift_warning_dialog_title" formatted="false">Shift only %d notes?</string>
@@ -93,6 +86,15 @@
     <string name="insert_note_dialog_text_right">Right</string>
     <string name="insert_note_dialog_text_top">Top</string>
     <string name="insert_note_dialog_text_bottom">Bottom</string>
+
+    <!-- Time Picker Dialog -->
+    <string name="time_picker_dialog_title">Select a Time</string>
+    <string name="time_picker_dialog_text_minute">min</string>
+    <string name="time_picker_dialog_text_second">sec</string>
+    <string name="time_picker_dialog_button_ok">OK</string>
+
+    <!-- Section Picker Dialog -->
+    <string name="section_picker_dialog_title">Select a Section</string>
 
     <!-- Settings Activity -->
     <string name="settings_activity_text_settings">Settings</string>
@@ -133,6 +135,23 @@
 
     <!-- Credits Activity -->
     <string name="credits_activity_text_credits">Credits</string>
+
+    <!-- Instrumental Activity -->
+    <string name="instrumental_activity_text_instrumental">Instrumental</string>
+    <string name="instrumental_activity_text_audio_file">AUDIO FILE</string>
+    <string name="instrumental_activity_text_add_audio_file">Add audio file</string>
+    <string name="instrumental_activity_text_remove_audio_file">Remove audio file</string>
+    <string name="instrumental_activity_text_add_scroll_timer">Add scroll timer</string>
+    <string name="instrumental_activity_text_at">at</string>
+    <string name="instrumental_activity_text_scroll_to">scroll to</string>
+    <string name="instrumental_activity_text_scroll_timers">SCROLL TIMERS</string>
+    <string name="instrumental_activity_text_adding_audio_file">Adding audio file…</string>
+    <string name="instrumental_activity_toast_audio_file_added">Audio file added</string>
+    <string name="instrumental_activity_toast_audio_file_removed">Audio file removed</string>
+    <string name="instrumental_activity_toast_add_audio_file_error">Error adding audio file</string>
+    <string name="instrumental_activity_toast_error_no_filepicker_app">No file picker app available on the device</string>
+    <string name="instrumental_activity_toast_permission_needed">Permission needed to add audio file</string>
+    <string name="instrumental_activity_toast_no_sections">Song has no sections</string>
 
     <!-- Customize Activity -->
     <string name="customize_activity_text_customize">Customize</string>

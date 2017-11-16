@@ -55,6 +55,13 @@ public class SectionDbHandler {
                 .execute();
     }
 
+    public static DbSection getSectionById(long id) {
+        return new Select()
+                .from(DbSection.class)
+                .where("_id = ?", id)
+                .executeSingle();
+    }
+
     /**
      * Deletes all sections from db.
      */

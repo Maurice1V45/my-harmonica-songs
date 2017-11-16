@@ -1,6 +1,5 @@
 package com.mivas.myharmonicasongs;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -11,8 +10,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -35,6 +32,7 @@ import com.mivas.myharmonicasongs.database.model.DbSection;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.dialog.NotesShiftDialog;
 import com.mivas.myharmonicasongs.exception.MediaPlayerException;
+import com.mivas.myharmonicasongs.listener.MediaPlayerListener;
 import com.mivas.myharmonicasongs.listener.NotesShiftDialogListener;
 import com.mivas.myharmonicasongs.listener.SectionBarListener;
 import com.mivas.myharmonicasongs.listener.TablatureListener;
@@ -58,7 +56,7 @@ import java.util.List;
 /**
  * Activity that displays dbNotes.
  */
-public class SongActivity extends AppCompatActivity implements TablatureListener, NotesShiftDialogListener, SectionBarListener {
+public class SongActivity extends AppCompatActivity implements TablatureListener, NotesShiftDialogListener, SectionBarListener, MediaPlayerListener {
 
     private TablatureView tablatureView;
     private MediaPlayerView mediaPlayerView;
@@ -68,7 +66,6 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
     private List<DbSection> dbSections = new ArrayList<DbSection>();
     private TextView noNotesText;
     private View backgroundView;
-    private ProgressDialog progressDialog;
     private boolean showSectionBar;
     private BroadcastReceiver customizationReceiver = new BroadcastReceiver() {
 
@@ -83,6 +80,42 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
         }
     };
 
+    private BroadcastReceiver audioFileReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            invalidateOptionsMenu();
+            if (dbSong.getAudioFile() != null) {
+                try {
+                    mediaPlayerView.release();
+                    mediaPlayerView.initialize();
+                    if (!mediaPlayerView.isDisplayed()) {
+                        tablatureView.setMediaPadding(true);
+                        mediaPlayerView.show(true);
+                    }
+                } catch (MediaPlayerException e) {
+
+                }
+            } else {
+                if (mediaPlayerView.isDisplayed()) {
+                    tablatureView.setMediaPadding(false);
+                    mediaPlayerView.show(false);
+                }
+                mediaPlayerView.release();
+            }
+        }
+    };
+
+    private BroadcastReceiver scrollTimersReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (dbSong.getAudioFile() != null) {
+                mediaPlayerView.refreshScrollTimers();
+            }
+        }
+    };
+
     private void showSectionBar() {
         if (showSectionBar && dbSections.size() > 0) {
             sectionBarView.setVisibility(View.VISIBLE);
@@ -92,9 +125,6 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
             sectionBarView.setVisibility(View.GONE);
         }
     }
-
-    private static final int REQUEST_CODE_ADD_AUDIO_FILE = 1;
-    private static final int REQUEST_CODE_STORAGE_PERMISSION = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +154,7 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
         // init media player
         try {
             mediaPlayerView.setDbSong(dbSong);
+            mediaPlayerView.setListener(SongActivity.this);
             mediaPlayerView.initialize();
             if (dbSong.getAudioFile() != null && CustomizationUtils.getShowMediaPlayer()) {
                 tablatureView.setMediaPadding(true);
@@ -134,6 +165,8 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
         }
 
         registerReceiver(customizationReceiver, new IntentFilter(Constants.INTENT_CUSTOMIZATIONS_UPDATED));
+        registerReceiver(audioFileReceiver, new IntentFilter(Constants.INTENT_AUDIO_FILE_UPDATED));
+        registerReceiver(scrollTimersReceiver, new IntentFilter(Constants.INTENT_SCROLL_TIMERS_UPDATED));
     }
 
     @Override
@@ -141,16 +174,10 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_song_activity, menu);
         MenuItem toggleMedia = menu.findItem(R.id.action_toggle_media);
-        MenuItem addAudioFile = menu.findItem(R.id.action_add_audio_file);
-        MenuItem removeAudioFile = menu.findItem(R.id.action_remove_audio_file);
         if (dbSong.getAudioFile() == null) {
             toggleMedia.setVisible(false);
-            addAudioFile.setVisible(true);
-            removeAudioFile.setVisible(false);
         } else {
             toggleMedia.setVisible(true);
-            addAudioFile.setVisible(false);
-            removeAudioFile.setVisible(true);
         }
         return true;
     }
@@ -163,25 +190,10 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
 
         // handle item selection
         switch (item.getItemId()) {
-            case R.id.action_add_audio_file:
-                if (ContextCompat.checkSelfPermission(SongActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(SongActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
-                } else {
-                    launchAddAudioFileActivity();
-                }
-                return true;
-            case R.id.action_remove_audio_file:
-                ExportHelper.getInstance().removeAudioFile(SongActivity.this, dbSong);
-                dbSong.setAudioFile(null);
-                SongDbHandler.insertSong(dbSong);
-                CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_audio_file_removed, Toast.LENGTH_SHORT).show();
-                if (mediaPlayerView.isDisplayed()) {
-                    tablatureView.setMediaPadding(false);
-                    mediaPlayerView.animate(false);
-                }
-                invalidateOptionsMenu();
-                mediaPlayerView.release();
-                sendSongsUpdatedBroadcast();
+            case R.id.action_instrumental:
+                Intent instrumentalIntent = new Intent(SongActivity.this, InstrumentalActivity.class);
+                instrumentalIntent.putExtra(Constants.EXTRA_SONG_ID, dbSong.getId());
+                startActivity(instrumentalIntent);
                 return true;
             case R.id.action_customize:
                 Intent intent = new Intent(SongActivity.this, CustomizeActivity.class);
@@ -226,101 +238,12 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        if (requestCode == REQUEST_CODE_ADD_AUDIO_FILE && resultCode == RESULT_OK) {
-            showProgress(getString(R.string.song_activity_text_adding_audio_file));
-            Thread thread = new Thread() {
-
-                @Override
-                public void run() {
-                    try {
-                        InputStream inputStream = getContentResolver().openInputStream(data.getData());
-                        String fileName = ExportHelper.getInstance().getFileName(SongActivity.this, data.getData());
-                        String finalName = dbSong.getId() + Constants.SEPARATOR_AUDIO_FILE + fileName;
-                        ExportHelper.getInstance().saveToInternalStorage(SongActivity.this, finalName, inputStream);
-                        dbSong.setAudioFile(finalName);
-                        SongDbHandler.insertSong(dbSong);
-                        runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                try {
-                                    mediaPlayerView.initialize();
-                                    if (!mediaPlayerView.isDisplayed()) {
-                                        tablatureView.setMediaPadding(true);
-                                        mediaPlayerView.animate(true);
-                                    }
-                                    progressDialog.dismiss();
-                                    CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_audio_file_added, Toast.LENGTH_SHORT).show();
-                                    invalidateOptionsMenu();
-                                    sendSongsUpdatedBroadcast();
-                                } catch (Exception e) {
-                                    handleAddAudioFileException();
-                                }
-                            }
-                        });
-                    } catch (Exception e) {
-                        handleAddAudioFileException();
-                    }
-                }
-            };
-            thread.start();
-        }
-    }
-
-    private void handleAddAudioFileException() {
-        ExportHelper.getInstance().removeAudioFile(SongActivity.this, dbSong);
-        dbSong.setAudioFile(null);
-        SongDbHandler.insertSong(dbSong);
-        mediaPlayerView.release();
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                progressDialog.dismiss();
-                CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_add_audio_file_error, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_STORAGE_PERMISSION: {
-
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    launchAddAudioFileActivity();
-                } else {
-                    CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_permission_needed, Toast.LENGTH_LONG).show();
-                }
-                return;
-            }
-            default:
-                break;
-        }
-    }
-
-    private void launchAddAudioFileActivity() {
-        try {
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            intent.setType("*/*");
-            startActivityForResult(intent, REQUEST_CODE_ADD_AUDIO_FILE);
-        } catch (ActivityNotFoundException e) {
-            CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_error_no_filepicker_app, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
     protected void onDestroy() {
         unregisterReceiver(customizationReceiver);
+        unregisterReceiver(audioFileReceiver);
+        unregisterReceiver(scrollTimersReceiver);
         mediaPlayerView.release();
         super.onDestroy();
-    }
-
-    private void sendSongsUpdatedBroadcast() {
-        Intent intent = new Intent(Constants.INTENT_SONGS_UPDATED);
-        sendBroadcast(intent);
     }
 
     @Override
@@ -382,15 +305,6 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
         }
     }
 
-    private void showProgress(String message) {
-        progressDialog = new ProgressDialog(SongActivity.this);
-        progressDialog.setMessage(message);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
-    }
-
     @Override
     public void onBackPressed() {
         NotePickerView notePickerView = tablatureView.getNotePickerView();
@@ -428,7 +342,6 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
         getSupportActionBar().setTitle(builder.toString());
     }
 
-
     @Override
     public void onSectionSelected(CellLine cellLine) {
         tablatureView.smoothScrollToCellLine(cellLine);
@@ -451,5 +364,10 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
                 sectionBarView.startAnimation(sectionBarAnimation);
             }
         }
+    }
+
+    @Override
+    public void onScrollToSection(long sectionId) {
+        tablatureView.smoothScrollToSection(sectionId);
     }
 }

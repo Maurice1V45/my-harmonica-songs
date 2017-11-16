@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.mivas.myharmonicasongs.adapter.SongsListAdapter;
 import com.mivas.myharmonicasongs.animation.SlideAnimation;
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
+import com.mivas.myharmonicasongs.database.handler.ScrollTimerDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SectionDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbSong;
@@ -226,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
                             public void onClick(DialogInterface dialog, int which) {
                                 dbSongs.remove(dbSong);
                                 NoteDbHandler.deleteNotesBySongId(dbSong.getId());
+                                ScrollTimerDbHandler.deleteScrollTimersBySongId(dbSong.getId());
                                 SectionDbHandler.deleteSectionsBySongId(dbSong.getId());
                                 SongDbHandler.deleteSongById(dbSong.getId());
                                 refreshSongsList();

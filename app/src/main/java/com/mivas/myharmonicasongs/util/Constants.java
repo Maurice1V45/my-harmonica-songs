@@ -11,6 +11,8 @@ public class Constants {
 
     /* Dialog tags */
     public static final String TAG_SONG_DIALOG = "tag_song_dialog";
+    public static final String TAG_TIME_PICKER_DIALOG = "tag_time_picker_dialog";
+    public static final String TAG_SECTION_PICKER_DIALOG = "tag_section_picker_dialog";
     public static final String TAG_NOTES_SHIFT_DIALOG = "tag_notes_shift_dialog";
     public static final String TAG_INSERT_NOTE_DIALOG = "tag_insert_note_dialog";
 
@@ -21,7 +23,9 @@ public class Constants {
 
     /* Broadcast receivers */
     public static final String INTENT_SONGS_UPDATED = "intent_songs_updated";
+    public static final String INTENT_AUDIO_FILE_UPDATED = "intent_audio_file_updated";
     public static final String INTENT_CUSTOMIZATIONS_UPDATED = "intent_customizations_updated";
+    public static final String INTENT_SCROLL_TIMERS_UPDATED = "intent_scroll_timers_updated";
 
     /* Default customizations */
     public static final int DEFAULT_NOTE_BLOW_SIGN = 2;

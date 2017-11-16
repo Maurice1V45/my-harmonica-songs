@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/image_background"
+    android:orientation="vertical"
+    tools:context="com.mivas.myharmonicasongs.InstrumentalActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/black_30"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ToolbarBackArrow"
+        app:title="@string/instrumental_activity_text_instrumental"
+        app:titleTextColor="@color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/greyEE">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:scrollbars="none">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/bu1_5"
+                android:layout_marginTop="@dimen/bu2"
+                android:text="@string/instrumental_activity_text_audio_file"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_30px"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:id="@+id/view_add_audio_file"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu5"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true">
+
+                <ImageView
+                    android:layout_width="@dimen/bu2"
+                    android:layout_height="@dimen/bu2"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu1_5"
+                    android:src="@drawable/icon_plus3" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu4_5"
+                    android:text="@string/instrumental_activity_text_add_audio_file"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_34px" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/view_remove_audio_file"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu5"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true">
+
+                <ImageView
+                    android:layout_width="@dimen/bu1_5"
+                    android:layout_height="@dimen/bu1_5"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu1_75"
+                    android:src="@drawable/icon_delete3" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu4_5"
+                    android:text="@string/instrumental_activity_text_remove_audio_file"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_34px" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/bu1_5"
+                android:layout_marginTop="@dimen/bu2"
+                android:text="@string/instrumental_activity_text_scroll_timers"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_30px"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_scroll_timers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+
+            <RelativeLayout
+                android:id="@+id/view_add_scroll_timer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu5"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true">
+
+                <ImageView
+                    android:layout_width="@dimen/bu2"
+                    android:layout_height="@dimen/bu2"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu1_5"
+                    android:src="@drawable/icon_plus3" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bu4_5"
+                    android:text="@string/instrumental_activity_text_add_scroll_timer"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_34px" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

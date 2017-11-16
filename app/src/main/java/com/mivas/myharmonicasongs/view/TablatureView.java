@@ -23,6 +23,7 @@ import com.mivas.myharmonicasongs.animation.CellAnimation;
 import com.mivas.myharmonicasongs.animation.SectionAnimation;
 import com.mivas.myharmonicasongs.animation.SlideAnimation;
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
+import com.mivas.myharmonicasongs.database.handler.ScrollTimerDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SectionDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.database.model.DbSection;
@@ -372,6 +373,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
             if (dbSection != null) {
 
                 // remove section
+                ScrollTimerDbHandler.deleteScrollTimerBySectionId(dbSection.getId());
                 dbSections.remove(dbSection);
                 SectionDbHandler.deleteSection(dbSection);
 
@@ -488,6 +490,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
             sectionRemoved = true;
 
             // remove section
+            ScrollTimerDbHandler.deleteScrollTimerBySectionId(dbSection.getId());
             dbSections.remove(dbSection);
             SectionDbHandler.deleteSection(dbSection);
 
@@ -673,6 +676,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
             DbSection dbSection = cellLine.getSectionCell().getDbSection();
 
             // remove section
+            ScrollTimerDbHandler.deleteScrollTimerBySectionId(dbSection.getId());
             dbSections.remove(dbSection);
             SectionDbHandler.deleteSection(dbSection);
 
@@ -1048,6 +1052,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
             // leave only 1 section on the row and delete the others
             if (duplicateSections.size() > 1) {
                 for (int i = 1; i < duplicateSections.size(); i++) {
+                    ScrollTimerDbHandler.deleteScrollTimerBySectionId(duplicateSections.get(i).getId());
                     dbSections.remove(duplicateSections.get(i));
                     SectionDbHandler.deleteSection(duplicateSections.get(i));
                 }
@@ -1104,9 +1109,24 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
 
     public void smoothScrollToCellLine(final CellLine cellLine) {
         verticalScrollView.post(new Runnable() {
+
             @Override
             public void run() {
                 verticalScrollView.smoothScrollTo(0, cellLine.getLayout().getTop());
+            }
+        });
+    }
+
+    public void smoothScrollToSection(final long sectionId) {
+        verticalScrollView.post(new Runnable() {
+
+            @Override
+            public void run() {
+                for (CellLine cellLine : cellLines) {
+                    if (cellLine.getSectionCell() != null && cellLine.getSectionCell().getDbSection() != null && cellLine.getSectionCell().getDbSection().getId() == sectionId) {
+                        verticalScrollView.smoothScrollTo(0, cellLine.getLayout().getTop());
+                    }
+                }
             }
         });
     }

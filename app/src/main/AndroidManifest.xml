@@ -39,6 +39,9 @@
             android:name=".CustomizeActivity"
             android:configChanges="orientation|screenSize" />
         <activity
+            android:name=".InstrumentalActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
             android:name=".CustomizeNoteActivity"
             android:configChanges="orientation|screenSize" />
         <activity
