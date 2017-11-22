@@ -12,6 +12,7 @@
     <color name="grey_50">#80EEEEEE</color>
     <color name="black_30">#4A000000</color>
     <color name="black">#1A2634</color>
+    <color name="green">#1CC194</color>
     <color name="purple">#8832ba</color>
     <color name="dark_purple">#642589</color>
     <color name="red">#d11030</color>
@@ -21,6 +22,7 @@
     <color name="greyDD">#DDDDDD</color>
     <color name="greyEE">#EEEEEE</color>
     <color name="grey77">#777777</color>
+    <color name="grey99">#999999</color>
     <color name="gold">#e0d62a</color>
     <color name="gold2">#e0bb2a</color>
 

@@ -16,6 +16,9 @@ public class DbScrollTimer extends Model {
     @Column(name = "section_id")
     private long sectionId;
 
+    @Column(name = "section_line")
+    private int sectionLine;
+
     @Column(name = "song_id")
     private long songId;
 
@@ -23,9 +26,10 @@ public class DbScrollTimer extends Model {
 
     }
 
-    public DbScrollTimer(int time, long sectionId, long songId) {
+    public DbScrollTimer(int time, long sectionId, int sectionLine, long songId) {
         this.time = time;
         this.sectionId = sectionId;
+        this.sectionLine = sectionLine;
         this.songId = songId;
     }
 
@@ -43,6 +47,14 @@ public class DbScrollTimer extends Model {
 
     public void setSectionId(long sectionId) {
         this.sectionId = sectionId;
+    }
+
+    public int getSectionLine() {
+        return sectionLine;
+    }
+
+    public void setSectionLine(int sectionLine) {
+        this.sectionLine = sectionLine;
     }
 
     public long getSongId() {

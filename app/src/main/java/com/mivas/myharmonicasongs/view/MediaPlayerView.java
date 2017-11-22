@@ -21,6 +21,7 @@ import com.mivas.myharmonicasongs.database.model.DbScrollTimer;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.exception.MediaPlayerException;
 import com.mivas.myharmonicasongs.listener.MediaPlayerListener;
+import com.mivas.myharmonicasongs.util.CustomizationUtils;
 import com.mivas.myharmonicasongs.util.ExportHelper;
 
 import java.util.Iterator;
@@ -40,6 +41,7 @@ public class MediaPlayerView extends RelativeLayout {
     private DbSong dbSong;
     private Runnable updateSongViewsRunnable;
     private boolean mediaViewDisplayed = false;
+    private boolean scrollTimersEnabled;
     private List<DbScrollTimer> dbScrollTimers;
     private DbScrollTimer currentScrollTimer;
     private MediaPlayerListener listener;
@@ -139,6 +141,7 @@ public class MediaPlayerView extends RelativeLayout {
             });
 
             // init scroll timers
+            scrollTimersEnabled = CustomizationUtils.getScrollTimersEnabled();
             dbScrollTimers = ScrollTimerDbHandler.getScrollTimersBySongId(dbSong.getId());
             if (!dbScrollTimers.isEmpty()) {
                 currentScrollTimer = dbScrollTimers.get(0);
@@ -152,8 +155,8 @@ public class MediaPlayerView extends RelativeLayout {
                     progressBar.setProgress(currentTime);
                     updateTimeText(currentTimeText, currentTime > finalTime ? finalTime : currentTime);
 
-                    if (currentScrollTimer != null && currentTime > currentScrollTimer.getTime()) {
-                        listener.onScrollToSection(currentScrollTimer.getSectionId());
+                    if (scrollTimersEnabled && currentScrollTimer != null && currentTime > currentScrollTimer.getTime()) {
+                        listener.onScrollToSection(currentScrollTimer.getSectionId(), currentScrollTimer.getSectionLine());
                         dbScrollTimers.remove(0);
                         currentScrollTimer = dbScrollTimers.isEmpty() ? null : dbScrollTimers.get(0);
                     }
@@ -166,6 +169,7 @@ public class MediaPlayerView extends RelativeLayout {
     }
 
     public void refreshScrollTimers() {
+        scrollTimersEnabled = CustomizationUtils.getScrollTimersEnabled();
         int mediaPlayerTime = mediaPlayer.getCurrentPosition();
         dbScrollTimers = ScrollTimerDbHandler.getScrollTimersBySongId(dbSong.getId());
         Iterator<DbScrollTimer> iterator = dbScrollTimers.iterator();

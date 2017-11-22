@@ -39,11 +39,23 @@
                 android:background="@drawable/selector_button_generic2"
                 android:clickable="true"
                 android:gravity="center_vertical"
+                android:layout_marginRight="@dimen/bu5"
                 android:paddingBottom="0dp"
                 android:paddingLeft="@dimen/bu1"
                 android:paddingRight="@dimen/bu1"
                 android:maxLines="1"
                 android:paddingTop="0dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_30px" />
+
+            <TextView
+                android:id="@+id/text_section_line"
+                android:layout_width="@dimen/bu3_5"
+                android:layout_height="@dimen/bu3"
+                android:layout_marginLeft="@dimen/bu4_5_negative"
+                android:background="@drawable/selector_button_generic2"
+                android:gravity="center"
+                android:padding="0dp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_30px" />
         </LinearLayout>

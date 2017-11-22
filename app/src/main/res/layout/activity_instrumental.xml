@@ -27,7 +27,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:scrollbars="none">
 
@@ -71,6 +71,17 @@
                     android:background="@color/greyCC" />
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/text_audio_file"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/bu2"
+                android:layout_marginLeft="@dimen/bu1_5"
+                android:layout_marginRight="@dimen/bu2"
+                android:gravity="bottom"
+                android:textColor="@color/green"
+                android:textSize="@dimen/text_size_28px" />
+
+
             <RelativeLayout
                 android:id="@+id/view_remove_audio_file"
                 android:layout_width="match_parent"
@@ -111,34 +122,43 @@
                 android:textSize="@dimen/text_size_30px"
                 android:textStyle="bold" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/list_scroll_timers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false" />
-
             <RelativeLayout
-                android:id="@+id/view_add_scroll_timer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/bu5"
-                android:background="?android:attr/selectableItemBackground"
-                android:clickable="true">
+                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:layout_width="@dimen/bu2"
-                    android:layout_height="@dimen/bu2"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu1_5"
-                    android:src="@drawable/icon_plus3" />
-
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/bu4_5"
-                    android:text="@string/instrumental_activity_text_add_scroll_timer"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_34px" />
+                    android:layout_marginBottom="@dimen/bu1_5"
+                    android:layout_marginRight="@dimen/bu5"
+                    android:layout_marginTop="@dimen/bu1_5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/instrumental_activity_text_enable_scroll_timers"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_34px" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/instrumental_activity_text_enable_scroll_timers_description"
+                        android:textColor="@color/grey77"
+                        android:textSize="@dimen/text_size_28px" />
+                </LinearLayout>
+
+                <Switch
+                    android:id="@+id/switch_enable_scroll_timers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/bu1" />
 
                 <View
                     android:layout_width="match_parent"
@@ -147,6 +167,47 @@
                     android:background="@color/greyCC" />
             </RelativeLayout>
 
+            <LinearLayout
+                android:id="@+id/layout_scroll_timers"
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list_scroll_timers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <RelativeLayout
+                    android:id="@+id/view_add_scroll_timer"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bu5"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true">
+
+                    <ImageView
+                        android:layout_width="@dimen/bu2"
+                        android:layout_height="@dimen/bu2"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:src="@drawable/icon_plus3" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/bu4_5"
+                        android:text="@string/instrumental_activity_text_add_scroll_timer"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_34px" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/greyCC" />
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

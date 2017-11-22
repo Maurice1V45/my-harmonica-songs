@@ -89,12 +89,18 @@
 
     <!-- Time Picker Dialog -->
     <string name="time_picker_dialog_title">Select a Time</string>
+    <string name="time_picker_dialog_description">The scrolling will start when the song reaches this time.</string>
     <string name="time_picker_dialog_text_minute">min</string>
     <string name="time_picker_dialog_text_second">sec</string>
     <string name="time_picker_dialog_button_ok">OK</string>
 
     <!-- Section Picker Dialog -->
     <string name="section_picker_dialog_title">Select a Section</string>
+    <string name="section_picker_dialog_description">The scrolling will stop at this section.</string>
+
+    <!-- Section Line Picker Dialog -->
+    <string name="section_line_picker_dialog_title">Select a Section Line</string>
+    <string name="section_line_picker_dialog_description">The scrolling will stop at this line in the section.</string>
 
     <!-- Settings Activity -->
     <string name="settings_activity_text_settings">Settings</string>
@@ -146,6 +152,8 @@
     <string name="instrumental_activity_text_scroll_to">scroll to</string>
     <string name="instrumental_activity_text_scroll_timers">SCROLL TIMERS</string>
     <string name="instrumental_activity_text_adding_audio_file">Adding audio file…</string>
+    <string name="instrumental_activity_text_enable_scroll_timers">Enable scroll timers</string>
+    <string name="instrumental_activity_text_enable_scroll_timers_description">Scroll timers automatically scroll your tablature when an audio file is playing</string>
     <string name="instrumental_activity_toast_audio_file_added">Audio file added</string>
     <string name="instrumental_activity_toast_audio_file_removed">Audio file removed</string>
     <string name="instrumental_activity_toast_add_audio_file_error">Error adding audio file</string>

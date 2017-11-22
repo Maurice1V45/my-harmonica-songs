@@ -17,7 +17,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mivas.myharmonicasongs.adapter.ScrollTimersAdapter;
@@ -27,14 +30,19 @@ import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbScrollTimer;
 import com.mivas.myharmonicasongs.database.model.DbSection;
 import com.mivas.myharmonicasongs.database.model.DbSong;
+import com.mivas.myharmonicasongs.dialog.SectionLinePickerDialog;
 import com.mivas.myharmonicasongs.dialog.SectionPickerDialog;
 import com.mivas.myharmonicasongs.dialog.TimePickerDialog;
 import com.mivas.myharmonicasongs.listener.ScrollTimersAdapterListener;
+import com.mivas.myharmonicasongs.listener.SectionLinePickerListener;
 import com.mivas.myharmonicasongs.listener.SectionPickerListener;
 import com.mivas.myharmonicasongs.listener.TimePickerListener;
+import com.mivas.myharmonicasongs.util.AudioFileUtils;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
+import com.mivas.myharmonicasongs.util.CustomizationUtils;
 import com.mivas.myharmonicasongs.util.ExportHelper;
+import com.mivas.myharmonicasongs.util.PreferencesUtils;
 
 import java.io.InputStream;
 import java.util.Collections;
@@ -44,14 +52,17 @@ import java.util.List;
 public class InstrumentalActivity extends AppCompatActivity implements ScrollTimersAdapterListener {
 
     private DbSong dbSong;
-    private View addAudioFile;
-    private View removeAudioFile;
+    private View addAudioFileView;
+    private View removeAudioFileView;
+    private TextView audioFileText;
     private ProgressDialog progressDialog;
     private MediaPlayer mediaPlayer;
     private View addScrollTimerView;
     private Comparator sectionsComparator;
     private Comparator scrollTimersComparator;
     private RecyclerView scrollTimersList;
+    private Switch enableScrollTimersSwitch;
+    private View scrollTimersLayout;
     private ScrollTimersAdapter scrollTimersAdapter;
     private List<DbScrollTimer> dbScrollTimers;
     private List<DbSection> dbSections;
@@ -98,9 +109,15 @@ public class InstrumentalActivity extends AppCompatActivity implements ScrollTim
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        addAudioFile = findViewById(R.id.view_add_audio_file);
-        removeAudioFile = findViewById(R.id.view_remove_audio_file);
+        addAudioFileView = findViewById(R.id.view_add_audio_file);
+        removeAudioFileView = findViewById(R.id.view_remove_audio_file);
+        audioFileText = findViewById(R.id.text_audio_file);
         addScrollTimerView = findViewById(R.id.view_add_scroll_timer);
+        boolean scrollTimersEnabled = CustomizationUtils.getScrollTimersEnabled();
+        enableScrollTimersSwitch = findViewById(R.id.switch_enable_scroll_timers);
+        enableScrollTimersSwitch.setChecked(scrollTimersEnabled);
+        scrollTimersLayout = findViewById(R.id.layout_scroll_timers);
+        scrollTimersLayout.setVisibility(scrollTimersEnabled ? View.VISIBLE : View.GONE);
         scrollTimersList = findViewById(R.id.list_scroll_timers);
         scrollTimersList.setLayoutManager(new LinearLayoutManager(InstrumentalActivity.this, LinearLayout.VERTICAL, false));
         scrollTimersAdapter = new ScrollTimersAdapter(InstrumentalActivity.this, dbScrollTimers, InstrumentalActivity.this);
@@ -111,7 +128,7 @@ public class InstrumentalActivity extends AppCompatActivity implements ScrollTim
      * Listeners initializer.
      */
     private void initListeners() {
-        addAudioFile.setOnClickListener(new View.OnClickListener() {
+        addAudioFileView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -122,7 +139,7 @@ public class InstrumentalActivity extends AppCompatActivity implements ScrollTim
                 }
             }
         });
-        removeAudioFile.setOnClickListener(new View.OnClickListener() {
+        removeAudioFileView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -160,11 +177,21 @@ public class InstrumentalActivity extends AppCompatActivity implements ScrollTim
                                 @Override
                                 public void onSectionSelected(DbSection dbSection) {
                                     dbScrollTimer.setSectionId(dbSection.getId());
-                                    dbScrollTimer.save();
-                                    dbScrollTimers.add(dbScrollTimer);
-                                    Collections.sort(dbScrollTimers, scrollTimersComparator);
-                                    scrollTimersAdapter.notifyDataSetChanged();
-                                    scrollTimersChanged = true;
+
+                                    SectionLinePickerDialog sectionLinePickerDialog = new SectionLinePickerDialog();
+                                    sectionLinePickerDialog.setListener(new SectionLinePickerListener() {
+
+                                        @Override
+                                        public void onSectionLinePicked(int line) {
+                                            dbScrollTimer.setSectionLine(line);
+                                            dbScrollTimer.save();
+                                            dbScrollTimers.add(dbScrollTimer);
+                                            Collections.sort(dbScrollTimers, scrollTimersComparator);
+                                            scrollTimersAdapter.notifyDataSetChanged();
+                                            scrollTimersChanged = true;
+                                        }
+                                    });
+                                    sectionLinePickerDialog.show(getFragmentManager(), Constants.TAG_SECTION_LINE_PICKER_DIALOG);
                                 }
                             });
                             sectionPickerDialog.show(getFragmentManager(), Constants.TAG_SECTION_PICKER_DIALOG);
@@ -174,11 +201,28 @@ public class InstrumentalActivity extends AppCompatActivity implements ScrollTim
                 }
             }
         });
+        enableScrollTimersSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                PreferencesUtils.storePreference(Constants.PREF_CURRENT_SCROLL_TIMERS_ENABLED, isChecked);
+                scrollTimersLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+                scrollTimersChanged = true;
+            }
+        });
     }
 
     private void refreshAudioFileView() {
-        addAudioFile.setVisibility(dbSong.getAudioFile() == null ? View.VISIBLE : View.GONE);
-        removeAudioFile.setVisibility(dbSong.getAudioFile() == null ? View.GONE : View.VISIBLE);
+        if (dbSong.getAudioFile() == null) {
+            addAudioFileView.setVisibility(View.VISIBLE);
+            removeAudioFileView.setVisibility(View.GONE);
+            audioFileText.setVisibility(View.GONE);
+        } else {
+            addAudioFileView.setVisibility(View.GONE);
+            removeAudioFileView.setVisibility(View.VISIBLE);
+            audioFileText.setVisibility(View.VISIBLE);
+            audioFileText.setText(AudioFileUtils.getRawFileName(dbSong));
+        }
     }
 
     private void sendSongsUpdatedBroadcast() {
@@ -231,7 +275,7 @@ public class InstrumentalActivity extends AppCompatActivity implements ScrollTim
                     try {
                         InputStream inputStream = getContentResolver().openInputStream(data.getData());
                         String fileName = ExportHelper.getInstance().getFileName(InstrumentalActivity.this, data.getData());
-                        String finalName = dbSong.getId() + Constants.SEPARATOR_AUDIO_FILE + fileName;
+                        String finalName = AudioFileUtils.getFormattedFileName(dbSong, fileName);
                         ExportHelper.getInstance().saveToInternalStorage(InstrumentalActivity.this, finalName, inputStream);
                         dbSong.setAudioFile(finalName);
                         SongDbHandler.insertSong(dbSong);
@@ -365,6 +409,23 @@ public class InstrumentalActivity extends AppCompatActivity implements ScrollTim
             }
         });
         sectionPickerDialog.show(getFragmentManager(), Constants.TAG_SECTION_PICKER_DIALOG);
+    }
+
+    @Override
+    public void onSectionLineSelected(final DbScrollTimer dbScrollTimer) {
+        SectionLinePickerDialog sectionLinePickerDialog = new SectionLinePickerDialog();
+        sectionLinePickerDialog.setDbScrollTimer(dbScrollTimer);
+        sectionLinePickerDialog.setListener(new SectionLinePickerListener() {
+
+            @Override
+            public void onSectionLinePicked(int line) {
+                dbScrollTimer.setSectionLine(line);
+                dbScrollTimer.save();
+                scrollTimersAdapter.notifyDataSetChanged();
+                scrollTimersChanged = true;
+            }
+        });
+        sectionLinePickerDialog.show(getFragmentManager(), Constants.TAG_SECTION_LINE_PICKER_DIALOG);
     }
 
     @Override

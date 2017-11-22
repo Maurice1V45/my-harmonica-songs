@@ -31,6 +31,13 @@ public class ScrollTimerDbHandler {
                 .execute();
     }
 
+    public static List<DbScrollTimer> getScrollTimersForSection(long songId, long sectionId) {
+        return new Select()
+                .from(DbScrollTimer.class)
+                .where("song_id = ? and section_id = ?", songId, sectionId)
+                .execute();
+    }
+
     public static void deleteScrollTimers() {
         new Delete()
                 .from(DbScrollTimer.class)

@@ -13,6 +13,7 @@ public class Constants {
     public static final String TAG_SONG_DIALOG = "tag_song_dialog";
     public static final String TAG_TIME_PICKER_DIALOG = "tag_time_picker_dialog";
     public static final String TAG_SECTION_PICKER_DIALOG = "tag_section_picker_dialog";
+    public static final String TAG_SECTION_LINE_PICKER_DIALOG = "tag_section_line_picker_dialog";
     public static final String TAG_NOTES_SHIFT_DIALOG = "tag_notes_shift_dialog";
     public static final String TAG_INSERT_NOTE_DIALOG = "tag_insert_note_dialog";
 
@@ -49,6 +50,7 @@ public class Constants {
     public static final int DEFAULT_SECTION_BAR_STYLE = 0;
     public static final int DEFAULT_SECTION_BAR_TEXT_COLOR = 0xff000000;
     public static final int DEFAULT_SECTION_BAR_BACKGROUND = 0xffffffff;
+    public static final boolean DEFAULT_SCROLL_TIMERS_ENABLED = false;
 
     /* Current customizations */
     public static final String PREF_CURRENT_NOTE_BLOW_SIGN = "pref_current_note_blow_sign";
@@ -68,6 +70,7 @@ public class Constants {
     public static final String PREF_CURRENT_SECTION_BAR_STYLE = "pref_current_section_bar_style";
     public static final String PREF_CURRENT_SECTION_BAR_TEXT_COLOR = "pref_current_section_bar_text_color";
     public static final String PREF_CURRENT_SECTION_BAR_BACKGROUND = "pref_current_section_bar_background";
+    public static final String PREF_CURRENT_SCROLL_TIMERS_ENABLED = "pref_current_scroll_timers_enabled";
 
     /* Misc */
     public static final String SEPARATOR_AUDIO_FILE = "%&#";

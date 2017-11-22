@@ -17,9 +17,11 @@ import com.google.common.io.Files;
 import com.mivas.myharmonicasongs.MHSApplication;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.handler.NoteDbHandler;
+import com.mivas.myharmonicasongs.database.handler.ScrollTimerDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SectionDbHandler;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbNote;
+import com.mivas.myharmonicasongs.database.model.DbScrollTimer;
 import com.mivas.myharmonicasongs.database.model.DbSection;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 
@@ -115,6 +117,17 @@ public class ExportHelper {
                     JSONObject sectionJson = new JSONObject();
                     sectionJson.put("name", dbSection.getName());
                     sectionJson.put("row", dbSection.getRow());
+
+                    // add scroll timers
+                    JSONArray scrollTimersArray = new JSONArray();
+                    List<DbScrollTimer> dbScrollTimers = ScrollTimerDbHandler.getScrollTimersForSection(dbSong.getId(), dbSection.getId());
+                    for (DbScrollTimer dbScrollTimer : dbScrollTimers) {
+                        JSONObject scrollTimerJson = new JSONObject();
+                        scrollTimerJson.put("time", dbScrollTimer.getTime());
+                        scrollTimerJson.put("line", dbScrollTimer.getSectionLine());
+                        scrollTimersArray.put(scrollTimerJson);
+                    }
+                    sectionJson.put("scroll_timers", scrollTimersArray);
                     sectionsArray.put(sectionJson);
                 }
                 songJson.put("sections", sectionsArray);
@@ -133,6 +146,7 @@ public class ExportHelper {
 
         // clear database
         if (clearDb) {
+            ScrollTimerDbHandler.deleteScrollTimers();
             SectionDbHandler.deleteSections();
             NoteDbHandler.deleteNotes();
             SongDbHandler.deleteSongs();
@@ -141,6 +155,8 @@ public class ExportHelper {
         // init list of dbSongs and songJsons
         List<DbSong> dbSongs = new ArrayList<DbSong>();
         List<JSONObject> songJsons = new ArrayList<JSONObject>();
+        List<DbSection> dbSections = new ArrayList<DbSection>();
+        List<JSONObject> sectionJsons = new ArrayList<JSONObject>();
 
         // start parsing the songs
         try {
@@ -156,10 +172,8 @@ public class ExportHelper {
                 dbSong.setAuthor(songJson.getString("author"));
                 dbSong.setFavourite(songJson.getBoolean("favorite"));
                 dbSong.setKey(songJson.getInt("key"));
+                dbSong.save();
                 dbSongs.add(dbSong);
-
-                // add the song to the transaction
-                SongDbHandler.insertSong(dbSong);
             }
 
             // set the transaction successful
@@ -183,29 +197,56 @@ public class ExportHelper {
                     DbNote dbNote = new DbNote();
                     dbNote.setHole(noteJson.getInt("hole"));
                     dbNote.setBlow(noteJson.getBoolean("blow"));
-                    dbNote.setWord(noteJson.getString("word"));
+                    if (noteJson.has("word")) {
+                        dbNote.setWord(noteJson.getString("word"));
+                    }
                     dbNote.setRow(noteJson.getInt("row"));
                     dbNote.setColumn(noteJson.getInt("column"));
                     dbNote.setBend((float) noteJson.getDouble("bend"));
                     dbNote.setSongId(dbSongs.get(i).getId());
-
-                    // add the note to the transaction
-                    NoteDbHandler.insertNote(dbNote);
+                    dbNote.save();
                 }
 
                 // save sections
                 JSONArray sectionsArray = songJson.getJSONArray("sections");
                 for (int j = 0; j < sectionsArray.length(); j++) {
                     JSONObject sectionJson = sectionsArray.getJSONObject(j);
+                    sectionJsons.add(sectionJson);
 
                     // populate the section
                     DbSection dbSection = new DbSection();
                     dbSection.setName(sectionJson.getString("name"));
                     dbSection.setRow(sectionJson.getInt("row"));
                     dbSection.setSongId(dbSongs.get(i).getId());
+                    dbSection.save();
+                    dbSections.add(dbSection);
+                }
+            }
 
-                    // add the section to the transaction
-                    SectionDbHandler.insertSection(dbSection);
+            // set the transaction successful
+            ActiveAndroid.setTransactionSuccessful();
+        } catch (JSONException e) {
+            return;
+        } finally {
+            ActiveAndroid.endTransaction();
+        }
+
+        // start parsing the scroll timers
+        try {
+            ActiveAndroid.beginTransaction();
+            for (int i = 0; i < sectionJsons.size(); i++) {
+                JSONObject sectionJson = sectionJsons.get(i);
+                JSONArray scrollTimersArray = sectionJson.getJSONArray("scroll_timers");
+                for (int j = 0; j < scrollTimersArray.length(); j++) {
+                    JSONObject scrollTimerJson = scrollTimersArray.getJSONObject(j);
+
+                    // populate the scroll timer
+                    DbScrollTimer dbScrollTimer = new DbScrollTimer();
+                    dbScrollTimer.setTime(scrollTimerJson.getInt("time"));
+                    dbScrollTimer.setSectionLine(scrollTimerJson.getInt("line"));
+                    dbScrollTimer.setSectionId(dbSections.get(i).getId());
+                    dbScrollTimer.setSongId(dbSections.get(i).getSongId());
+                    dbScrollTimer.save();
                 }
             }
 

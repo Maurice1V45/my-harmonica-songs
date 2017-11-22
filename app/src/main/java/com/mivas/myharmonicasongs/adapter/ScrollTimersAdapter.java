@@ -42,6 +42,8 @@ public class ScrollTimersAdapter extends RecyclerView.Adapter<ScrollTimersAdapte
         // set text
         holder.timeText.setText(TimeUtils.toDisplayTime(dbScrollTimers.get(position).getTime()));
         holder.sectionText.setText(SectionDbHandler.getSectionById(dbScrollTimers.get(position).getSectionId()).getName());
+        String lineText = "L" + (dbScrollTimers.get(position).getSectionLine() + 1);
+        holder.sectionLineText.setText(lineText);
 
         // set listeners
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +67,13 @@ public class ScrollTimersAdapter extends RecyclerView.Adapter<ScrollTimersAdapte
                 listener.onSectionSelected(dbScrollTimers.get(position));
             }
         });
+        holder.sectionLineText.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                listener.onSectionLineSelected(dbScrollTimers.get(position));
+            }
+        });
     }
 
     @Override
@@ -75,12 +84,14 @@ public class ScrollTimersAdapter extends RecyclerView.Adapter<ScrollTimersAdapte
     static class ScrollTimerViewHolder extends RecyclerView.ViewHolder {
         TextView timeText;
         TextView sectionText;
+        TextView sectionLineText;
         View deleteButton;
 
         ScrollTimerViewHolder(View itemView) {
             super(itemView);
             timeText = itemView.findViewById(R.id.text_time);
             sectionText = itemView.findViewById(R.id.text_section);
+            sectionLineText = itemView.findViewById(R.id.text_section_line);
             deleteButton = itemView.findViewById(R.id.button_delete);
         }
     }

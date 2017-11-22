@@ -1117,16 +1117,23 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         });
     }
 
-    public void smoothScrollToSection(final long sectionId) {
+    public void smoothScrollToSection(final long sectionId, final int sectionLine) {
         verticalScrollView.post(new Runnable() {
 
             @Override
             public void run() {
-                for (CellLine cellLine : cellLines) {
+                for (int i = 0; i < cellLines.size(); i++) {
+                    CellLine cellLine = cellLines.get(i);
                     if (cellLine.getSectionCell() != null && cellLine.getSectionCell().getDbSection() != null && cellLine.getSectionCell().getDbSection().getId() == sectionId) {
-                        verticalScrollView.smoothScrollTo(0, cellLine.getLayout().getTop());
+                        int sum = i + sectionLine;
+                        if (sum < cellLines.size()) {
+                            CellLine finalCellLine = cellLines.get(sum);
+                            verticalScrollView.smoothScrollTo(0, finalCellLine.getLayout().getTop());
+                        }
+                        return;
                     }
                 }
+
             }
         });
     }

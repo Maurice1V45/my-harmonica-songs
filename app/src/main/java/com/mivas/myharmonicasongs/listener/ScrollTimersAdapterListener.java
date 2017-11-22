@@ -7,4 +7,5 @@ public interface ScrollTimersAdapterListener {
     void onScrollTimerDeleted(DbScrollTimer dbScrollTimer);
     void onTimeSelected(DbScrollTimer dbScrollTimer);
     void onSectionSelected(DbScrollTimer dbScrollTimer);
+    void onSectionLineSelected(DbScrollTimer dbScrollTimer);
 }
