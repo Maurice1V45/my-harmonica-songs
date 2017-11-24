@@ -51,6 +51,7 @@ public class Constants {
     public static final int DEFAULT_SECTION_BAR_TEXT_COLOR = 0xff000000;
     public static final int DEFAULT_SECTION_BAR_BACKGROUND = 0xffffffff;
     public static final boolean DEFAULT_SCROLL_TIMERS_ENABLED = false;
+    public static final boolean DEFAULT_PLAY_NOTE_SOUND = false;
 
     /* Current customizations */
     public static final String PREF_CURRENT_NOTE_BLOW_SIGN = "pref_current_note_blow_sign";
@@ -71,6 +72,7 @@ public class Constants {
     public static final String PREF_CURRENT_SECTION_BAR_TEXT_COLOR = "pref_current_section_bar_text_color";
     public static final String PREF_CURRENT_SECTION_BAR_BACKGROUND = "pref_current_section_bar_background";
     public static final String PREF_CURRENT_SCROLL_TIMERS_ENABLED = "pref_current_scroll_timers_enabled";
+    public static final String PREF_CURRENT_PLAY_NOTE_SOUND = "pref_current_play_note_sound";
 
     /* Misc */
     public static final String SEPARATOR_AUDIO_FILE = "%&#";

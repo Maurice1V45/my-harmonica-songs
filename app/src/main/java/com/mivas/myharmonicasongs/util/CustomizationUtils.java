@@ -83,6 +83,10 @@ public class CustomizationUtils {
         return PreferencesUtils.getPreferences().getBoolean(Constants.PREF_CURRENT_SCROLL_TIMERS_ENABLED, Constants.DEFAULT_SCROLL_TIMERS_ENABLED);
     }
 
+    public static boolean getPlayNoteSound() {
+        return PreferencesUtils.getPreferences().getBoolean(Constants.PREF_CURRENT_PLAY_NOTE_SOUND, Constants.DEFAULT_PLAY_NOTE_SOUND);
+    }
+
     public static StateListDrawable createNoteBackground(Context context, int backgroundColor) {
         StateListDrawable stateListDrawable = new StateListDrawable();
         GradientDrawable normalShape = new GradientDrawable();

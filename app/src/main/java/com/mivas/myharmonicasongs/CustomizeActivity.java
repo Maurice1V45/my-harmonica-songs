@@ -45,6 +45,7 @@ public class CustomizeActivity extends AppCompatActivity {
     private View backgroundColorColorView;
     private Switch showBendsSwitch;
     private Switch showMediaPlayerSwitch;
+    private Switch playNoteSoundSwitch;
     private BroadcastReceiver customizationReceiver = new BroadcastReceiver() {
 
         @Override
@@ -101,6 +102,7 @@ public class CustomizeActivity extends AppCompatActivity {
                         PreferencesUtils.storePreference(Constants.PREF_CURRENT_SECTION_BAR_STYLE, Constants.DEFAULT_SECTION_BAR_STYLE);
                         PreferencesUtils.storePreference(Constants.PREF_CURRENT_SECTION_BAR_TEXT_COLOR, Constants.DEFAULT_SECTION_BAR_TEXT_COLOR);
                         PreferencesUtils.storePreference(Constants.PREF_CURRENT_SECTION_BAR_BACKGROUND, Constants.DEFAULT_SECTION_BAR_BACKGROUND);
+                        PreferencesUtils.storePreference(Constants.PREF_CURRENT_PLAY_NOTE_SOUND, Constants.DEFAULT_PLAY_NOTE_SOUND);
 
                         // show toast
                         CustomToast.makeText(CustomizeActivity.this, R.string.customize_activity_toast_customizations_reset, Toast.LENGTH_SHORT).show();
@@ -151,6 +153,7 @@ public class CustomizeActivity extends AppCompatActivity {
         backgroundColorColorView = findViewById(R.id.view_background_color_color);
         showBendsSwitch = findViewById(R.id.switch_show_bends);
         showMediaPlayerSwitch = findViewById(R.id.switch_show_media_player);
+        playNoteSoundSwitch = findViewById(R.id.switch_play_note_sound);
     }
 
     /**
@@ -229,6 +232,14 @@ public class CustomizeActivity extends AppCompatActivity {
                 sendCustomizationsUpdatedBroadcast();
             }
         });
+        playNoteSoundSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                PreferencesUtils.storePreference(Constants.PREF_CURRENT_PLAY_NOTE_SOUND, isChecked);
+                sendCustomizationsUpdatedBroadcast();
+            }
+        });
     }
 
     private void startCustomizeNoteActivity(boolean blow) {
@@ -253,6 +264,7 @@ public class CustomizeActivity extends AppCompatActivity {
         backgroundColorColorView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeActivity.this, 6, CustomizationUtils.getBackgroundColor()));
         showBendsSwitch.setChecked(CustomizationUtils.getShowBends());
         showMediaPlayerSwitch.setChecked(CustomizationUtils.getShowMediaPlayer());
+        playNoteSoundSwitch.setChecked(CustomizationUtils.getPlayNoteSound());
     }
 
     @Override

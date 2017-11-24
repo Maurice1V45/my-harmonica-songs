@@ -12,9 +12,6 @@ import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.listener.SongDialogListener;
 import com.mivas.myharmonicasongs.util.SongKeyUtils;
 
-/**
- * Adapter for note picker.
- */
 public class KeyPickerAdapter extends RecyclerView.Adapter<KeyPickerAdapter.KeyViewHolder> {
 
     private Context context;
@@ -76,8 +73,8 @@ public class KeyPickerAdapter extends RecyclerView.Adapter<KeyPickerAdapter.KeyV
 
         KeyViewHolder(View itemView) {
             super(itemView);
-            keyText = (TextView) itemView.findViewById(R.id.text_key);
-            minorText = (TextView) itemView.findViewById(R.id.text_minor);
+            keyText = itemView.findViewById(R.id.text_key);
+            minorText = itemView.findViewById(R.id.text_minor);
             parentView = itemView.findViewById(R.id.view_parent);
         }
     }

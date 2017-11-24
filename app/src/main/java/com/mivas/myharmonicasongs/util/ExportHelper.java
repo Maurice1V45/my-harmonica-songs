@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -179,6 +180,7 @@ public class ExportHelper {
             // set the transaction successful
             ActiveAndroid.setTransactionSuccessful();
         } catch (JSONException e) {
+            sendSongsUpdatedIntent(dbSongs);
             return;
         } finally {
             ActiveAndroid.endTransaction();
@@ -226,6 +228,7 @@ public class ExportHelper {
             // set the transaction successful
             ActiveAndroid.setTransactionSuccessful();
         } catch (JSONException e) {
+            sendSongsUpdatedIntent(dbSongs);
             return;
         } finally {
             ActiveAndroid.endTransaction();
@@ -236,29 +239,36 @@ public class ExportHelper {
             ActiveAndroid.beginTransaction();
             for (int i = 0; i < sectionJsons.size(); i++) {
                 JSONObject sectionJson = sectionJsons.get(i);
-                JSONArray scrollTimersArray = sectionJson.getJSONArray("scroll_timers");
-                for (int j = 0; j < scrollTimersArray.length(); j++) {
-                    JSONObject scrollTimerJson = scrollTimersArray.getJSONObject(j);
+                if (sectionJson.has("scroll_timers")) {
+                    JSONArray scrollTimersArray = sectionJson.getJSONArray("scroll_timers");
+                    for (int j = 0; j < scrollTimersArray.length(); j++) {
+                        JSONObject scrollTimerJson = scrollTimersArray.getJSONObject(j);
 
-                    // populate the scroll timer
-                    DbScrollTimer dbScrollTimer = new DbScrollTimer();
-                    dbScrollTimer.setTime(scrollTimerJson.getInt("time"));
-                    dbScrollTimer.setSectionLine(scrollTimerJson.getInt("line"));
-                    dbScrollTimer.setSectionId(dbSections.get(i).getId());
-                    dbScrollTimer.setSongId(dbSections.get(i).getSongId());
-                    dbScrollTimer.save();
+                        // populate the scroll timer
+                        DbScrollTimer dbScrollTimer = new DbScrollTimer();
+                        dbScrollTimer.setTime(scrollTimerJson.getInt("time"));
+                        dbScrollTimer.setSectionLine(scrollTimerJson.getInt("line"));
+                        dbScrollTimer.setSectionId(dbSections.get(i).getId());
+                        dbScrollTimer.setSongId(dbSections.get(i).getSongId());
+                        dbScrollTimer.save();
+                    }
                 }
             }
 
             // set the transaction successful
             ActiveAndroid.setTransactionSuccessful();
         } catch (JSONException e) {
+            sendSongsUpdatedIntent(dbSongs);
             return;
         } finally {
             ActiveAndroid.endTransaction();
         }
 
         // send broadcast receiver
+        sendSongsUpdatedIntent(dbSongs);
+    }
+
+    private void sendSongsUpdatedIntent(List<DbSong> dbSongs) {
         Intent intent = new Intent(Constants.INTENT_SONGS_UPDATED);
         intent.putExtra(Constants.EXTRA_SONGS_UPDATED_COUNT, dbSongs.size());
         MHSApplication.getInstance().getApplicationContext().sendBroadcast(intent);

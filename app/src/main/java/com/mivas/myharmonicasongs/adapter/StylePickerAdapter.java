@@ -14,9 +14,6 @@ import com.mivas.myharmonicasongs.util.StyleUtils;
 
 import java.util.List;
 
-/**
- * Adapter for style picker.
- */
 public class StylePickerAdapter extends RecyclerView.Adapter<StylePickerAdapter.SignViewHolder> {
 
     private Context context;
@@ -78,7 +75,7 @@ public class StylePickerAdapter extends RecyclerView.Adapter<StylePickerAdapter.
 
         SignViewHolder(View itemView) {
             super(itemView);
-            styleText = (TextView) itemView.findViewById(R.id.text_style);
+            styleText = itemView.findViewById(R.id.text_style);
         }
     }
 

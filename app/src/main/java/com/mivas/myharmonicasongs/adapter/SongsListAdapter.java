@@ -19,9 +19,6 @@ import com.mivas.myharmonicasongs.util.SongKeyUtils;
 
 import java.util.List;
 
-/**
- * Adapter for songs list.
- */
 public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.SongViewHolder> {
 
     private List<DbSong> songs;
@@ -127,10 +124,10 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
 
         SongViewHolder(View itemView) {
             super(itemView);
-            titleText = (TextView) itemView.findViewById(R.id.text_title);
-            authorText = (TextView) itemView.findViewById(R.id.text_author);
-            keyText = (TextView) itemView.findViewById(R.id.text_key);
-            minorText = (TextView) itemView.findViewById(R.id.text_minor);
+            titleText = itemView.findViewById(R.id.text_title);
+            authorText = itemView.findViewById(R.id.text_author);
+            keyText = itemView.findViewById(R.id.text_key);
+            minorText = itemView.findViewById(R.id.text_minor);
             moreButton = itemView.findViewById(R.id.button_more);
             songView = itemView.findViewById(R.id.view_song);
             audioFileIcon = itemView.findViewById(R.id.icon_audio_file);

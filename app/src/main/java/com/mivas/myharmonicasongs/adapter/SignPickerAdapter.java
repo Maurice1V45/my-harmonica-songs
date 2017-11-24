@@ -12,9 +12,6 @@ import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.listener.CustomizeNoteActivityListener;
 import com.mivas.myharmonicasongs.util.NoteSignUtils;
 
-/**
- * Adapter for sign picker.
- */
 public class SignPickerAdapter extends RecyclerView.Adapter<SignPickerAdapter.SignViewHolder> {
 
     private Context context;
@@ -69,7 +66,7 @@ public class SignPickerAdapter extends RecyclerView.Adapter<SignPickerAdapter.Si
 
         SignViewHolder(View itemView) {
             super(itemView);
-            signText = (TextView) itemView.findViewById(R.id.text_sign);
+            signText = itemView.findViewById(R.id.text_sign);
         }
     }
 

@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.mivas.myharmonicasongs.adapter.NotePickerAdapter;
 import com.mivas.myharmonicasongs.adapter.NotePickerAdapterBends;
 import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.database.model.DbSection;
+import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.dialog.InsertNoteDialog;
 import com.mivas.myharmonicasongs.listener.InsertNoteDialogListener;
 import com.mivas.myharmonicasongs.listener.NotePickerAdapterListener;
@@ -30,12 +32,14 @@ import com.mivas.myharmonicasongs.model.Cell;
 import com.mivas.myharmonicasongs.model.CellLine;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
+import com.mivas.myharmonicasongs.util.FrequencyUtils;
 import com.mivas.myharmonicasongs.util.KeyboardUtils;
 
 public class NotePickerView extends RelativeLayout implements NotePickerAdapterListener, InsertNoteDialogListener {
 
     private Context context;
     private DbNote dbNote;
+    private DbSong dbSong;
     private RecyclerView notesList;
     private View notesLayout;
     private NotePickerViewListener listener;
@@ -61,6 +65,7 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
     private boolean bendsAdapter;
     private boolean showBends;
     private boolean copiedNotes;
+    private boolean playNoteSound;
 
     public NotePickerView(Context context) {
         super(context);
@@ -104,6 +109,7 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
         notesLayout = findViewById(R.id.layout_notes);
         notesList = findViewById(R.id.list_harmonica_notes);
         notesList.setLayoutManager(new LinearLayoutManager(context, LinearLayout.HORIZONTAL, false));
+        playNoteSound = CustomizationUtils.getPlayNoteSound();
         showBends = CustomizationUtils.getShowBends();
         if (showBends) {
             bendsAdapter = true;
@@ -311,6 +317,10 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
     @Override
     public void onNoteSelected(int note, boolean blow, float bend) {
         if (isEnabled()) {
+
+            if (playNoteSound) {
+                FrequencyUtils.playSound(FrequencyUtils.getFrequency(note, blow, bend, dbSong.getKey()));
+            }
             dbNote.setHole(note);
             dbNote.setBlow(blow);
             dbNote.setBend(bend);
@@ -324,6 +334,10 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
 
     public void setDbNote(DbNote dbNote) {
         this.dbNote = dbNote;
+    }
+
+    public void setDbSong(DbSong dbSong) {
+        this.dbSong = dbSong;
     }
 
     public void setListener(NotePickerViewListener listener) {
@@ -376,6 +390,10 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
 
     public void setCopiedNotes(boolean copiedNotes) {
         this.copiedNotes = copiedNotes;
+    }
+
+    public void setPlayNoteSound(boolean playNoteSound) {
+        this.playNoteSound = playNoteSound;
     }
 
     public void animate(final boolean expand) {

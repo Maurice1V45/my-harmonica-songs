@@ -40,7 +40,6 @@ public class SettingsActivity extends AppCompatActivity {
     private View backupView;
     private View restoreView;
     private View creditsView;
-    private View qaView;
     private View rateAppView;
     private View feedbackView;
     private TextView versionText;
@@ -78,7 +77,6 @@ public class SettingsActivity extends AppCompatActivity {
         importView = findViewById(R.id.view_import);
         backupView = findViewById(R.id.view_backup);
         restoreView = findViewById(R.id.view_restore);
-        qaView = findViewById(R.id.view_qa);
         creditsView = findViewById(R.id.view_credits);
         rateAppView = findViewById(R.id.view_rate_app);
         feedbackView = findViewById(R.id.view_feedback);
@@ -151,13 +149,6 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 });
                 builder.create().show();
-            }
-        });
-        qaView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SettingsActivity.this, QaActivity.class);
-                startActivity(intent);
             }
         });
         creditsView.setOnClickListener(new View.OnClickListener() {

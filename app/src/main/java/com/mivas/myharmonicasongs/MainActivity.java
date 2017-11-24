@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
             if (intent.hasExtra(Constants.EXTRA_SONGS_UPDATED_COUNT)) {
                 int songsImported = intent.getIntExtra(Constants.EXTRA_SONGS_UPDATED_COUNT, 0);
                 if (songsImported == 0) {
-                    CustomToast.makeText(MainActivity.this, songsImported + " " + getString(R.string.settings_activity_toast_no_song_imported), Toast.LENGTH_SHORT).show();
+                    CustomToast.makeText(MainActivity.this, getString(R.string.settings_activity_toast_no_song_imported), Toast.LENGTH_SHORT).show();
                 } else if (songsImported == 1) {
                     CustomToast.makeText(MainActivity.this, songsImported + " " + getString(R.string.settings_activity_toast_song_imported), Toast.LENGTH_SHORT).show();
                 } else {

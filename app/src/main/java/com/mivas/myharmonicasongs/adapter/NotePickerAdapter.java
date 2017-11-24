@@ -13,12 +13,6 @@ import com.mivas.myharmonicasongs.listener.NotePickerAdapterListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-
-/**
- * Adapter for note picker.
- */
 public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.NoteViewHolder> {
 
     private Context context;
@@ -103,8 +97,8 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
 
         NoteViewHolder(View itemView) {
             super(itemView);
-            upperNote = (TextView) itemView.findViewById(R.id.text_upper_note);
-            lowerNote = (TextView) itemView.findViewById(R.id.text_lower_note);
+            upperNote = itemView.findViewById(R.id.text_upper_note);
+            lowerNote = itemView.findViewById(R.id.text_lower_note);
             borderLeft = itemView.findViewById(R.id.border_left);
             borderRight = itemView.findViewById(R.id.border_right);
         }

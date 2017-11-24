@@ -277,8 +277,9 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
                 nextNote = i < (dbNotes.size() - 1) ? dbNotes.get(i + 1) : null;
             }
         }
-
+        notePickerView.setDbSong(dbSong);
         notePickerView.setShowBends(CustomizationUtils.getShowBends());
+        notePickerView.setPlayNoteSound(CustomizationUtils.getPlayNoteSound());
 
     }
 

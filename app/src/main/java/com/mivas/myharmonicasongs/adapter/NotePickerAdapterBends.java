@@ -16,9 +16,6 @@ import com.mivas.myharmonicasongs.util.CustomizationUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Adapter for note picker.
- */
 public class NotePickerAdapterBends extends RecyclerView.Adapter<NotePickerAdapterBends.NoteViewHolder> {
 
     private Context context;
@@ -183,13 +180,13 @@ public class NotePickerAdapterBends extends RecyclerView.Adapter<NotePickerAdapt
 
         NoteViewHolder(View itemView) {
             super(itemView);
-            upperNoteBend2 = (TextView) itemView.findViewById(R.id.text_upper_note_bend2);
-            upperNoteBend1 = (TextView) itemView.findViewById(R.id.text_upper_note_bend1);
-            upperNote = (TextView) itemView.findViewById(R.id.text_upper_note);
-            lowerNote = (TextView) itemView.findViewById(R.id.text_lower_note);
-            lowerNoteBend1 = (TextView) itemView.findViewById(R.id.text_lower_note_bend1);
-            lowerNoteBend2 = (TextView) itemView.findViewById(R.id.text_lower_note_bend2);
-            lowerNoteBend3 = (TextView) itemView.findViewById(R.id.text_lower_note_bend3);
+            upperNoteBend2 = itemView.findViewById(R.id.text_upper_note_bend2);
+            upperNoteBend1 = itemView.findViewById(R.id.text_upper_note_bend1);
+            upperNote = itemView.findViewById(R.id.text_upper_note);
+            lowerNote = itemView.findViewById(R.id.text_lower_note);
+            lowerNoteBend1 = itemView.findViewById(R.id.text_lower_note_bend1);
+            lowerNoteBend2 = itemView.findViewById(R.id.text_lower_note_bend2);
+            lowerNoteBend3 = itemView.findViewById(R.id.text_lower_note_bend3);
             borderLeft = itemView.findViewById(R.id.border_left);
             borderRight = itemView.findViewById(R.id.border_right);
         }
