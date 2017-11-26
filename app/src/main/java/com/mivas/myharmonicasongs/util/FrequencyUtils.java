@@ -203,7 +203,7 @@ public class FrequencyUtils {
     }
 
     public static final double getFrequency(int hole, boolean blow, float bend, int key) {
-        int frequencyIndex = 36;
+        int frequencyIndex = 48;
         frequencyIndex += keyOffsetMap.get(key);
         frequencyIndex += getNoteOffset(hole, blow, bend);
         return frequenciesList.get(frequencyIndex);
