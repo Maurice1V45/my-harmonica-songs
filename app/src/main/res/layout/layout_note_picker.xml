@@ -263,9 +263,9 @@
             android:id="@+id/button_cancel"
             android:layout_width="@dimen/bu4"
             android:layout_height="@dimen/bu4"
-            android:layout_toLeftOf="@id/button_done"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/bu0_5"
+            android:layout_toLeftOf="@id/button_done"
             android:background="@drawable/selector_note_picker_button"
             android:clickable="true">
 
@@ -285,9 +285,9 @@
             android:layout_alignParentStart="true"
             android:layout_marginBottom="@dimen/bu0_5"
             android:layout_marginLeft="@dimen/bu0_5"
-            android:layout_toLeftOf="@id/button_cancel"
             android:layout_marginRight="@dimen/bu0_5"
             android:layout_marginTop="@dimen/bu0_5"
+            android:layout_toLeftOf="@id/button_cancel"
             android:background="@drawable/shape_note_picker_button"
             android:gravity="center_vertical"
             android:hint="@string/note_picker_view_hint_text"
@@ -335,9 +335,9 @@
             android:id="@+id/button_section_cancel"
             android:layout_width="@dimen/bu4"
             android:layout_height="@dimen/bu4"
-            android:layout_toLeftOf="@+id/button_section_done"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/bu0_5"
+            android:layout_toLeftOf="@+id/button_section_done"
             android:background="@drawable/selector_note_picker_button"
             android:clickable="true">
 
@@ -358,8 +358,8 @@
             android:layout_marginBottom="@dimen/bu0_5"
             android:layout_marginLeft="@dimen/bu0_5"
             android:layout_marginRight="@dimen/bu0_5"
-            android:layout_toLeftOf="@+id/button_section_cancel"
             android:layout_marginTop="@dimen/bu0_5"
+            android:layout_toLeftOf="@+id/button_section_cancel"
             android:background="@drawable/shape_note_picker_button"
             android:gravity="center_vertical"
             android:hint="@string/note_picker_view_hint_section_text"

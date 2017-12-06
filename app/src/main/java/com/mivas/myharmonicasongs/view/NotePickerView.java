@@ -190,7 +190,7 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
                 } else {
                     notesList.setAdapter(new NotePickerAdapter(context, NotePickerView.this, dbNote));
                 }
-                listener.onBendsSelected(showBends, cellLine);
+                listener.onBendsSelected(showBends, cellLine, cell);
             }
         });
         copyButton.setOnClickListener(new OnClickListener() {
@@ -249,7 +249,11 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     dbNote.setWord(textField.getText().toString());
-                    listener.onNoteEdited(cellLine, cell, true);
+                    if (cellLine.getCells().indexOf(cell) < cellLine.getCells().size() - 2) {
+                        listener.onNoteEdited(cellLine, cell, true, false);
+                    } else {
+                        listener.onNoteEdited(cellLine, cell, false, true);
+                    }
                 }
                 return true;
             }
@@ -259,7 +263,7 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
             @Override
             public void onClick(View v) {
                 dbNote.setWord(null);
-                listener.onNoteEdited(cellLine, cell, true);
+                listener.onNoteEdited(cellLine, cell, true, false);
             }
         });
         doneButton.setOnClickListener(new OnClickListener() {
@@ -268,7 +272,7 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
             public void onClick(View v) {
                 dbNote.setWord(textField.getText().toString());
                 closeTextMode(true);
-                listener.onNoteEdited(cellLine, cell, false);
+                listener.onNoteEdited(cellLine, cell, false, false);
             }
         });
         sectionTextField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -325,7 +329,7 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
             dbNote.setBlow(blow);
             dbNote.setBend(bend);
             if (editMode) {
-                listener.onNoteEdited(cellLine, cell, true);
+                listener.onNoteEdited(cellLine, cell, true, false);
             } else {
                 listener.onNoteAdded(cellLine, cell, dbNote);
             }

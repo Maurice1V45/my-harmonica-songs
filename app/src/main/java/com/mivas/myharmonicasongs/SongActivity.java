@@ -344,7 +344,7 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
 
     @Override
     public void onSectionSelected(CellLine cellLine) {
-        tablatureView.smoothScrollToCellLine(cellLine);
+        tablatureView.smoothScrollToCellLine(cellLine, null);
     }
 
     @Override

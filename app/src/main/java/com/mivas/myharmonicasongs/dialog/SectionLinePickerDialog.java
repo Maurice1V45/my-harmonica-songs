@@ -38,7 +38,7 @@ public class SectionLinePickerDialog extends DialogFragment {
     private void initViews(View rootView) {
         numberPicker = rootView.findViewById(R.id.numberpicker);
         numberPicker.setMinValue(1);
-        numberPicker.setMaxValue(9);
+        numberPicker.setMaxValue(99);
         okButton = rootView.findViewById(R.id.button_ok);
         if (dbScrollTimer != null) {
             numberPicker.setValue(dbScrollTimer.getSectionLine() + 1);

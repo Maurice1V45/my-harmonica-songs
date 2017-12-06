@@ -2,10 +2,13 @@ package com.mivas.myharmonicasongs.view;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +60,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     private TablatureListener listener;
     private NotePickerView notePickerView;
     private ScrollView verticalScrollView;
+    private HorizontalScrollView horizontalScrollView;
     private Cell selectedCell;
 
     //customizations
@@ -72,6 +76,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     private int sectionTextColor;
 
     // measures
+    private int MEASURE_SCREEN_WIDTH;
     private int MEASURE_CELL_WIDTH;
     private int MEASURE_CELL_HEIGHT;
     private int MEASURE_CELL_MARGIN;
@@ -147,7 +152,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         addView(verticalScrollView);
 
         // init horizontalscrollview
-        HorizontalScrollView horizontalScrollView = new HorizontalScrollView(context);
+        horizontalScrollView = new HorizontalScrollView(context);
         RelativeLayout.LayoutParams horizontalScrollLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         horizontalScrollView.setLayoutParams(horizontalScrollLayoutParams);
         horizontalScrollView.setPadding(MEASURE_TABLATURE_PADDING, 0, MEASURE_TABLATURE_PADDING, 0);
@@ -172,6 +177,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     }
 
     private void initMeasures() {
+        MEASURE_SCREEN_WIDTH = getScreenWidth();
         MEASURE_CELL_WIDTH = DimensionUtils.dpToPx(context, 48);
         MEASURE_CELL_HEIGHT = DimensionUtils.dpToPx(context, 66);
         MEASURE_CELL_MARGIN = DimensionUtils.dpToPx(context, 3);
@@ -314,13 +320,15 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     }
 
     @Override
-    public void onNoteEdited(CellLine cellLine, Cell cell, boolean moveToNext) {
+    public void onNoteEdited(CellLine cellLine, Cell cell, boolean moveToNextCell, boolean moveToNextLine) {
         DbNote dbNote = cell.getDbNote();
         NoteDbHandler.insertNote(dbNote);
         updateCellViews(cell);
 
-        if (moveToNext) {
+        if (moveToNextCell) {
             jumpToNextCell(cellLine, cell);
+        } else if (moveToNextLine) {
+            jumpToNextLine(cellLine);
         } else {
             jumpToCell(cellLine, cell);
         }
@@ -461,9 +469,9 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     }
 
     @Override
-    public void onBendsSelected(boolean bends, CellLine cellLine) {
+    public void onBendsSelected(boolean bends, CellLine cellLine, Cell cell) {
         setVerticalScrollBottomPadding(true, bends);
-        smoothScrollToCellLine(cellLine);
+        smoothScrollToCellLine(cellLine, cell);
     }
 
     @Override
@@ -861,7 +869,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     private void selectAndScrollCell(CellLine cellLine, Cell cell) {
         setSelectedCell(cell);
         setVerticalScrollBottomPadding(true, notePickerView.isShowBends());
-        smoothScrollToCellLine(cellLine);
+        smoothScrollToCellLine(cellLine, cell);
         if (!notePickerView.isNotePickerDisplayed()) {
             notePickerView.animate(true);
         }
@@ -877,25 +885,58 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         setSelectedCell(nextCell);
 
         boolean isPlus = nextCell.getDbNote() == null;
-        DbNote dbNote = isPlus ? new DbNote() : nextCell.getDbNote();
-        dbNote.setRow(cellLines.indexOf(cellLine));
-        dbNote.setColumn(nextCellIndex);
-        dbNote.setSongId(dbSong.getId());
+        DbNote dbNote;
+        if (isPlus) {
+            dbNote = new DbNote();
+            dbNote.setRow(cellLines.indexOf(cellLine));
+            dbNote.setColumn(nextCellIndex);
+            dbNote.setSongId(dbSong.getId());
+        } else {
+            dbNote = nextCell.getDbNote();
+        }
         initializeNotePicker(cellLine, nextCell, dbNote, isPlus);
         setVerticalScrollBottomPadding(true, notePickerView.isShowBends());
-        smoothScrollToCellLine(cellLine);
+        smoothScrollToCellLine(cellLine, nextCell);
+    }
+
+    private void jumpToNextLine(CellLine cellLine) {
+        int cellLineIndex = cellLines.indexOf(cellLine);
+        if (cellLineIndex < cellLines.size() - 1) {
+            CellLine nextCellLine = cellLines.get(cellLineIndex + 1);
+            Cell cell = nextCellLine.getCells().get(0);
+            setSelectedCell(cell);
+
+            boolean isPlus = cell.getDbNote() == null;
+            DbNote dbNote;
+            if (isPlus) {
+                dbNote = new DbNote();
+                dbNote.setRow(cellLineIndex + 1);
+                dbNote.setColumn(0);
+                dbNote.setSongId(dbSong.getId());
+            } else {
+                dbNote = cell.getDbNote();
+            }
+            initializeNotePicker(nextCellLine, cell, dbNote, isPlus);
+            setVerticalScrollBottomPadding(true, notePickerView.isShowBends());
+            smoothScrollToCellLine(nextCellLine, cell);
+        }
     }
 
     private void jumpToCell(CellLine cellLine, Cell cell) {
         setSelectedCell(cell);
         boolean isPlus = cell.getDbNote() == null;
-        DbNote dbNote = isPlus ? new DbNote() : cell.getDbNote();
-        dbNote.setRow(cellLines.indexOf(cellLine));
-        dbNote.setColumn(cellLine.getCells().indexOf(cell));
-        dbNote.setSongId(dbSong.getId());
+        DbNote dbNote;
+        if (isPlus) {
+            dbNote = new DbNote();
+            dbNote.setRow(cellLines.indexOf(cellLine));
+            dbNote.setColumn(cellLine.getCells().indexOf(cell));
+            dbNote.setSongId(dbSong.getId());
+        } else {
+            dbNote = cell.getDbNote();
+        }
         initializeNotePicker(cellLine, cell, dbNote, isPlus);
         setVerticalScrollBottomPadding(true, notePickerView.isShowBends());
-        smoothScrollToCellLine(cellLine);
+        smoothScrollToCellLine(cellLine, cell);
     }
 
     private void jumpToPreviousCell(CellLine cellLine, Cell cell) {
@@ -908,13 +949,18 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         setSelectedCell(previousCell);
 
         boolean isPlus = previousCell.getDbNote() == null;
-        DbNote dbNote = isPlus ? new DbNote() : previousCell.getDbNote();
-        dbNote.setRow(cellLines.indexOf(cellLine));
-        dbNote.setColumn(previousCellIndex);
-        dbNote.setSongId(dbSong.getId());
+        DbNote dbNote;
+        if (isPlus) {
+            dbNote = new DbNote();
+            dbNote.setRow(cellLines.indexOf(cellLine));
+            dbNote.setColumn(previousCellIndex);
+            dbNote.setSongId(dbSong.getId());
+        } else {
+            dbNote = previousCell.getDbNote();
+        }
         initializeNotePicker(cellLine, previousCell, dbNote, isPlus);
         setVerticalScrollBottomPadding(true, notePickerView.isShowBends());
-        smoothScrollToCellLine(cellLine);
+        smoothScrollToCellLine(cellLine, previousCell);
     }
 
     private void addSectionCell(DbSection dbSection, CellLine cellLine, boolean animate) {
@@ -1108,14 +1154,38 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         }
     }
 
-    public void smoothScrollToCellLine(final CellLine cellLine) {
+    public void smoothScrollToCellLine(final CellLine cellLine, final Cell cell) {
         verticalScrollView.post(new Runnable() {
 
             @Override
             public void run() {
                 verticalScrollView.smoothScrollTo(0, cellLine.getLayout().getTop());
+                if (cell != null) {
+                    Rect cellBounds = new Rect();
+                    cell.getView().getHitRect(cellBounds);
+                    Rect scrollBounds = new Rect();
+                    horizontalScrollView.getDrawingRect(scrollBounds);
+                    if (cellBounds.right + MEASURE_TABLATURE_PADDING + MEASURE_CELL_MARGIN * 2 > scrollBounds.right) {
+                        horizontalScrollView.post(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                horizontalScrollView.smoothScrollTo(MEASURE_TABLATURE_PADDING + MEASURE_CELL_MARGIN * 2 + cell.getView().getRight() - MEASURE_SCREEN_WIDTH, 0);
+                            }
+                        });
+                    } else if (MEASURE_TABLATURE_PADDING + scrollBounds.left > cellBounds.left) {
+
+                        horizontalScrollView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                horizontalScrollView.smoothScrollTo(cell.getView().getLeft() - MEASURE_TABLATURE_PADDING, 0);
+                            }
+                        });
+                    }
+                }
             }
         });
+
     }
 
     public void smoothScrollToSection(final long sectionId, final int sectionLine) {
@@ -1151,6 +1221,12 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
 
     public List<CellLine> getCellLines() {
         return cellLines;
+    }
+
+    private int getScreenWidth() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
     }
 
 }

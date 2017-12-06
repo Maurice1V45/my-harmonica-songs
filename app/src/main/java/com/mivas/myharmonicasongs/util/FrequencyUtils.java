@@ -170,35 +170,43 @@ public class FrequencyUtils {
             soundData[i] = sample;
         }
 
-        AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC,
-                sampleRate,
-                AudioFormat.CHANNEL_OUT_DEFAULT,
-                AudioFormat.ENCODING_PCM_8BIT, soundData.length,
-                AudioTrack.MODE_STATIC
-        );
-        track.write(soundData, 0, soundData.length);
-        track.setNotificationMarkerPosition(soundData.length);
-        track.setPlaybackPositionUpdateListener(new AudioTrack.OnPlaybackPositionUpdateListener() {
+        try {
+            AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC,
+                    sampleRate,
+                    AudioFormat.CHANNEL_OUT_DEFAULT,
+                    AudioFormat.ENCODING_PCM_8BIT, soundData.length,
+                    AudioTrack.MODE_STATIC
+            );
+            track.write(soundData, 0, soundData.length);
+            track.setNotificationMarkerPosition(soundData.length);
+            track.setPlaybackPositionUpdateListener(new AudioTrack.OnPlaybackPositionUpdateListener() {
 
-            @Override
-            public void onMarkerReached(AudioTrack track) {
-                track.flush();
-                track.stop();
-                track.release();
+                @Override
+                public void onMarkerReached(AudioTrack track) {
+                    try {
+                        track.flush();
+                        track.stop();
+                        track.release();
+                    } catch (IllegalStateException e) {
+
+                    }
+                }
+
+                @Override
+                public void onPeriodicNotification(AudioTrack track) {
+
+                }
+            });
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                track.setVolume(SOUND_VOLUME);
+            } else {
+                track.setStereoVolume(SOUND_VOLUME, SOUND_VOLUME);
             }
 
-            @Override
-            public void onPeriodicNotification(AudioTrack track) {
+            track.play();
+        } catch (IllegalStateException e) {
 
-            }
-        });
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            track.setVolume(SOUND_VOLUME);
-        } else {
-            track.setStereoVolume(SOUND_VOLUME, SOUND_VOLUME);
         }
-
-        track.play();
 
     }
 
