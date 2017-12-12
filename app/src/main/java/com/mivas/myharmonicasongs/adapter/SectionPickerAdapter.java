@@ -1,9 +1,7 @@
 package com.mivas.myharmonicasongs.adapter;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +9,7 @@ import android.widget.TextView;
 
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbSection;
-import com.mivas.myharmonicasongs.listener.CustomizeNoteActivityListener;
 import com.mivas.myharmonicasongs.listener.SectionPickerAdapterListener;
-import com.mivas.myharmonicasongs.util.NoteSignUtils;
 
 import java.util.List;
 

@@ -74,6 +74,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     private int drawBackgroundColor;
     private int sectionStyle;
     private int sectionTextColor;
+    private int buttonStyle;
 
     // measures
     private int MEASURE_SCREEN_WIDTH;
@@ -205,6 +206,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         drawBackgroundColor = CustomizationUtils.getDrawBackgroundColor();
         sectionStyle = CustomizationUtils.getSectionStyle();
         sectionTextColor = CustomizationUtils.getSectionTextColor();
+        buttonStyle = CustomizationUtils.getButtonStyle();
     }
 
     public void initialize() {
@@ -284,8 +286,9 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
             }
         }
         notePickerView.setDbSong(dbSong);
-        notePickerView.setShowBends(CustomizationUtils.getShowBends());
+        notePickerView.setShowBends(dbSong.getHarpType() == 0 ? CustomizationUtils.getShowBends() : CustomizationUtils.getShowButton());
         notePickerView.setPlayNoteSound(CustomizationUtils.getPlayNoteSound());
+        notePickerView.getNotesList().setAdapter(null);
 
     }
 
@@ -715,10 +718,28 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         DbNote dbNote = cell.getDbNote();
         cell.getView().setBackground(CustomizationUtils.createNoteBackground(context, dbNote.isBlow() ? blowBackgroundColor : drawBackgroundColor));
         TextView noteTextView = (TextView) ((LinearLayout) cell.getView()).getChildAt(0);
-        if (dbNote.isBlow()) {
-            CustomizationUtils.styleNoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, CustomizationUtils.createNoteTextColor(blowTextColor));
-        } else {
-            CustomizationUtils.styleNoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, CustomizationUtils.createNoteTextColor(drawTextColor));
+        switch (dbSong.getHarpType()) {
+            case 0:
+                if (dbNote.isBlow()) {
+                    CustomizationUtils.styleDiatonic10NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, CustomizationUtils.createNoteTextColor(blowTextColor));
+                } else {
+                    CustomizationUtils.styleDiatonic10NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, CustomizationUtils.createNoteTextColor(drawTextColor));
+                }
+                break;
+            case 1:
+                if (dbNote.isBlow()) {
+                    CustomizationUtils.styleChromatic12NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, buttonStyle, CustomizationUtils.createNoteTextColor(blowTextColor));
+                } else {
+                    CustomizationUtils.styleChromatic12NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, buttonStyle, CustomizationUtils.createNoteTextColor(drawTextColor));
+                }
+                break;
+            case 2:
+                if (dbNote.isBlow()) {
+                    CustomizationUtils.styleChromatic16NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, buttonStyle, CustomizationUtils.createNoteTextColor(blowTextColor));
+                } else {
+                    CustomizationUtils.styleChromatic16NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, buttonStyle, CustomizationUtils.createNoteTextColor(drawTextColor));
+                }
+                break;
         }
         TextView wordTextView = (TextView) ((LinearLayout) cell.getView()).getChildAt(1);
         wordTextView.setText(dbNote.getWord());
@@ -746,10 +767,29 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         noteTextView.setLayoutParams(noteTextLayoutParams);
         noteTextView.setTextSize(MEASURE_NOTE_TEXT_SIZE);
         noteTextView.setMaxLines(1);
-        if (dbNote.isBlow()) {
-            CustomizationUtils.styleNoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, CustomizationUtils.createNoteTextColor(blowTextColor));
-        } else {
-            CustomizationUtils.styleNoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, CustomizationUtils.createNoteTextColor(drawTextColor));
+        switch (dbSong.getHarpType()) {
+            case 0:
+                if (dbNote.isBlow()) {
+                    CustomizationUtils.styleDiatonic10NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, CustomizationUtils.createNoteTextColor(blowTextColor));
+                } else {
+                    CustomizationUtils.styleDiatonic10NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, CustomizationUtils.createNoteTextColor(drawTextColor));
+                }
+                break;
+            case 1:
+                if (dbNote.isBlow()) {
+                    CustomizationUtils.styleChromatic12NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, buttonStyle, CustomizationUtils.createNoteTextColor(blowTextColor));
+                } else {
+                    CustomizationUtils.styleChromatic12NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, buttonStyle, CustomizationUtils.createNoteTextColor(drawTextColor));
+                }
+                break;
+            case 2:
+                if (dbNote.isBlow()) {
+                    CustomizationUtils.styleChromatic16NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, buttonStyle, CustomizationUtils.createNoteTextColor(blowTextColor));
+                } else {
+                    CustomizationUtils.styleChromatic16NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, buttonStyle, CustomizationUtils.createNoteTextColor(drawTextColor));
+                }
+                break;
+
         }
         noteLayout.addView(noteTextView);
 

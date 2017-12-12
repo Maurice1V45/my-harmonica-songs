@@ -1,7 +1,5 @@
 package com.mivas.myharmonicasongs.listener;
 
-import com.mivas.myharmonicasongs.CustomizeNoteActivity;
-
 /**
  * Listener for {@link com.mivas.myharmonicasongs.CustomizeSectionActivity}
  */

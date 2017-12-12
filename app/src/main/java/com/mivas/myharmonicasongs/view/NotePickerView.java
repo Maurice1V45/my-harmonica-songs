@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +13,18 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mivas.myharmonicasongs.R;
-import com.mivas.myharmonicasongs.adapter.NotePickerAdapter;
-import com.mivas.myharmonicasongs.adapter.NotePickerAdapterBends;
+import com.mivas.myharmonicasongs.adapter.Chromatic12NotePickerAdapter;
+import com.mivas.myharmonicasongs.adapter.Chromatic12NotePickerAdapterBends;
+import com.mivas.myharmonicasongs.adapter.Chromatic16NotePickerAdapter;
+import com.mivas.myharmonicasongs.adapter.Chromatic16NotePickerAdapterBends;
+import com.mivas.myharmonicasongs.adapter.Diatonic10NotePickerAdapter;
+import com.mivas.myharmonicasongs.adapter.Diatonic10NotePickerAdapterBends;
 import com.mivas.myharmonicasongs.database.model.DbNote;
 import com.mivas.myharmonicasongs.database.model.DbSection;
 import com.mivas.myharmonicasongs.database.model.DbSong;
@@ -55,6 +59,8 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
     private View cancelButton;
     private View doneButton;
     private View sectionTextLayout;
+    private ImageView bendsButtonImage;
+    private TextView bendsButtonText;
     private EditText sectionTextField;
     private View sectionCancelButton;
     private View sectionDoneButton;
@@ -93,6 +99,8 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
         inflater.inflate(R.layout.layout_note_picker, this, true);
         textButton = findViewById(R.id.button_text);
         bendsButton = findViewById(R.id.button_bends);
+        bendsButtonImage = findViewById(R.id.image_bends_button);
+        bendsButtonText = findViewById(R.id.text_bends_button);
         copyButton = findViewById(R.id.button_copy);
         pasteButton = findViewById(R.id.button_paste);
         insertButton = findViewById(R.id.button_insert);
@@ -109,19 +117,18 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
         notesLayout = findViewById(R.id.layout_notes);
         notesList = findViewById(R.id.list_harmonica_notes);
         notesList.setLayoutManager(new LinearLayoutManager(context, LinearLayout.HORIZONTAL, false));
-        playNoteSound = CustomizationUtils.getPlayNoteSound();
-        showBends = CustomizationUtils.getShowBends();
-        if (showBends) {
-            bendsAdapter = true;
-            notesList.setAdapter(new NotePickerAdapterBends(context, NotePickerView.this, dbNote));
-        } else {
-            bendsAdapter = false;
-            notesList.setAdapter(new NotePickerAdapter(context, NotePickerView.this, dbNote));
-        }
     }
 
     public void initialize() {
         setEnabled(true);
+        if (notesList.getAdapter() == null) {
+            setNewAdapter(showBends);
+            showBends = dbSong.getHarpType() == 0 ? CustomizationUtils.getShowBends() : CustomizationUtils.getShowButton();
+            bendsAdapter = showBends;
+            playNoteSound = CustomizationUtils.getPlayNoteSound();
+            bendsButtonImage.setImageResource(dbSong.getHarpType() == 0 ? R.drawable.icon_bends : R.drawable.icon_button);
+            bendsButtonText.setText(dbSong.getHarpType() == 0 ? R.string.note_picker_view_button_bends : R.string.note_picker_view_button_button);
+        }
         boolean lastPlus = cellLine.getCells().size() <= 1;
         textButton.setVisibility(editMode ? View.VISIBLE : View.INVISIBLE);
         copyButton.setVisibility(lastPlus ? View.INVISIBLE : View.VISIBLE);
@@ -131,19 +138,39 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
         showBends = showBends || dbNote.getBend() != 0;
         if (showBends) {
             if (bendsAdapter) {
-                ((NotePickerAdapterBends) notesList.getAdapter()).setSelectedNote(dbNote);
+                switch (dbSong.getHarpType()) {
+                    case 0:
+                        ((Diatonic10NotePickerAdapterBends) notesList.getAdapter()).setSelectedNote(dbNote);
+                        break;
+                    case 1:
+                        ((Chromatic12NotePickerAdapterBends) notesList.getAdapter()).setSelectedNote(dbNote);
+                        break;
+                    case 2:
+                        ((Chromatic16NotePickerAdapterBends) notesList.getAdapter()).setSelectedNote(dbNote);
+                        break;
+                }
                 notesList.getAdapter().notifyDataSetChanged();
             } else {
                 bendsAdapter = true;
-                notesList.setAdapter(new NotePickerAdapterBends(context, NotePickerView.this, dbNote));
+                setNewAdapter(true);
             }
         } else {
             if (!bendsAdapter) {
-                ((NotePickerAdapter) notesList.getAdapter()).setSelectedNote(dbNote);
+                switch (dbSong.getHarpType()) {
+                    case 0:
+                        ((Diatonic10NotePickerAdapter) notesList.getAdapter()).setSelectedNote(dbNote);
+                        break;
+                    case 1:
+                        ((Chromatic12NotePickerAdapter) notesList.getAdapter()).setSelectedNote(dbNote);
+                        break;
+                    case 2:
+                        ((Chromatic16NotePickerAdapter) notesList.getAdapter()).setSelectedNote(dbNote);
+                        break;
+                }
                 notesList.getAdapter().notifyDataSetChanged();
             } else {
                 bendsAdapter = false;
-                notesList.setAdapter(new NotePickerAdapter(context, NotePickerView.this, dbNote));
+                setNewAdapter(false);
             }
         }
         if (editMode) {
@@ -185,11 +212,7 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
             public void onClick(View v) {
                 showBends = !showBends;
                 bendsAdapter = showBends;
-                if (showBends) {
-                    notesList.setAdapter(new NotePickerAdapterBends(context, NotePickerView.this, dbNote));
-                } else {
-                    notesList.setAdapter(new NotePickerAdapter(context, NotePickerView.this, dbNote));
-                }
+                setNewAdapter(showBends);
                 listener.onBendsSelected(showBends, cellLine, cell);
             }
         });
@@ -319,7 +342,7 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
     }
 
     @Override
-    public void onNoteSelected(int note, boolean blow, float bend) {
+    public void onNoteSelected(int note, boolean blow, float bend, boolean button) {
         if (isEnabled()) {
 
             if (playNoteSound) {
@@ -501,5 +524,35 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
                 animate(true);
             }
         }
+    }
+
+    private void setNewAdapter(boolean bends) {
+        switch (dbSong.getHarpType()) {
+            case 0:
+                if (bends) {
+                    notesList.setAdapter(new Diatonic10NotePickerAdapterBends(context, NotePickerView.this, dbNote));
+                } else {
+                    notesList.setAdapter(new Diatonic10NotePickerAdapter(context, NotePickerView.this, dbNote));
+                }
+                break;
+            case 1:
+                if (bends) {
+                    notesList.setAdapter(new Chromatic12NotePickerAdapterBends(context, NotePickerView.this, dbNote));
+                } else {
+                    notesList.setAdapter(new Chromatic12NotePickerAdapter(context, NotePickerView.this, dbNote));
+                }
+                break;
+            case 2:
+                if (bends) {
+                    notesList.setAdapter(new Chromatic16NotePickerAdapterBends(context, NotePickerView.this, dbNote));
+                } else {
+                    notesList.setAdapter(new Chromatic16NotePickerAdapter(context, NotePickerView.this, dbNote));
+                }
+                break;
+        }
+    }
+
+    public RecyclerView getNotesList() {
+        return notesList;
     }
 }

@@ -1,15 +1,11 @@
 package com.mivas.myharmonicasongs;
 
-import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -49,7 +45,6 @@ import com.mivas.myharmonicasongs.view.NotePickerView;
 import com.mivas.myharmonicasongs.view.SectionBarView;
 import com.mivas.myharmonicasongs.view.TablatureView;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -197,6 +192,7 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
                 return true;
             case R.id.action_customize:
                 Intent intent = new Intent(SongActivity.this, CustomizeActivity.class);
+                intent.putExtra(Constants.EXTRA_HARP_TYPE, dbSong.getHarpType());
                 startActivity(intent);
                 return true;
             case R.id.action_toggle_media:
@@ -217,6 +213,7 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
                 NotesShiftDialog dialog = new NotesShiftDialog();
                 dialog.setDbNotes(dbNotes);
                 dialog.setListener(SongActivity.this);
+                dialog.setDbSong(dbSong);
                 dialog.show(getFragmentManager(), Constants.TAG_NOTES_SHIFT_DIALOG);
                 return true;
             default:
@@ -283,9 +280,9 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
     private void shiftNotes(boolean increase) {
         for (DbNote dbNote : dbNotes) {
             if (increase) {
-                NotesShiftUtils.increase(dbNote);
+                NotesShiftUtils.increase(dbNote, dbSong.getHarpType());
             } else {
-                NotesShiftUtils.decrease(dbNote);
+                NotesShiftUtils.decrease(dbNote, dbSong.getHarpType());
             }
         }
         ActiveAndroid.beginTransaction();

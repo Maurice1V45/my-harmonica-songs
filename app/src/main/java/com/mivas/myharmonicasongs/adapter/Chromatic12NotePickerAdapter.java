@@ -13,7 +13,7 @@ import com.mivas.myharmonicasongs.listener.NotePickerAdapterListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
 
-public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.NoteViewHolder> {
+public class Chromatic12NotePickerAdapter extends RecyclerView.Adapter<Chromatic12NotePickerAdapter.NoteViewHolder> {
 
     private Context context;
     private NotePickerAdapterListener listener;
@@ -26,8 +26,9 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
     private int drawStyle;
     private int drawTextColor;
     private int drawBackgroundColor;
+    private int buttonStyle;
 
-    public NotePickerAdapter(Context context, NotePickerAdapterListener listener, DbNote selectedNote) {
+    public Chromatic12NotePickerAdapter(Context context, NotePickerAdapterListener listener, DbNote selectedNote) {
         this.context = context;
         this.listener = listener;
         this.selectedNote = selectedNote;
@@ -39,6 +40,7 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
         drawStyle = CustomizationUtils.getDrawStyle();
         drawTextColor = CustomizationUtils.getDrawTextColor();
         drawBackgroundColor = CustomizationUtils.getDrawBackgroundColor();
+        buttonStyle = CustomizationUtils.getButtonStyle();
     }
 
     @Override
@@ -52,8 +54,8 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
         final int note = position + 1;
 
         // set hole text
-        CustomizationUtils.styleNoteText(holder.upperNote, note, 0f, blowSign, blowStyle, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
-        CustomizationUtils.styleNoteText(holder.lowerNote, note, 0f, drawSign, drawStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
+        CustomizationUtils.styleChromatic12NoteText(holder.upperNote, note, 0f, blowSign, blowStyle, buttonStyle, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
+        CustomizationUtils.styleChromatic12NoteText(holder.lowerNote, note, 0f, drawSign, drawStyle, buttonStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
 
         // set hole background
         holder.upperNote.setBackground(CustomizationUtils.createNotePickerBackground(context, blowBackgroundColor));
@@ -61,7 +63,7 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
 
         if (selectedNote != null && selectedNote.getHole() == position + 1 && selectedNote.getBend() == 0f) {
             TextView selectedView = selectedNote.isBlow() ? holder.upperNote : holder.lowerNote;
-            CustomizationUtils.styleNoteText(selectedView, note, selectedNote.getBend(), selectedNote.isBlow() ? blowSign : drawSign, selectedNote.isBlow() ? blowStyle : drawStyle, Constants.DEFAULT_COLOR_WHITE);
+            CustomizationUtils.styleChromatic12NoteText(selectedView, note, selectedNote.getBend(), selectedNote.isBlow() ? blowSign : drawSign, selectedNote.isBlow() ? blowStyle : drawStyle, buttonStyle, Constants.DEFAULT_COLOR_WHITE);
             selectedView.setBackground(CustomizationUtils.createSimpleBackground(context, 12, Constants.DEFAULT_COLOR_PRIMARY));
         }
 
@@ -70,14 +72,14 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
 
             @Override
             public void onClick(View v) {
-                listener.onNoteSelected(note, true, 0f);
+                listener.onNoteSelected(note, true, 0f, false);
             }
         });
         holder.lowerNote.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                listener.onNoteSelected(note, false, 0f);
+                listener.onNoteSelected(note, false, 0f, false);
             }
         });
 
@@ -86,7 +88,7 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
 
     @Override
     public int getItemCount() {
-        return 10;
+        return 12;
     }
 
     static class NoteViewHolder extends RecyclerView.ViewHolder {
@@ -106,7 +108,7 @@ public class NotePickerAdapter extends RecyclerView.Adapter<NotePickerAdapter.No
 
     private void showBorders(NoteViewHolder holder, int hole) {
         holder.borderLeft.setVisibility(hole == 1 ? View.VISIBLE : View.GONE);
-        holder.borderRight.setVisibility(hole == 10 ? View.VISIBLE : View.GONE);
+        holder.borderRight.setVisibility(hole == 12 ? View.VISIBLE : View.GONE);
     }
 
     public void setSelectedNote(DbNote selectedNote) {

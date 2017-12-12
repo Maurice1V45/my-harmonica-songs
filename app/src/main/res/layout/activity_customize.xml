@@ -57,22 +57,6 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_34px" />
 
-                <RelativeLayout
-                    android:id="@+id/view_blow_background"
-                    android:layout_width="@dimen/bu3"
-                    android:layout_height="@dimen/bu4"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/bu1_5">
-
-                    <TextView
-                        android:id="@+id/text_blow_note"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:textSize="@dimen/text_size_40px" />
-                </RelativeLayout>
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -95,22 +79,6 @@
                     android:text="@string/customize_activity_text_draw_note"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_34px" />
-
-                <RelativeLayout
-                    android:id="@+id/view_draw_background"
-                    android:layout_width="@dimen/bu3"
-                    android:layout_height="@dimen/bu4"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/bu1_5">
-
-                    <TextView
-                        android:id="@+id/text_draw_note"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:textSize="@dimen/text_size_40px" />
-                </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -135,16 +103,6 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_34px" />
 
-                <TextView
-                    android:id="@+id/text_section"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/bu1"
-                    android:text="@string/customize_activity_text_chorus"
-                    android:textSize="@dimen/text_size_36px" />
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -167,20 +125,6 @@
                     android:text="@string/customize_activity_text_section_bar"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_34px" />
-
-                <TextView
-                    android:id="@+id/text_section_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/bu1"
-                    android:paddingBottom="@dimen/bu0_5"
-                    android:paddingLeft="@dimen/bu1_5"
-                    android:paddingRight="@dimen/bu1_5"
-                    android:paddingTop="@dimen/bu0_5"
-                    android:text="@string/customize_activity_text_chorus"
-                    android:textSize="@dimen/text_size_26px" />
 
                 <View
                     android:layout_width="match_parent"
@@ -276,6 +220,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/layout_show_bends"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -307,6 +252,52 @@
 
                 <Switch
                     android:id="@+id/switch_show_bends"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/bu1" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/greyCC" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_show_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="@dimen/bu1_5"
+                    android:layout_marginRight="@dimen/bu5"
+                    android:layout_marginTop="@dimen/bu1_5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/customize_activity_text_always_show_button"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_34px" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/customize_activity_text_always_show_button_description"
+                        android:textColor="@color/grey77"
+                        android:textSize="@dimen/text_size_28px" />
+                </LinearLayout>
+
+                <Switch
+                    android:id="@+id/switch_show_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

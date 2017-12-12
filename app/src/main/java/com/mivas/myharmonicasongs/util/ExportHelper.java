@@ -95,6 +95,7 @@ public class ExportHelper {
                 songJson.put("author", dbSong.getAuthor());
                 songJson.put("favorite", dbSong.isFavourite());
                 songJson.put("key", dbSong.getKey());
+                songJson.put("harp_type", dbSong.getHarpType());
 
                 // add notes
                 JSONArray notesArray = new JSONArray();
@@ -173,6 +174,9 @@ public class ExportHelper {
                 dbSong.setAuthor(songJson.getString("author"));
                 dbSong.setFavourite(songJson.getBoolean("favorite"));
                 dbSong.setKey(songJson.getInt("key"));
+                if (songJson.has("harp_type")) {
+                    dbSong.setHarpType(songJson.getInt("harp_type"));
+                }
                 dbSong.save();
                 dbSongs.add(dbSong);
             }

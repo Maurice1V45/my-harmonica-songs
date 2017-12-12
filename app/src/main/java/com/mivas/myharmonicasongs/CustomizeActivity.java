@@ -32,20 +32,18 @@ import com.mivas.myharmonicasongs.util.PreferencesUtils;
 public class CustomizeActivity extends AppCompatActivity {
 
     private View blowNoteView;
-    private View blowNoteBackground;
-    private TextView blowNoteText;
     private View drawNoteView;
-    private View drawNoteBackground;
-    private TextView drawNoteText;
     private View sectionView;
-    private TextView sectionText;
     private View sectionBarView;
-    private TextView sectionBarText;
     private View backgroundColorView;
     private View backgroundColorColorView;
     private Switch showBendsSwitch;
+    private Switch showButtonSwitch;
     private Switch showMediaPlayerSwitch;
     private Switch playNoteSoundSwitch;
+    private View showBendsView;
+    private View showButtonView;
+    private int harpType;
     private BroadcastReceiver customizationReceiver = new BroadcastReceiver() {
 
         @Override
@@ -59,6 +57,7 @@ public class CustomizeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customize);
 
+        harpType = getIntent().getIntExtra(Constants.EXTRA_HARP_TYPE, 0);
         initViews();
         initListeners();
         refreshPreviews();
@@ -140,20 +139,25 @@ public class CustomizeActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         blowNoteView = findViewById(R.id.view_blow_note);
-        blowNoteBackground = findViewById(R.id.view_blow_background);
-        blowNoteText = findViewById(R.id.text_blow_note);
         drawNoteView = findViewById(R.id.view_draw_note);
-        drawNoteBackground = findViewById(R.id.view_draw_background);
-        drawNoteText = findViewById(R.id.text_draw_note);
         sectionView = findViewById(R.id.view_section);
-        sectionText = findViewById(R.id.text_section);
         sectionBarView = findViewById(R.id.view_section_bar);
-        sectionBarText = findViewById(R.id.text_section_bar);
         backgroundColorView = findViewById(R.id.view_background_color);
         backgroundColorColorView = findViewById(R.id.view_background_color_color);
         showBendsSwitch = findViewById(R.id.switch_show_bends);
+        showButtonSwitch = findViewById(R.id.switch_show_button);
         showMediaPlayerSwitch = findViewById(R.id.switch_show_media_player);
         playNoteSoundSwitch = findViewById(R.id.switch_play_note_sound);
+        showBendsView = findViewById(R.id.layout_show_bends);
+        showButtonView = findViewById(R.id.layout_show_button);
+        if (harpType == 0) {
+            showBendsView.setVisibility(View.VISIBLE);
+            showButtonView.setVisibility(View.GONE);
+        } else {
+            showBendsView.setVisibility(View.GONE);
+            showButtonView.setVisibility(View.VISIBLE);
+
+        }
     }
 
     /**
@@ -224,6 +228,14 @@ public class CustomizeActivity extends AppCompatActivity {
                 sendCustomizationsUpdatedBroadcast();
             }
         });
+        showButtonSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                PreferencesUtils.storePreference(Constants.PREF_CURRENT_SHOW_BUTTON, isChecked);
+                sendCustomizationsUpdatedBroadcast();
+            }
+        });
         showMediaPlayerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -245,24 +257,14 @@ public class CustomizeActivity extends AppCompatActivity {
     private void startCustomizeNoteActivity(boolean blow) {
         Intent intent = new Intent(CustomizeActivity.this, CustomizeNoteActivity.class);
         intent.putExtra(Constants.EXTRA_BLOW, blow);
+        intent.putExtra(Constants.EXTRA_HARP_TYPE, harpType);
         startActivity(intent);
     }
 
     private void refreshPreviews() {
-        CustomizationUtils.styleNoteText(blowNoteText, 4, 0, CustomizationUtils.getBlowSign(), CustomizationUtils.getBlowStyle(), CustomizationUtils.getBlowTextColor());
-        blowNoteBackground.setBackground(CustomizationUtils.createSimpleBackground(CustomizeActivity.this, 6, CustomizationUtils.getBlowBackgroundColor()));
-        CustomizationUtils.styleNoteText(drawNoteText, 4, 0, CustomizationUtils.getDrawSign(), CustomizationUtils.getDrawStyle(), CustomizationUtils.getDrawTextColor());
-        drawNoteBackground.setBackground(CustomizationUtils.createSimpleBackground(CustomizeActivity.this, 6, CustomizationUtils.getDrawBackgroundColor()));
-        CustomizationUtils.styleSectionText(sectionText, CustomizationUtils.getSectionStyle(), CustomizationUtils.getSectionTextColor());
-        if (CustomizationUtils.getShowSectionBar()) {
-            sectionBarText.setVisibility(View.VISIBLE);
-            CustomizationUtils.styleSectionBarText(sectionBarText, CustomizationUtils.getSectionBarStyle(), CustomizationUtils.getSectionBarTextColor());
-            sectionBarText.setBackground(CustomizationUtils.createSectionBarSimpleBackground(CustomizeActivity.this, CustomizationUtils.getSectionBarBackground()));
-        } else {
-            sectionBarText.setVisibility(View.GONE);
-        }
         backgroundColorColorView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeActivity.this, 6, CustomizationUtils.getBackgroundColor()));
         showBendsSwitch.setChecked(CustomizationUtils.getShowBends());
+        showButtonSwitch.setChecked(CustomizationUtils.getShowButton());
         showMediaPlayerSwitch.setChecked(CustomizationUtils.getShowMediaPlayer());
         playNoteSoundSwitch.setChecked(CustomizationUtils.getPlayNoteSound());
     }

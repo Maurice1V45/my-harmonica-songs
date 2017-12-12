@@ -8,13 +8,12 @@ import java.util.Map;
  */
 public class NoteSignUtils {
 
-    private static final Map<Integer, String> signMap = new HashMap<Integer, String>();
+    private static final Map<Integer, String> buttonMap = new HashMap<Integer, String>();
     static {
-        signMap.put(0, "-4");
-        signMap.put(1, "4-");
-        signMap.put(2, "4");
-        signMap.put(3, "+4");
-        signMap.put(4, "4+");
+        buttonMap.put(0, "*%s");
+        buttonMap.put(1, "%s*");
+        buttonMap.put(2, "<%s");
+        buttonMap.put(3, "%s<");
     }
 
     private static final Map<Integer, String> formatMap = new HashMap<Integer, String>();
@@ -26,8 +25,8 @@ public class NoteSignUtils {
         formatMap.put(4, "%s+");
     }
 
-    public static String getSign(int position) {
-        return signMap.get(position);
+    public static String getButton(int position) {
+        return buttonMap.get(position);
     }
 
     public static String getFormat(int position) {

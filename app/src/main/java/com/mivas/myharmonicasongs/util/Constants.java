@@ -21,6 +21,7 @@ public class Constants {
     public static final String EXTRA_SONG_ID = "extra_song_id";
     public static final String EXTRA_SONGS_UPDATED_COUNT = "extra_songs_updated_count";
     public static final String EXTRA_BLOW = "extra_blow";
+    public static final String EXTRA_HARP_TYPE = "extra_harp_type";
 
     /* Broadcast receivers */
     public static final String INTENT_SONGS_UPDATED = "intent_songs_updated";
@@ -45,6 +46,7 @@ public class Constants {
     public static final int DEFAULT_SECTION_STYLE = 0;
     public static final int DEFAULT_SECTION_TEXT_COLOR = 0xff000000;
     public static final boolean DEFAULT_SHOW_BENDS = false;
+    public static final boolean DEFAULT_SHOW_BUTTON = false;
     public static final boolean DEFAULT_SHOW_MEDIA_PLAYER = false;
     public static final boolean DEFAULT_SHOW_SECTION_BAR = true;
     public static final int DEFAULT_SECTION_BAR_STYLE = 0;
@@ -52,6 +54,8 @@ public class Constants {
     public static final int DEFAULT_SECTION_BAR_BACKGROUND = 0xffffffff;
     public static final boolean DEFAULT_SCROLL_TIMERS_ENABLED = false;
     public static final boolean DEFAULT_PLAY_NOTE_SOUND = false;
+    public static final int DEFAULT_HARP_TYPE = 0;
+    public static final int DEFAULT_BUTTON_STYLE = 1;
 
     /* Current customizations */
     public static final String PREF_CURRENT_NOTE_BLOW_SIGN = "pref_current_note_blow_sign";
@@ -66,6 +70,7 @@ public class Constants {
     public static final String PREF_CURRENT_SECTION_STYLE = "pref_current_section_style";
     public static final String PREF_CURRENT_SECTION_TEXT_COLOR = "pref_current_section_text_color";
     public static final String PREF_CURRENT_SHOW_BENDS = "pref_current_show_bends";
+    public static final String PREF_CURRENT_SHOW_BUTTON = "pref_current_show_button";
     public static final String PREF_CURRENT_SHOW_MEDIA_PLAYER = "pref_current_show_media_player";
     public static final String PREF_CURRENT_SHOW_SECTION_BAR = "pref_current_show_section_bar";
     public static final String PREF_CURRENT_SECTION_BAR_STYLE = "pref_current_section_bar_style";
@@ -73,6 +78,8 @@ public class Constants {
     public static final String PREF_CURRENT_SECTION_BAR_BACKGROUND = "pref_current_section_bar_background";
     public static final String PREF_CURRENT_SCROLL_TIMERS_ENABLED = "pref_current_scroll_timers_enabled";
     public static final String PREF_CURRENT_PLAY_NOTE_SOUND = "pref_current_play_note_sound";
+    public static final String PREF_CURRENT_HARP_TYPE = "pref_current_harp_type";
+    public static final String PREF_CURRENT_BUTTON_STYLE = "pref_current_button_style";
 
     /* Misc */
     public static final String SEPARATOR_AUDIO_FILE = "%&#";

@@ -5,7 +5,7 @@
     <RelativeLayout
         android:id="@+id/view_song"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/bu5"
         android:layout_marginBottom="@dimen/bu0_33"
         android:layout_marginTop="@dimen/bu0_33"
         android:background="@drawable/selector_song_list_item"

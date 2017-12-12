@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -16,9 +15,11 @@ import android.widget.TextView;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
+import com.mivas.myharmonicasongs.adapter.ButtonPickerAdapter;
 import com.mivas.myharmonicasongs.adapter.SignPickerAdapter;
 import com.mivas.myharmonicasongs.adapter.StylePickerAdapter;
-import com.mivas.myharmonicasongs.listener.CustomizeNoteActivityListener;
+import com.mivas.myharmonicasongs.listener.ButtonPickerListener;
+import com.mivas.myharmonicasongs.listener.SignPickerListener;
 import com.mivas.myharmonicasongs.listener.StylePickerListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
@@ -30,7 +31,7 @@ import java.util.List;
 /**
  * Customize Note Activity.
  */
-public class CustomizeNoteActivity extends AppCompatActivity implements CustomizeNoteActivityListener, StylePickerListener {
+public class CustomizeNoteActivity extends AppCompatActivity implements SignPickerListener, StylePickerListener, ButtonPickerListener {
 
     private boolean blow;
     private int blowSign;
@@ -41,16 +42,21 @@ public class CustomizeNoteActivity extends AppCompatActivity implements Customiz
     private int drawStyle;
     private int drawTextColor;
     private int drawBackgroundColor;
+    private int buttonStyle;
     private RecyclerView signList;
     private RecyclerView styleList;
+    private RecyclerView buttonList;
     private SignPickerAdapter signAdapter;
     private StylePickerAdapter styleAdapter;
+    private ButtonPickerAdapter buttonAdapter;
     private View textColorView;
     private View textColorColorView;
     private View backgroundColorView;
     private View backgroundColorColorView;
+    private View buttonLayout;
     private View previewView;
     private TextView previewText;
+    private int harpType;
     private boolean changesMade = false;
 
     @Override
@@ -59,6 +65,7 @@ public class CustomizeNoteActivity extends AppCompatActivity implements Customiz
         setContentView(R.layout.activity_customize_note);
 
         blow = getIntent().getBooleanExtra(Constants.EXTRA_BLOW, true);
+        harpType = getIntent().getIntExtra(Constants.EXTRA_HARP_TYPE, 0);
         initStyles();
         initViews();
         initListeners();
@@ -87,26 +94,29 @@ public class CustomizeNoteActivity extends AppCompatActivity implements Customiz
             drawTextColor = CustomizationUtils.getDrawTextColor();
             drawBackgroundColor = CustomizationUtils.getDrawBackgroundColor();
         }
+        if (harpType != 0) {
+            buttonStyle = CustomizationUtils.getButtonStyle();
+        }
     }
 
     /**
      * Views initializer.
      */
     private void initViews() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(blow ? R.string.customize_note_activity_text_blow_title : R.string.customize_note_activity_text_draw_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        signList = (RecyclerView) findViewById(R.id.list_signs);
+        signList = findViewById(R.id.list_signs);
         signList.setLayoutManager(new LinearLayoutManager(CustomizeNoteActivity.this, LinearLayout.HORIZONTAL, false));
-        signAdapter = new SignPickerAdapter(CustomizeNoteActivity.this, CustomizeNoteActivity.this, blow ? blowSign : drawSign);
+        signAdapter = new SignPickerAdapter(CustomizeNoteActivity.this, CustomizeNoteActivity.this, harpType == 0 ? "4" : "5", blow ? blowSign : drawSign);
         signList.setAdapter(signAdapter);
-        styleList = (RecyclerView) findViewById(R.id.list_styles);
+        styleList = findViewById(R.id.list_styles);
         styleList.setLayoutManager(new LinearLayoutManager(CustomizeNoteActivity.this, LinearLayout.HORIZONTAL, false));
         List<String> texts = new ArrayList<String>();
         for (int i = 0; i < 3; i++) {
-            texts.add(String.valueOf(4));
+            texts.add(String.valueOf(harpType == 0 ? 4 : 5));
         }
         styleAdapter = new StylePickerAdapter(CustomizeNoteActivity.this, R.layout.list_item_note_style_picker, CustomizeNoteActivity.this, blow ? blowStyle : drawStyle, texts);
         styleList.setAdapter(styleAdapter);
@@ -117,7 +127,17 @@ public class CustomizeNoteActivity extends AppCompatActivity implements Customiz
         backgroundColorColorView = findViewById(R.id.view_background_color_color);
         backgroundColorColorView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeNoteActivity.this, 6, blow ? blowBackgroundColor : drawBackgroundColor));
         previewView = findViewById(R.id.view_preview);
-        previewText = (TextView) findViewById(R.id.text_preview);
+        previewText = findViewById(R.id.text_preview);
+        buttonLayout = findViewById(R.id.layout_button);
+        if (harpType != 0) {
+            buttonLayout.setVisibility(View.VISIBLE);
+            buttonList = findViewById(R.id.list_button);
+            buttonList.setLayoutManager(new LinearLayoutManager(CustomizeNoteActivity.this, LinearLayout.HORIZONTAL, false));
+            buttonAdapter = new ButtonPickerAdapter(CustomizeNoteActivity.this, CustomizeNoteActivity.this, buttonStyle);
+            buttonList.setAdapter(buttonAdapter);
+        } else {
+            buttonLayout.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -228,12 +248,45 @@ public class CustomizeNoteActivity extends AppCompatActivity implements Customiz
     }
 
     private void refreshPreview() {
-        if (blow) {
-            CustomizationUtils.styleNoteText(previewText, 4, 0, blowSign, blowStyle, blowTextColor);
-            previewView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeNoteActivity.this, 6, blowBackgroundColor));
-        } else {
-            CustomizationUtils.styleNoteText(previewText, 4, 0, drawSign, drawStyle, drawTextColor);
-            previewView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeNoteActivity.this, 6, drawBackgroundColor));
+        switch (harpType) {
+            case 0:
+                if (blow) {
+                    CustomizationUtils.styleDiatonic10NoteText(previewText, 4, 0, blowSign, blowStyle, blowTextColor);
+                    previewView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeNoteActivity.this, 6, blowBackgroundColor));
+                } else {
+                    CustomizationUtils.styleDiatonic10NoteText(previewText, 4, 0, drawSign, drawStyle, drawTextColor);
+                    previewView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeNoteActivity.this, 6, drawBackgroundColor));
+                }
+                break;
+            case 1:
+                if (blow) {
+                    CustomizationUtils.styleChromatic12NoteText(previewText, 5, 0.5f, blowSign, blowStyle, buttonStyle, blowTextColor);
+                    previewView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeNoteActivity.this, 6, blowBackgroundColor));
+                } else {
+                    CustomizationUtils.styleChromatic12NoteText(previewText, 5, -0.5f, drawSign, drawStyle, buttonStyle, drawTextColor);
+                    previewView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeNoteActivity.this, 6, drawBackgroundColor));
+                }
+                break;
+            case 2:
+                if (blow) {
+                    CustomizationUtils.styleChromatic16NoteText(previewText, 9, 0.5f, blowSign, blowStyle, buttonStyle, blowTextColor);
+                    previewView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeNoteActivity.this, 6, blowBackgroundColor));
+                } else {
+                    CustomizationUtils.styleChromatic16NoteText(previewText, 9, -0.5f, drawSign, drawStyle, buttonStyle, drawTextColor);
+                    previewView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeNoteActivity.this, 6, drawBackgroundColor));
+                }
+                break;
         }
+
+    }
+
+    @Override
+    public void onButtonSelected(int position) {
+        changesMade = true;
+        buttonStyle = position;
+        PreferencesUtils.storePreference(Constants.PREF_CURRENT_BUTTON_STYLE, position);
+        buttonAdapter.setSelectedButton(position);
+        buttonAdapter.notifyDataSetChanged();
+        refreshPreview();
     }
 }

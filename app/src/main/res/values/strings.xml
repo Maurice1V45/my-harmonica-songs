@@ -27,6 +27,15 @@
     <string name="song_dialog_text_add_song">Add Song</string>
     <string name="song_dialog_text_edit_song">Edit Song</string>
     <string name="song_dialog_text_key">Key</string>
+    <string name="song_dialog_text_harp_type">Harmonica type:</string>
+    <string name="song_dialog_text_harp_type_diatonic_10">Diatonic(10)</string>
+    <string name="song_dialog_text_harp_type_chromatic_12">Chromatic(12)</string>
+    <string name="song_dialog_text_harp_type_chromatic_16">Chromatic(16)</string>
+    <string-array name="song_dialog_spinner_harp_type">
+        <item>Diatonic (10 Holes)</item>
+        <item>Chromatic (12 Holes)</item>
+        <item>Chromatic (16 Holes)</item>
+    </string-array>
 
     <!-- Song Activity -->
     <string name="song_activity_text_no_notes">Press \"+\" to add a note</string>
@@ -60,6 +69,7 @@
     <string name="note_picker_dialog_button_hide_bendings">Hide bends</string>
     <string name="note_picker_view_button_text">Text</string>
     <string name="note_picker_view_button_bends">Bends</string>
+    <string name="note_picker_view_button_button">Button</string>
     <string name="note_picker_view_button_copy">Copy</string>
     <string name="note_picker_view_button_paste">Paste</string>
     <string name="note_picker_view_button_insert">Insert</string>
@@ -153,7 +163,7 @@
     <string name="instrumental_activity_text_scroll_timers">SCROLL TIMERS</string>
     <string name="instrumental_activity_text_adding_audio_file">Adding audio file…</string>
     <string name="instrumental_activity_text_enable_scroll_timers">Enable scroll timers</string>
-    <string name="instrumental_activity_text_enable_scroll_timers_description">Scroll timers automatically scroll your tablature when an audio file is playing</string>
+    <string name="instrumental_activity_text_enable_scroll_timers_description">Scroll timers automatically scroll your tablature to a section when an audio file is playing</string>
     <string name="instrumental_activity_toast_audio_file_added">Audio file added</string>
     <string name="instrumental_activity_toast_audio_file_removed">Audio file removed</string>
     <string name="instrumental_activity_toast_add_audio_file_error">Error adding audio file</string>
@@ -170,8 +180,10 @@
     <string name="customize_activity_text_section_bar">Section bar</string>
     <string name="customize_activity_text_chorus">Chorus</string>
     <string name="customize_activity_text_general">GENERAL</string>
-    <string name="customize_activity_text_always_show_bends">Always show bends</string>
-    <string name="customize_activity_text_always_show_bends_description">Bend notes will be displayed by default when you open the note picker</string>
+    <string name="customize_activity_text_always_show_bends">Always show bend notes</string>
+    <string name="customize_activity_text_always_show_bends_description">Bend notes on a diatonic harmonica will be displayed by default when you open the note picker</string>
+    <string name="customize_activity_text_always_show_button">Always show button notes</string>
+    <string name="customize_activity_text_always_show_button_description">Button notes on a chromatic harmonica will be displayed by default when you open the note picker</string>
     <string name="customize_activity_text_always_show_media_player">Always show media player</string>
     <string name="customize_activity_text_always_show_media_player_description">Media player will be displayed by default when you open a song</string>
     <string name="customize_activity_text_play_note_sound">Play note sounds</string>
@@ -190,6 +202,7 @@
     <string name="customize_note_activity_text_preview">(preview)</string>
     <string name="customize_note_activity_text_sign">Sign</string>
     <string name="customize_note_activity_text_style">Style</string>
+    <string name="customize_note_activity_text_button">Button</string>
     <string name="customize_note_activity_text_text_color">Text color</string>
     <string name="customize_note_activity_text_background_color">Background color</string>
 

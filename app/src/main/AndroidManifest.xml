@@ -70,7 +70,7 @@
             android:value="MHSDB" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="5" />
+            android:value="6" />
     </application>
 
 </manifest>

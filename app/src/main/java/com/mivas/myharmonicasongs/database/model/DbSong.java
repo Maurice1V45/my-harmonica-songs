@@ -25,6 +25,9 @@ public class DbSong extends Model {
     @Column(name = "audio_file")
     private String audioFile;
 
+    @Column(name = "harp_type")
+    private int harpType;
+
     public String getTitle() {
         return title;
     }
@@ -63,5 +66,13 @@ public class DbSong extends Model {
 
     public void setAudioFile(String audioFile) {
         this.audioFile = audioFile;
+    }
+
+    public int getHarpType() {
+        return harpType;
+    }
+
+    public void setHarpType(int harpType) {
+        this.harpType = harpType;
     }
 }

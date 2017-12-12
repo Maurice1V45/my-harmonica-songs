@@ -9,9 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,8 +24,11 @@ import com.mivas.myharmonicasongs.adapter.KeyPickerAdapter;
 import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.listener.MainActivityListener;
 import com.mivas.myharmonicasongs.listener.SongDialogListener;
+import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
+import com.mivas.myharmonicasongs.util.CustomizationUtils;
 import com.mivas.myharmonicasongs.util.KeyboardUtils;
+import com.mivas.myharmonicasongs.util.PreferencesUtils;
 
 /**
  * Dialog for adding and editing a song.
@@ -38,7 +43,9 @@ public class SongDialog extends DialogFragment implements SongDialogListener {
     private RecyclerView keyList;
     private KeyPickerAdapter keyAdapter;
     private MainActivityListener listener;
+    private View harpTypeLayout;
     private int selectedKey;
+    private Spinner harpTypeSpinner;
 
     /**
      * Default constructor
@@ -53,10 +60,10 @@ public class SongDialog extends DialogFragment implements SongDialogListener {
      * @param rootView
      */
     private void initViews(View rootView) {
-        dialogTitle = (TextView) rootView.findViewById(R.id.text_title);
-        titleField = (EditText) rootView.findViewById(R.id.field_title);
-        authorField = (EditText) rootView.findViewById(R.id.field_author);
-        okButton = (Button) rootView.findViewById(R.id.button_ok);
+        dialogTitle = rootView.findViewById(R.id.text_title);
+        titleField = rootView.findViewById(R.id.field_title);
+        authorField = rootView.findViewById(R.id.field_author);
+        okButton = rootView.findViewById(R.id.button_ok);
         if (dbSong != null) {
             dialogTitle.setText(R.string.song_dialog_text_edit_song);
             titleField.setText(dbSong.getTitle());
@@ -65,11 +72,22 @@ public class SongDialog extends DialogFragment implements SongDialogListener {
         } else {
             dialogTitle.setText(R.string.song_dialog_text_add_song);
         }
-        keyList = (RecyclerView) rootView.findViewById(R.id.list_keys);
+        keyList = rootView.findViewById(R.id.list_keys);
         keyList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL, false));
         keyAdapter = new KeyPickerAdapter(getActivity(), SongDialog.this, selectedKey);
         keyList.setAdapter(keyAdapter);
         keyList.scrollToPosition(selectedKey);
+        harpTypeSpinner = rootView.findViewById(R.id.spinner_harp_type);
+        harpTypeLayout = rootView.findViewById(R.id.layout_harp_type);
+        if (dbSong != null) {
+            harpTypeLayout.setVisibility(View.GONE);
+        } else {
+            harpTypeLayout.setVisibility(View.VISIBLE);
+            ArrayAdapter<CharSequence> harpTypeAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.song_dialog_spinner_harp_type, android.R.layout.simple_spinner_item);
+            harpTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            harpTypeSpinner.setAdapter(harpTypeAdapter);
+            harpTypeSpinner.setSelection(CustomizationUtils.getHarpType());
+        }
     }
 
     /**
@@ -86,9 +104,14 @@ public class SongDialog extends DialogFragment implements SongDialogListener {
                 } else {
                     if (dbSong == null) {
 
+                        // save selected harp type
+                        int harpType = harpTypeSpinner.getSelectedItemPosition();
+                        PreferencesUtils.storePreference(Constants.PREF_CURRENT_HARP_TYPE, harpType);
+
                         // add a song
                         dbSong = new DbSong();
                         dbSong.setKey(selectedKey);
+                        dbSong.setHarpType(harpType);
                         dbSong.setTitle(titleField.getText().toString());
                         dbSong.setAuthor(authorField.getText().toString());
                         listener.onSongAdded(dbSong);
@@ -150,4 +173,5 @@ public class SongDialog extends DialogFragment implements SongDialogListener {
         keyAdapter.setSelectedKey(position);
         keyAdapter.notifyDataSetChanged();
     }
+
 }

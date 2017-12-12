@@ -8,20 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 
-import com.mivas.myharmonicasongs.CustomizeNoteActivity;
 import com.mivas.myharmonicasongs.MHSApplication;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.adapter.SectionPickerAdapter;
-import com.mivas.myharmonicasongs.database.model.DbScrollTimer;
 import com.mivas.myharmonicasongs.database.model.DbSection;
 import com.mivas.myharmonicasongs.listener.SectionPickerAdapterListener;
 import com.mivas.myharmonicasongs.listener.SectionPickerListener;
-import com.mivas.myharmonicasongs.listener.TimePickerListener;
-import com.mivas.myharmonicasongs.util.TimeUtils;
 
 import java.util.List;
 

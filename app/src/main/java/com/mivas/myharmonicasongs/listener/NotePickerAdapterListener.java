@@ -9,5 +9,5 @@ public interface NotePickerAdapterListener {
      * @param blow
      * @param bend
      */
-    void onNoteSelected(int note, boolean blow, float bend);
+    void onNoteSelected(int note, boolean blow, float bend, boolean button);
 }

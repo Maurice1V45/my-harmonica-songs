@@ -16,7 +16,7 @@ import com.mivas.myharmonicasongs.util.CustomizationUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NotePickerAdapterBends extends RecyclerView.Adapter<NotePickerAdapterBends.NoteViewHolder> {
+public class Diatonic10NotePickerAdapterBends extends RecyclerView.Adapter<Diatonic10NotePickerAdapterBends.NoteViewHolder> {
 
     private Context context;
     private NotePickerAdapterListener listener;
@@ -44,7 +44,7 @@ public class NotePickerAdapterBends extends RecyclerView.Adapter<NotePickerAdapt
         BENDS_MAP.put(10, 1f);
     }
 
-    public NotePickerAdapterBends(Context context, NotePickerAdapterListener listener, DbNote selectedNote) {
+    public Diatonic10NotePickerAdapterBends(Context context, NotePickerAdapterListener listener, DbNote selectedNote) {
         this.context = context;
         this.listener = listener;
         this.selectedNote = selectedNote;
@@ -69,13 +69,13 @@ public class NotePickerAdapterBends extends RecyclerView.Adapter<NotePickerAdapt
         final int note = position + 1;
 
         // set hole text
-        CustomizationUtils.styleNoteText(holder.upperNoteBend2, note, 1f, blowSign, blowStyle, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
-        CustomizationUtils.styleNoteText(holder.upperNoteBend1, note, 0.5f, blowSign, blowStyle, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
-        CustomizationUtils.styleNoteText(holder.upperNote, note, 0f, blowSign, blowStyle, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
-        CustomizationUtils.styleNoteText(holder.lowerNote, note, 0f, drawSign, drawStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
-        CustomizationUtils.styleNoteText(holder.lowerNoteBend1, note, -0.5f, drawSign, drawStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
-        CustomizationUtils.styleNoteText(holder.lowerNoteBend2, note, -1f, drawSign, drawStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
-        CustomizationUtils.styleNoteText(holder.lowerNoteBend3, note, -1.5f, drawSign, drawStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
+        CustomizationUtils.styleDiatonic10NoteText(holder.upperNoteBend2, note, 1f, blowSign, blowStyle, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
+        CustomizationUtils.styleDiatonic10NoteText(holder.upperNoteBend1, note, 0.5f, blowSign, blowStyle, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
+        CustomizationUtils.styleDiatonic10NoteText(holder.upperNote, note, 0f, blowSign, blowStyle, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
+        CustomizationUtils.styleDiatonic10NoteText(holder.lowerNote, note, 0f, drawSign, drawStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
+        CustomizationUtils.styleDiatonic10NoteText(holder.lowerNoteBend1, note, -0.5f, drawSign, drawStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
+        CustomizationUtils.styleDiatonic10NoteText(holder.lowerNoteBend2, note, -1f, drawSign, drawStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
+        CustomizationUtils.styleDiatonic10NoteText(holder.lowerNoteBend3, note, -1.5f, drawSign, drawStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
 
         // set hole background
         holder.upperNoteBend2.setBackground(CustomizationUtils.createNotePickerBackground(context, blowBackgroundColor));
@@ -102,7 +102,7 @@ public class NotePickerAdapterBends extends RecyclerView.Adapter<NotePickerAdapt
                 selectedView = holder.lowerNoteBend3;
             }
             if (selectedView != null) {
-                CustomizationUtils.styleNoteText(selectedView, note, selectedNote.getBend(), selectedNote.isBlow() ? blowSign : drawSign, selectedNote.isBlow() ? blowStyle : drawStyle, Constants.DEFAULT_COLOR_WHITE);
+                CustomizationUtils.styleDiatonic10NoteText(selectedView, note, selectedNote.getBend(), selectedNote.isBlow() ? blowSign : drawSign, selectedNote.isBlow() ? blowStyle : drawStyle, Constants.DEFAULT_COLOR_WHITE);
                 selectedView.setBackground(CustomizationUtils.createSimpleBackground(context, 12, Constants.DEFAULT_COLOR_PRIMARY));
             }
         }
@@ -112,49 +112,49 @@ public class NotePickerAdapterBends extends RecyclerView.Adapter<NotePickerAdapt
 
             @Override
             public void onClick(View v) {
-                listener.onNoteSelected(note, true, 1f);
+                listener.onNoteSelected(note, true, 1f, false);
             }
         });
         holder.upperNoteBend1.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                listener.onNoteSelected(note, true, 0.5f);
+                listener.onNoteSelected(note, true, 0.5f, false);
             }
         });
         holder.upperNote.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                listener.onNoteSelected(note, true, 0f);
+                listener.onNoteSelected(note, true, 0f, false);
             }
         });
         holder.lowerNote.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                listener.onNoteSelected(note, false, 0f);
+                listener.onNoteSelected(note, false, 0f, false);
             }
         });
         holder.lowerNoteBend1.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                listener.onNoteSelected(note, false, -0.5f);
+                listener.onNoteSelected(note, false, -0.5f, false);
             }
         });
         holder.lowerNoteBend2.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                listener.onNoteSelected(note, false, -1f);
+                listener.onNoteSelected(note, false, -1f, false);
             }
         });
         holder.lowerNoteBend3.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                listener.onNoteSelected(note, false, -1.5f);
+                listener.onNoteSelected(note, false, -1.5f, false);
             }
         });
 

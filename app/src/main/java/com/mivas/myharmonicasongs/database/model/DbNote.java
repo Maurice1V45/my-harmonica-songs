@@ -109,4 +109,5 @@ public class DbNote extends Model {
     public void setBend(float bend) {
         this.bend = bend;
     }
+
 }

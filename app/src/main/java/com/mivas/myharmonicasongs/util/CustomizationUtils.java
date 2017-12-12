@@ -59,6 +59,10 @@ public class CustomizationUtils {
         return PreferencesUtils.getPreferences().getBoolean(Constants.PREF_CURRENT_SHOW_BENDS, Constants.DEFAULT_SHOW_BENDS);
     }
 
+    public static boolean getShowButton() {
+        return PreferencesUtils.getPreferences().getBoolean(Constants.PREF_CURRENT_SHOW_BUTTON, Constants.DEFAULT_SHOW_BUTTON);
+    }
+
     public static boolean getShowMediaPlayer() {
         return PreferencesUtils.getPreferences().getBoolean(Constants.PREF_CURRENT_SHOW_MEDIA_PLAYER, Constants.DEFAULT_SHOW_MEDIA_PLAYER);
     }
@@ -85,6 +89,14 @@ public class CustomizationUtils {
 
     public static boolean getPlayNoteSound() {
         return PreferencesUtils.getPreferences().getBoolean(Constants.PREF_CURRENT_PLAY_NOTE_SOUND, Constants.DEFAULT_PLAY_NOTE_SOUND);
+    }
+
+    public static int getHarpType() {
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_HARP_TYPE, Constants.DEFAULT_HARP_TYPE);
+    }
+
+    public static int getButtonStyle() {
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_BUTTON_STYLE, Constants.DEFAULT_BUTTON_STYLE);
     }
 
     public static StateListDrawable createNoteBackground(Context context, int backgroundColor) {
@@ -128,11 +140,11 @@ public class CustomizationUtils {
         GradientDrawable normalShape = new GradientDrawable();
         normalShape.setShape(GradientDrawable.RECTANGLE);
         int dp6 = DimensionUtils.dpToPx(context, 6);
-        normalShape.setCornerRadii(new float[] {0, 0, 0, 0, dp6, dp6, dp6, dp6});
+        normalShape.setCornerRadii(new float[]{0, 0, 0, 0, dp6, dp6, dp6, dp6});
         normalShape.setColor(backgroundColor);
         GradientDrawable pressedShape = new GradientDrawable();
         pressedShape.setShape(GradientDrawable.RECTANGLE);
-        pressedShape.setCornerRadii(new float[] {0, 0, 0, 0, dp6, dp6, dp6, dp6});
+        pressedShape.setCornerRadii(new float[]{0, 0, 0, 0, dp6, dp6, dp6, dp6});
         pressedShape.setColor(Constants.DEFAULT_COLOR_PRIMARY);
         stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, pressedShape);
         stateListDrawable.addState(new int[]{}, normalShape);
@@ -193,19 +205,43 @@ public class CustomizationUtils {
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
         int dp6 = DimensionUtils.dpToPx(context, 6);
-        shape.setCornerRadii(new float[] {0, 0, 0, 0, dp6, dp6, dp6, dp6});
+        shape.setCornerRadii(new float[]{0, 0, 0, 0, dp6, dp6, dp6, dp6});
         shape.setColor(backgroundColor);
         return shape;
     }
 
-    public static void styleNoteText(TextView textView, int hole, float bending, int sign, int style, int textColor) {
-        textView.setText(getNoteText(hole, sign, bending));
+    public static void styleDiatonic10NoteText(TextView textView, int hole, float bending, int sign, int style, int textColor) {
+        textView.setText(getDiatonic10NoteText(hole, sign, bending));
         StyleUtils.setStyle(textView, style);
         textView.setTextColor(textColor);
     }
 
-    public static void styleNoteText(TextView textView, int hole, float bending, int sign, int style, ColorStateList colorStateList) {
-        textView.setText(getNoteText(hole, sign, bending));
+    public static void styleDiatonic10NoteText(TextView textView, int hole, float bending, int sign, int style, ColorStateList colorStateList) {
+        textView.setText(getDiatonic10NoteText(hole, sign, bending));
+        StyleUtils.setStyle(textView, style);
+        textView.setTextColor(colorStateList);
+    }
+
+    public static void styleChromatic12NoteText(TextView textView, int hole, float bending, int sign, int style, int buttonStyle, int textColor) {
+        textView.setText(getChromatic12NoteText(hole, sign, bending, buttonStyle));
+        StyleUtils.setStyle(textView, style);
+        textView.setTextColor(textColor);
+    }
+
+    public static void styleChromatic12NoteText(TextView textView, int hole, float bending, int sign, int style, int buttonStyle, ColorStateList colorStateList) {
+        textView.setText(getChromatic12NoteText(hole, sign, bending, buttonStyle));
+        StyleUtils.setStyle(textView, style);
+        textView.setTextColor(colorStateList);
+    }
+
+    public static void styleChromatic16NoteText(TextView textView, int hole, float bending, int sign, int style, int buttonStyle, int textColor) {
+        textView.setText(getChromatic16NoteText(hole, sign, bending, buttonStyle));
+        StyleUtils.setStyle(textView, style);
+        textView.setTextColor(textColor);
+    }
+
+    public static void styleChromatic16NoteText(TextView textView, int hole, float bending, int sign, int style, int buttonStyle, ColorStateList colorStateList) {
+        textView.setText(getChromatic16NoteText(hole, sign, bending, buttonStyle));
         StyleUtils.setStyle(textView, style);
         textView.setTextColor(colorStateList);
     }
@@ -225,12 +261,64 @@ public class CustomizationUtils {
         textView.setTextColor(textColor);
     }
 
-    private static String getNoteText(int hole, int sign, float bending) {
+    private static String getDiatonic10NoteText(int hole, int sign, float bending) {
         StringBuilder format = new StringBuilder();
         format.append(NoteSignUtils.getFormat(sign));
         for (int i = 0; i < Math.abs(bending * 2); i++) {
             format.append("'");
         }
         return String.format(format.toString(), hole);
+    }
+
+    private static String getChromatic12NoteText(int hole, int sign, float bending, int buttonStyle) {
+        StringBuilder format = new StringBuilder();
+        format.append(NoteSignUtils.getFormat(sign));
+        String noteString = String.format(format.toString(), hole);
+        if (bending != 0) {
+            switch (buttonStyle) {
+                case 0:
+                    noteString = "*" + noteString;
+                    break;
+                case 1:
+                    noteString = noteString + "*";
+                    break;
+                case 2:
+                    noteString = "<" + noteString;
+                    break;
+                case 3:
+                    noteString = noteString + "<";
+                    break;
+            }
+        }
+        return noteString;
+    }
+
+    private static String getChromatic16NoteText(int hole, int sign, float bending, int buttonStyle) {
+        StringBuilder format = new StringBuilder();
+        format.append(NoteSignUtils.getFormat(sign));
+        String noteString;
+        if (hole < 5) {
+            noteString = "°" + String.format(format.toString(), hole);
+        } else {
+            hole -= 4;
+            noteString = String.format(format.toString(), hole);
+        }
+        if (bending != 0) {
+            switch (buttonStyle) {
+                case 0:
+                    noteString = "*" + noteString;
+                    break;
+                case 1:
+                    noteString = noteString + "*";
+                    break;
+                case 2:
+                    noteString = "<" + noteString;
+                    break;
+                case 3:
+                    noteString = noteString + "<";
+                    break;
+            }
+        }
+        return noteString;
     }
 }

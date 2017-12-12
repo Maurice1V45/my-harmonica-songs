@@ -9,18 +9,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mivas.myharmonicasongs.R;
-import com.mivas.myharmonicasongs.listener.CustomizeNoteActivityListener;
+import com.mivas.myharmonicasongs.listener.SignPickerListener;
 import com.mivas.myharmonicasongs.util.NoteSignUtils;
 
 public class SignPickerAdapter extends RecyclerView.Adapter<SignPickerAdapter.SignViewHolder> {
 
     private Context context;
-    private CustomizeNoteActivityListener listener;
+    private SignPickerListener listener;
     private int selectedSign;
+    private String note;
 
-    public SignPickerAdapter(Context context, CustomizeNoteActivityListener listener, int selectedSign) {
+    public SignPickerAdapter(Context context, SignPickerListener listener, String note, int selectedSign) {
         this.context = context;
         this.listener = listener;
+        this.note = note;
         this.selectedSign = selectedSign;
     }
 
@@ -35,7 +37,7 @@ public class SignPickerAdapter extends RecyclerView.Adapter<SignPickerAdapter.Si
     public void onBindViewHolder(final SignViewHolder holder, final int position) {
 
         // set text
-        holder.signText.setText(NoteSignUtils.getSign(position));
+        holder.signText.setText(String.format(NoteSignUtils.getFormat(position), note));
 
         // set background
         if (selectedSign == position) {

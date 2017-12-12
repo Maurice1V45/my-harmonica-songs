@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.database.model.DbNote;
+import com.mivas.myharmonicasongs.database.model.DbSong;
 import com.mivas.myharmonicasongs.listener.NotesShiftDialogListener;
 import com.mivas.myharmonicasongs.util.NotesShiftUtils;
 
@@ -29,6 +30,7 @@ public class NotesShiftDialog extends DialogFragment {
     private List<DbNote> dbNotes;
     private int increaseEligible;
     private int decreaseEligible;
+    private DbSong dbSong;
 
     /**
      * Default constructor
@@ -99,10 +101,10 @@ public class NotesShiftDialog extends DialogFragment {
 
     private void initEligibles() {
         for (DbNote dbNote : dbNotes) {
-            if (NotesShiftUtils.isIncreasePossible(dbNote)) {
+            if (NotesShiftUtils.isIncreasePossible(dbNote, dbSong.getHarpType())) {
                 increaseEligible++;
             }
-            if (NotesShiftUtils.isDecreasePossible(dbNote)) {
+            if (NotesShiftUtils.isDecreasePossible(dbNote, dbSong.getHarpType())) {
                 decreaseEligible++;
             }
         }
@@ -142,4 +144,7 @@ public class NotesShiftDialog extends DialogFragment {
         this.dbNotes = dbNotes;
     }
 
+    public void setDbSong(DbSong dbSong) {
+        this.dbSong = dbSong;
+    }
 }

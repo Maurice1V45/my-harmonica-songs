@@ -1,95 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
+    android:orientation="vertical"
     android:padding="@dimen/bu1">
 
     <TextView
         android:id="@+id/text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_size_40px" />
 
-    <EditText
-        android:id="@+id/field_title"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text_title"
-        android:layout_marginTop="@dimen/bu1"
-        android:hint="@string/song_dialog_hint_title"
-        android:imeOptions="actionNext"
-        android:inputType="textCapSentences"
-        android:paddingLeft="@dimen/bu1"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_30px" />
+        android:scrollbars="none">
 
-    <EditText
-        android:id="@+id/field_author"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/field_title"
-        android:hint="@string/song_dialog_hint_author"
-        android:imeOptions="actionDone"
-        android:inputType="textCapWords"
-        android:paddingLeft="@dimen/bu1"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_30px" />
-
-    <TextView
-        android:id="@+id/text_key"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/field_author"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/bu1"
-        android:text="@string/song_dialog_text_key"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_30px" />
-
-    <RelativeLayout
-        android:id="@+id/view_keys"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_key"
-        android:layout_marginTop="@dimen/bu0_25">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="@dimen/bu1"
-            android:layout_alignParentLeft="true"
-            android:background="@color/black" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="@dimen/bu1"
-            android:layout_alignParentRight="true"
-            android:background="@color/black" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list_keys"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/bu0_25"
-            android:paddingLeft="@dimen/bu0_25"
-            android:paddingRight="@dimen/bu0_25" />
-    </RelativeLayout>
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button_ok"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/bu4"
-        android:layout_below="@+id/view_keys"
-        android:layout_marginTop="@dimen/bu1"
-        android:background="@drawable/selector_button_generic"
-        android:text="@string/button_ok"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_40px" />
-</RelativeLayout>
+            <EditText
+                android:id="@+id/field_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bu1"
+                android:hint="@string/song_dialog_hint_title"
+                android:imeOptions="actionNext"
+                android:inputType="textCapSentences"
+                android:paddingLeft="@dimen/bu1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_30px" />
+
+            <EditText
+                android:id="@+id/field_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/song_dialog_hint_author"
+                android:imeOptions="actionDone"
+                android:inputType="textCapWords"
+                android:paddingLeft="@dimen/bu1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_30px" />
+
+            <TextView
+                android:id="@+id/text_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/field_author"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/bu1"
+                android:text="@string/song_dialog_text_key"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_30px" />
+
+            <RelativeLayout
+                android:id="@+id/view_keys"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bu0_25">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="@dimen/bu1"
+                    android:layout_alignParentLeft="true"
+                    android:background="@color/black" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="@dimen/bu1"
+                    android:layout_alignParentRight="true"
+                    android:background="@color/black" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list_keys"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/bu0_25"
+                    android:paddingLeft="@dimen/bu0_25"
+                    android:paddingRight="@dimen/bu0_25" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_harp_type"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="@dimen/bu1"
+                android:layout_height="@dimen/bu4"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/song_dialog_text_harp_type"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_30px" />
+
+                <Spinner
+                    android:id="@+id/spinner_harp_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/button_ok"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu4"
+                android:layout_marginTop="@dimen/bu1"
+                android:background="@drawable/selector_button_generic"
+                android:text="@string/button_ok"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_40px" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
