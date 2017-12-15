@@ -127,7 +127,7 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
             bendsAdapter = showBends;
             playNoteSound = CustomizationUtils.getPlayNoteSound();
             bendsButtonImage.setImageResource(dbSong.getHarpType() == 0 ? R.drawable.icon_bends : R.drawable.icon_button);
-            bendsButtonText.setText(dbSong.getHarpType() == 0 ? R.string.note_picker_view_button_bends : R.string.note_picker_view_button_button);
+            bendsButtonText.setText(dbSong.getHarpType() == 0 ? R.string.note_picker_view_button_bends : R.string.note_picker_view_button_slide);
         }
         boolean lastPlus = cellLine.getCells().size() <= 1;
         textButton.setVisibility(editMode ? View.VISIBLE : View.INVISIBLE);
@@ -286,7 +286,11 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
             @Override
             public void onClick(View v) {
                 dbNote.setWord(null);
-                listener.onNoteEdited(cellLine, cell, true, false);
+                if (cellLine.getCells().indexOf(cell) < cellLine.getCells().size() - 2) {
+                    listener.onNoteEdited(cellLine, cell, true, false);
+                } else {
+                    listener.onNoteEdited(cellLine, cell, false, true);
+                }
             }
         });
         doneButton.setOnClickListener(new OnClickListener() {
@@ -346,7 +350,7 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
         if (isEnabled()) {
 
             if (playNoteSound) {
-                FrequencyUtils.playSound(FrequencyUtils.getFrequency(note, blow, bend, dbSong.getKey()));
+                FrequencyUtils.playSound(FrequencyUtils.getFrequency(note, blow, bend, dbSong));
             }
             dbNote.setHole(note);
             dbNote.setBlow(blow);

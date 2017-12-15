@@ -92,6 +92,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     private int MEASURE_TABLATURE_BOTTOM_PADDING_WITH_MEDIA;
     private int MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER;
     private int MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER_BENDS;
+    private int MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER_SLIDES;
 
     public TablatureView(Context context) {
         super(context);
@@ -193,6 +194,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         MEASURE_TABLATURE_BOTTOM_PADDING_WITH_MEDIA = DimensionUtils.dpToPx(context, 75);
         MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER = DimensionUtils.dpToPx(context, 200);
         MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER_BENDS = DimensionUtils.dpToPx(context, 422);
+        MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER_SLIDES = DimensionUtils.dpToPx(context, 296);
     }
 
     public void initCustomizations() {
@@ -1176,7 +1178,11 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     private void setVerticalScrollBottomPadding(boolean notePicker, boolean bends) {
         if (notePicker) {
             if (bends) {
-                verticalScrollView.setPadding(0, MEASURE_TABLATURE_PADDING, 0, MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER_BENDS + MEASURE_TABLATURE_PADDING);
+                if (dbSong.getHarpType() == 0) {
+                    verticalScrollView.setPadding(0, MEASURE_TABLATURE_PADDING, 0, MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER_BENDS + MEASURE_TABLATURE_PADDING);
+                } else {
+                    verticalScrollView.setPadding(0, MEASURE_TABLATURE_PADDING, 0, MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER_SLIDES + MEASURE_TABLATURE_PADDING);
+                }
             } else {
                 verticalScrollView.setPadding(0, MEASURE_TABLATURE_PADDING, 0, MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER + MEASURE_TABLATURE_PADDING);
             }

@@ -43,7 +43,7 @@ public class SongDialog extends DialogFragment implements SongDialogListener {
     private RecyclerView keyList;
     private KeyPickerAdapter keyAdapter;
     private MainActivityListener listener;
-    private View harpTypeLayout;
+    private TextView harpTypeText;
     private int selectedKey;
     private Spinner harpTypeSpinner;
 
@@ -78,11 +78,20 @@ public class SongDialog extends DialogFragment implements SongDialogListener {
         keyList.setAdapter(keyAdapter);
         keyList.scrollToPosition(selectedKey);
         harpTypeSpinner = rootView.findViewById(R.id.spinner_harp_type);
-        harpTypeLayout = rootView.findViewById(R.id.layout_harp_type);
+        harpTypeText = rootView.findViewById(R.id.text_harp_type);
         if (dbSong != null) {
-            harpTypeLayout.setVisibility(View.GONE);
+            harpTypeSpinner.setVisibility(View.GONE);
+            harpTypeText.setVisibility(View.VISIBLE);
+            if (dbSong.getHarpType() == 0) {
+                harpTypeText.setText(R.string.song_dialog_text_harp_type_diatonic_10);
+            } else if (dbSong.getHarpType() == 1) {
+                harpTypeText.setText(R.string.song_dialog_text_harp_type_chromatic_12);
+            } else if (dbSong.getHarpType() == 2) {
+                harpTypeText.setText(R.string.song_dialog_text_harp_type_chromatic_16);
+            }
         } else {
-            harpTypeLayout.setVisibility(View.VISIBLE);
+            harpTypeSpinner.setVisibility(View.VISIBLE);
+            harpTypeText.setVisibility(View.GONE);
             ArrayAdapter<CharSequence> harpTypeAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.song_dialog_spinner_harp_type, android.R.layout.simple_spinner_item);
             harpTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             harpTypeSpinner.setAdapter(harpTypeAdapter);

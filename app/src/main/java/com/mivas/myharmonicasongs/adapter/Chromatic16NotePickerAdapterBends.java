@@ -45,7 +45,7 @@ public class Chromatic16NotePickerAdapterBends extends RecyclerView.Adapter<Chro
 
     @Override
     public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_note_picker_button, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_note_picker_slides, parent, false);
         return new NoteViewHolder(view);
     }
 

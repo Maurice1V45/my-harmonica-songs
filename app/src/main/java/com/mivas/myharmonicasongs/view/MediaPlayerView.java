@@ -137,6 +137,9 @@ public class MediaPlayerView extends RelativeLayout {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     playButton.setImageResource(R.drawable.selector_play_button);
+                    mediaPlayer.seekTo(0);
+                    updateTimeText(currentTimeText, 0);
+                    refreshScrollTimers();
                 }
             });
 

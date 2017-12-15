@@ -48,7 +48,6 @@
                 android:textSize="@dimen/text_size_30px" />
 
             <TextView
-                android:id="@+id/text_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/field_author"
@@ -90,33 +89,61 @@
                     android:paddingRight="@dimen/bu0_25" />
             </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/layout_harp_type"
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_marginLeft="@dimen/bu1"
-                android:layout_height="@dimen/bu4"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/field_author"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/bu1"
+                android:text="@string/song_dialog_text_harp_type"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_30px" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/song_dialog_text_harp_type"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_30px" />
+            <RelativeLayout
+                android:id="@+id/layout_harp_type"
+                android:layout_width="@dimen/bu18"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/bu0_25">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="@dimen/bu1"
+                    android:layout_alignParentLeft="true"
+                    android:background="@color/black" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="@dimen/bu1"
+                    android:layout_alignParentRight="true"
+                    android:background="@color/black" />
 
                 <Spinner
                     android:id="@+id/spinner_harp_type"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
-            </LinearLayout>
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="@dimen/bu3" />
 
+                <TextView
+                    android:id="@+id/text_harp_type"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/greyAA"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_30px"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="@dimen/bu3" />
+            </RelativeLayout>
 
             <Button
                 android:id="@+id/button_ok"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/bu4"
-                android:layout_marginTop="@dimen/bu1"
+                android:layout_marginTop="@dimen/bu3"
                 android:background="@drawable/selector_button_generic"
                 android:text="@string/button_ok"
                 android:textColor="@color/white"

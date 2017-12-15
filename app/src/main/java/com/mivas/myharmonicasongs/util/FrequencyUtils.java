@@ -5,6 +5,8 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.os.Build;
 
+import com.mivas.myharmonicasongs.database.model.DbSong;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -210,14 +212,26 @@ public class FrequencyUtils {
 
     }
 
-    public static final double getFrequency(int hole, boolean blow, float bend, int key) {
-        int frequencyIndex = 48;
-        frequencyIndex += keyOffsetMap.get(key);
-        frequencyIndex += getNoteOffset(hole, blow, bend);
-        return frequenciesList.get(frequencyIndex);
+    public static final double getFrequency(int hole, boolean blow, float bend, DbSong dbSong) {
+        int frequencyIndex;
+        if (dbSong.getHarpType() == 0) {
+            frequencyIndex = 48;
+            frequencyIndex += keyOffsetMap.get(dbSong.getKey());
+            frequencyIndex += getDiatonic10Offset(hole, blow, bend);
+            return frequenciesList.get(frequencyIndex);
+        } else if (dbSong.getHarpType() == 1) {
+            frequencyIndex = 48;
+            frequencyIndex += getChromatic12Offset(hole, blow, bend);
+            return frequenciesList.get(frequencyIndex);
+        } else if (dbSong.getHarpType() == 2) {
+            frequencyIndex = 36;
+            frequencyIndex += getChromatic16Offset(hole, blow, bend);
+            return frequenciesList.get(frequencyIndex);
+        }
+        return 0;
     }
 
-    private static final int getNoteOffset(int hole, boolean blow, float bend) {
+    private static final int getDiatonic10Offset(int hole, boolean blow, float bend) {
         if (hole == 1 && blow && bend == 0f) {
             return 0;
         } else if (hole == 1 && !blow && bend == -0.5f) {
@@ -282,6 +296,240 @@ public class FrequencyUtils {
             return 35;
         } else if (hole == 10 && blow && bend == 0f) {
             return 36;
+        }
+        return 0;
+    }
+
+    private static final int getChromatic12Offset(int hole, boolean blow, float bend) {
+        if (hole == 1 && blow && bend == 0f) {
+            return 0;
+        } else if (hole == 1 && blow && bend == 0.5f) {
+            return 1;
+        } else if (hole == 1 && !blow && bend == 0f) {
+            return 2;
+        } else if (hole == 1 && !blow && bend == -0.5f) {
+            return 3;
+        } else if (hole == 2 && blow && bend == 0f) {
+            return 4;
+        } else if (hole == 2 && blow && bend == 0.5f) {
+            return 5;
+        } else if (hole == 2 && !blow && bend == 0f) {
+            return 5;
+        } else if (hole == 2 && !blow && bend == -0.5f) {
+            return 6;
+        } else if (hole == 3 && blow && bend == 0f) {
+            return 7;
+        } else if (hole == 3 && blow && bend == 0.5f) {
+            return 8;
+        } else if (hole == 3 && !blow && bend == 0f) {
+            return 9;
+        } else if (hole == 3 && !blow && bend == -0.5f) {
+            return 10;
+        } else if (hole == 4 && blow && bend == 0f) {
+            return 12;
+        } else if (hole == 4 && blow && bend == 0.5f) {
+            return 13;
+        } else if (hole == 4 && !blow && bend == 0f) {
+            return 11;
+        } else if (hole == 4 && !blow && bend == -0.5f) {
+            return 12;
+        } else if (hole == 5 && blow && bend == 0f) {
+            return 12;
+        } else if (hole == 5 && blow && bend == 0.5f) {
+            return 13;
+        } else if (hole == 5 && !blow && bend == 0f) {
+            return 14;
+        } else if (hole == 5 && !blow && bend == -0.5f) {
+            return 15;
+        } else if (hole == 6 && blow && bend == 0f) {
+            return 16;
+        } else if (hole == 6 && blow && bend == 0.5f) {
+            return 17;
+        } else if (hole == 6 && !blow && bend == 0f) {
+            return 17;
+        } else if (hole == 6 && !blow && bend == -0.5f) {
+            return 18;
+        } else if (hole == 7 && blow && bend == 0f) {
+            return 19;
+        } else if (hole == 7 && blow && bend == 0.5f) {
+            return 20;
+        } else if (hole == 7 && !blow && bend == 0f) {
+            return 21;
+        } else if (hole == 7 && !blow && bend == -0.5f) {
+            return 22;
+        } else if (hole == 8 && blow && bend == 0f) {
+            return 24;
+        } else if (hole == 8 && blow && bend == 0.5f) {
+            return 25;
+        } else if (hole == 8 && !blow && bend == 0f) {
+            return 23;
+        } else if (hole == 8 && !blow && bend == -0.5f) {
+            return 24;
+        } else if (hole == 9 && blow && bend == 0f) {
+            return 24;
+        } else if (hole == 9 && blow && bend == 0.5f) {
+            return 25;
+        } else if (hole == 9 && !blow && bend == 0f) {
+            return 26;
+        } else if (hole == 9 && !blow && bend == -0.5f) {
+            return 27;
+        } else if (hole == 10 && blow && bend == 0f) {
+            return 28;
+        } else if (hole == 10 && blow && bend == 0.5f) {
+            return 29;
+        } else if (hole == 10 && !blow && bend == 0f) {
+            return 29;
+        } else if (hole == 10 && !blow && bend == -0.5f) {
+            return 30;
+        } else if (hole == 11 && blow && bend == 0f) {
+            return 31;
+        } else if (hole == 11 && blow && bend == 0.5f) {
+            return 32;
+        } else if (hole == 11 && !blow && bend == 0f) {
+            return 33;
+        } else if (hole == 11 && !blow && bend == -0.5f) {
+            return 34;
+        } else if (hole == 12 && blow && bend == 0f) {
+            return 36;
+        } else if (hole == 12 && blow && bend == 0.5f) {
+            return 37;
+        } else if (hole == 12 && !blow && bend == 0f) {
+            return 35;
+        } else if (hole == 12 && !blow && bend == -0.5f) {
+            return 36;
+        }
+        return 0;
+    }
+
+    private static final int getChromatic16Offset(int hole, boolean blow, float bend) {
+        if (hole == 1 && blow && bend == 0f) {
+            return 0;
+        } else if (hole == 1 && blow && bend == 0.5f) {
+            return 1;
+        } else if (hole == 1 && !blow && bend == 0f) {
+            return 2;
+        } else if (hole == 1 && !blow && bend == -0.5f) {
+            return 3;
+        } else if (hole == 2 && blow && bend == 0f) {
+            return 4;
+        } else if (hole == 2 && blow && bend == 0.5f) {
+            return 5;
+        } else if (hole == 2 && !blow && bend == 0f) {
+            return 5;
+        } else if (hole == 2 && !blow && bend == -0.5f) {
+            return 6;
+        } else if (hole == 3 && blow && bend == 0f) {
+            return 7;
+        } else if (hole == 3 && blow && bend == 0.5f) {
+            return 8;
+        } else if (hole == 3 && !blow && bend == 0f) {
+            return 9;
+        } else if (hole == 3 && !blow && bend == -0.5f) {
+            return 10;
+        } else if (hole == 4 && blow && bend == 0f) {
+            return 12;
+        } else if (hole == 4 && blow && bend == 0.5f) {
+            return 13;
+        } else if (hole == 4 && !blow && bend == 0f) {
+            return 11;
+        } else if (hole == 4 && !blow && bend == -0.5f) {
+            return 12;
+        } else if (hole == 5 && blow && bend == 0f) {
+            return 12;
+        } else if (hole == 5 && blow && bend == 0.5f) {
+            return 13;
+        } else if (hole == 5 && !blow && bend == 0f) {
+            return 14;
+        } else if (hole == 5 && !blow && bend == -0.5f) {
+            return 15;
+        } else if (hole == 6 && blow && bend == 0f) {
+            return 16;
+        } else if (hole == 6 && blow && bend == 0.5f) {
+            return 17;
+        } else if (hole == 6 && !blow && bend == 0f) {
+            return 17;
+        } else if (hole == 6 && !blow && bend == -0.5f) {
+            return 18;
+        } else if (hole == 7 && blow && bend == 0f) {
+            return 19;
+        } else if (hole == 7 && blow && bend == 0.5f) {
+            return 20;
+        } else if (hole == 7 && !blow && bend == 0f) {
+            return 21;
+        } else if (hole == 7 && !blow && bend == -0.5f) {
+            return 22;
+        } else if (hole == 8 && blow && bend == 0f) {
+            return 24;
+        } else if (hole == 8 && blow && bend == 0.5f) {
+            return 25;
+        } else if (hole == 8 && !blow && bend == 0f) {
+            return 23;
+        } else if (hole == 8 && !blow && bend == -0.5f) {
+            return 24;
+        } else if (hole == 9 && blow && bend == 0f) {
+            return 24;
+        } else if (hole == 9 && blow && bend == 0.5f) {
+            return 25;
+        } else if (hole == 9 && !blow && bend == 0f) {
+            return 26;
+        } else if (hole == 9 && !blow && bend == -0.5f) {
+            return 27;
+        } else if (hole == 10 && blow && bend == 0f) {
+            return 28;
+        } else if (hole == 10 && blow && bend == 0.5f) {
+            return 29;
+        } else if (hole == 10 && !blow && bend == 0f) {
+            return 29;
+        } else if (hole == 10 && !blow && bend == -0.5f) {
+            return 30;
+        } else if (hole == 11 && blow && bend == 0f) {
+            return 31;
+        } else if (hole == 11 && blow && bend == 0.5f) {
+            return 32;
+        } else if (hole == 11 && !blow && bend == 0f) {
+            return 33;
+        } else if (hole == 11 && !blow && bend == -0.5f) {
+            return 34;
+        } else if (hole == 12 && blow && bend == 0f) {
+            return 36;
+        } else if (hole == 12 && blow && bend == 0.5f) {
+            return 37;
+        } else if (hole == 12 && !blow && bend == 0f) {
+            return 35;
+        } else if (hole == 12 && !blow && bend == -0.5f) {
+            return 36;
+        } else if (hole == 13 && blow && bend == 0f) {
+            return 36;
+        } else if (hole == 13 && blow && bend == 0.5f) {
+            return 37;
+        } else if (hole == 13 && !blow && bend == 0f) {
+            return 38;
+        } else if (hole == 13 && !blow && bend == -0.5f) {
+            return 39;
+        } else if (hole == 14 && blow && bend == 0f) {
+            return 40;
+        } else if (hole == 14 && blow && bend == 0.5f) {
+            return 41;
+        } else if (hole == 14 && !blow && bend == 0f) {
+            return 41;
+        } else if (hole == 14 && !blow && bend == -0.5f) {
+            return 42;
+        } else if (hole == 15 && blow && bend == 0f) {
+            return 43;
+        } else if (hole == 15 && blow && bend == 0.5f) {
+            return 44;
+        } else if (hole == 15 && !blow && bend == 0f) {
+            return 45;
+        } else if (hole == 15 && !blow && bend == -0.5f) {
+            return 46;
+        } else if (hole == 16 && blow && bend == 0f) {
+            return 48;
+        } else if (hole == 16 && blow && bend == 0.5f) {
+            return 49;
+        } else if (hole == 16 && !blow && bend == 0f) {
+            return 47;
+        } else if (hole == 16 && !blow && bend == -0.5f) {
+            return 48;
         }
         return 0;
     }
