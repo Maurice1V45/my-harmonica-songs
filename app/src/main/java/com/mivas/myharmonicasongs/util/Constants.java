@@ -56,6 +56,7 @@ public class Constants {
     public static final boolean DEFAULT_PLAY_NOTE_SOUND = false;
     public static final int DEFAULT_HARP_TYPE = 0;
     public static final int DEFAULT_BUTTON_STYLE = 1;
+    public static final boolean DEFAULT_PLAY_CLOSES_MEDIA_PLAYER = false;
 
     /* Current customizations */
     public static final String PREF_CURRENT_NOTE_BLOW_SIGN = "pref_current_note_blow_sign";
@@ -80,6 +81,7 @@ public class Constants {
     public static final String PREF_CURRENT_PLAY_NOTE_SOUND = "pref_current_play_note_sound";
     public static final String PREF_CURRENT_HARP_TYPE = "pref_current_harp_type";
     public static final String PREF_CURRENT_BUTTON_STYLE = "pref_current_button_style";
+    public static final String PREF_CURRENT_PLAY_CLOSES_MEDIA_PLAYER = "pref_current_play_closes_media_player";
 
     /* Misc */
     public static final String SEPARATOR_AUDIO_FILE = "%&#";

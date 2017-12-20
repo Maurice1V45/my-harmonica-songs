@@ -456,8 +456,7 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
     @Override
     public void onLeftSelected() {
         DbNote newNote = new DbNote();
-        newNote.setHole(4);
-        newNote.setBlow(true);
+        setDefaultNote(newNote);
         newNote.setRow(dbNote.getRow());
         newNote.setColumn(dbNote.getColumn());
         newNote.setSongId(dbNote.getSongId());
@@ -467,8 +466,7 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
     @Override
     public void onRightSelected() {
         DbNote newNote = new DbNote();
-        newNote.setHole(4);
-        newNote.setBlow(true);
+        setDefaultNote(newNote);
         newNote.setRow(dbNote.getRow());
         newNote.setColumn(dbNote.getColumn() + 1);
         newNote.setSongId(dbNote.getSongId());
@@ -478,8 +476,7 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
     @Override
     public void onTopSelected() {
         DbNote newNote = new DbNote();
-        newNote.setHole(4);
-        newNote.setBlow(true);
+        setDefaultNote(newNote);
         newNote.setColumn(0);
         newNote.setSongId(dbNote.getSongId());
         listener.onRowInserted(cellLine, newNote, true);
@@ -488,8 +485,7 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
     @Override
     public void onBottomSelected() {
         DbNote newNote = new DbNote();
-        newNote.setHole(4);
-        newNote.setBlow(true);
+        setDefaultNote(newNote);
         newNote.setColumn(0);
         newNote.setSongId(dbNote.getSongId());
         listener.onRowInserted(cellLine, newNote, false);
@@ -558,5 +554,16 @@ public class NotePickerView extends RelativeLayout implements NotePickerAdapterL
 
     public RecyclerView getNotesList() {
         return notesList;
+    }
+
+    private void setDefaultNote(DbNote dbNote) {
+        if (dbSong.getHarpType() == 0) {
+            dbNote.setHole(4);
+        } else if (dbSong.getHarpType() == 1) {
+            dbNote.setHole(5);
+        } else if (dbSong.getHarpType() == 2) {
+            dbNote.setHole(9);
+        }
+        dbNote.setBlow(true);
     }
 }

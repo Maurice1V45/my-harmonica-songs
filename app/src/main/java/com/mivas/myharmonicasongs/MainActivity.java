@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Main Activity.
@@ -179,6 +180,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
                 SongDialog songDialog = new SongDialog();
                 songDialog.setListener(MainActivity.this);
                 songDialog.show(getFragmentManager(), Constants.TAG_SONG_DIALOG);
+                return true;
+            case R.id.action_random_song:
+                if (dbSongs.isEmpty()) {
+                    CustomToast.makeText(MainActivity.this, R.string.main_activity_toast_no_songs, Toast.LENGTH_SHORT).show();
+                } else {
+                    DbSong randomSong = dbSongs.get(new Random().nextInt(dbSongs.size()));
+                    Intent randomSongIntent = new Intent(MainActivity.this, SongActivity.class);
+                    randomSongIntent.putExtra(Constants.EXTRA_SONG_ID, randomSong.getId());
+                    startActivity(randomSongIntent);
+                }
                 return true;
             case R.id.action_settings:
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);

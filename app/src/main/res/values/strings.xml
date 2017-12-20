@@ -14,10 +14,12 @@
     <!-- Main Activity -->
     <string name="main_activity_menu_add_song">Add Song</string>
     <string name="main_activity_menu_search">Search</string>
+    <string name="main_activity_menu_random_song">Randomize</string>
     <string name="main_activity_menu_settings">Settings</string>
     <string name="main_activity_text_no_songs">Press \"+\" to add a song</string>
     <string name="main_activity_hint_search">Search song</string>
     <string name="main_activity_toast_song_deleted">Song deleted</string>
+    <string name="main_activity_toast_no_songs">You have no songs</string>
     <string name="main_activity_delete_dialog_description" formatted="false">Are you sure you want to delete %s?</string>
 
     <!-- Song Dialog -->
@@ -180,12 +182,15 @@
     <string name="customize_activity_text_section_bar">Section bar</string>
     <string name="customize_activity_text_chorus">Chorus</string>
     <string name="customize_activity_text_general">GENERAL</string>
+    <string name="customize_activity_text_media_player">MEDIA PLAYER</string>
     <string name="customize_activity_text_always_show_bends">Always show bend notes</string>
     <string name="customize_activity_text_always_show_bends_description">Bend notes will be displayed by default when you open the note picker</string>
     <string name="customize_activity_text_always_show_button">Always show slide notes</string>
     <string name="customize_activity_text_always_show_button_description">Slide notes will be displayed by default when you open the note picker</string>
     <string name="customize_activity_text_always_show_media_player">Always show media player</string>
     <string name="customize_activity_text_always_show_media_player_description">Media player will be displayed by default when you open a song</string>
+    <string name="customize_activity_text_play_closes_media_player">Hide media player after play</string>
+    <string name="customize_activity_text_play_closes_media_player_description">Media player will be hidden after a song starts playing</string>
     <string name="customize_activity_text_play_note_sound">Play note sounds</string>
     <string name="customize_activity_text_play_note_sound_description">Play an 8-bit sound when selecting a note from the note picker</string>
     <string name="customize_activity_background_color">Background color</string>

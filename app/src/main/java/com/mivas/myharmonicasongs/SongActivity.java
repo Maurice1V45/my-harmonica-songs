@@ -68,6 +68,7 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
         public void onReceive(Context context, Intent intent) {
             tablatureView.initCustomizations();
             tablatureView.initialize();
+            mediaPlayerView.setPlayClosesMediaPlayer(CustomizationUtils.getPlayClosesMediaPlayer());
             showSectionBar = CustomizationUtils.getShowSectionBar();
             sectionBarView.initCustomizations();
             showSectionBar();

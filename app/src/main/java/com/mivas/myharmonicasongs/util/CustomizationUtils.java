@@ -99,6 +99,10 @@ public class CustomizationUtils {
         return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_BUTTON_STYLE, Constants.DEFAULT_BUTTON_STYLE);
     }
 
+    public static boolean getPlayClosesMediaPlayer() {
+        return PreferencesUtils.getPreferences().getBoolean(Constants.PREF_CURRENT_PLAY_CLOSES_MEDIA_PLAYER, Constants.DEFAULT_PLAY_CLOSES_MEDIA_PLAYER);
+    }
+
     public static StateListDrawable createNoteBackground(Context context, int backgroundColor) {
         StateListDrawable stateListDrawable = new StateListDrawable();
         GradientDrawable normalShape = new GradientDrawable();

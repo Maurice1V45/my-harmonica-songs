@@ -45,6 +45,7 @@ public class MediaPlayerView extends RelativeLayout {
     private List<DbScrollTimer> dbScrollTimers;
     private DbScrollTimer currentScrollTimer;
     private MediaPlayerListener listener;
+    private boolean playClosesMediaPlayer;
 
     public MediaPlayerView(Context context) {
         super(context);
@@ -70,6 +71,7 @@ public class MediaPlayerView extends RelativeLayout {
     private void initViews() {
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.layout_media_player, this, true);
+        playClosesMediaPlayer = CustomizationUtils.getPlayClosesMediaPlayer();
         playButton = findViewById(R.id.button_play);
         progressBar = findViewById(R.id.seek_bar_progress);
         currentTimeText = findViewById(R.id.text_current_time);
@@ -88,6 +90,9 @@ public class MediaPlayerView extends RelativeLayout {
                 } else {
                     mediaPlayer.start();
                     playButton.setImageResource(R.drawable.selector_pause_button);
+                    if (playClosesMediaPlayer) {
+                        animate(false);
+                    }
                 }
             }
         });
@@ -238,5 +243,9 @@ public class MediaPlayerView extends RelativeLayout {
 
     public void setListener(MediaPlayerListener listener) {
         this.listener = listener;
+    }
+
+    public void setPlayClosesMediaPlayer(boolean playClosesMediaPlayer) {
+        this.playClosesMediaPlayer = playClosesMediaPlayer;
     }
 }

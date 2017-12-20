@@ -41,6 +41,7 @@ public class CustomizeActivity extends AppCompatActivity {
     private Switch showButtonSwitch;
     private Switch showMediaPlayerSwitch;
     private Switch playNoteSoundSwitch;
+    private Switch playClosesMediaPlayerSwitch;
     private View showBendsView;
     private View showButtonView;
     private int harpType;
@@ -148,6 +149,7 @@ public class CustomizeActivity extends AppCompatActivity {
         showButtonSwitch = findViewById(R.id.switch_show_button);
         showMediaPlayerSwitch = findViewById(R.id.switch_show_media_player);
         playNoteSoundSwitch = findViewById(R.id.switch_play_note_sound);
+        playClosesMediaPlayerSwitch = findViewById(R.id.switch_play_closes_media_player);
         showBendsView = findViewById(R.id.layout_show_bends);
         showButtonView = findViewById(R.id.layout_show_button);
         if (harpType == 0) {
@@ -252,6 +254,14 @@ public class CustomizeActivity extends AppCompatActivity {
                 sendCustomizationsUpdatedBroadcast();
             }
         });
+        playClosesMediaPlayerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                PreferencesUtils.storePreference(Constants.PREF_CURRENT_PLAY_CLOSES_MEDIA_PLAYER, isChecked);
+                sendCustomizationsUpdatedBroadcast();
+            }
+        });
     }
 
     private void startCustomizeNoteActivity(boolean blow) {
@@ -267,6 +277,7 @@ public class CustomizeActivity extends AppCompatActivity {
         showButtonSwitch.setChecked(CustomizationUtils.getShowButton());
         showMediaPlayerSwitch.setChecked(CustomizationUtils.getShowMediaPlayer());
         playNoteSoundSwitch.setChecked(CustomizationUtils.getPlayNoteSound());
+        playClosesMediaPlayerSwitch.setChecked(CustomizationUtils.getPlayClosesMediaPlayer());
     }
 
     @Override
