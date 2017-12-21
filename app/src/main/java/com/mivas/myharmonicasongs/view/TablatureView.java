@@ -75,6 +75,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     private int sectionStyle;
     private int sectionTextColor;
     private int buttonStyle;
+    private boolean numbers16ChromaticNotation;
 
     // measures
     private int MEASURE_SCREEN_WIDTH;
@@ -209,6 +210,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         sectionStyle = CustomizationUtils.getSectionStyle();
         sectionTextColor = CustomizationUtils.getSectionTextColor();
         buttonStyle = CustomizationUtils.getButtonStyle();
+        numbers16ChromaticNotation = CustomizationUtils.get16NumbersChromaticNotation();
     }
 
     public void initialize() {
@@ -737,9 +739,9 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
                 break;
             case 2:
                 if (dbNote.isBlow()) {
-                    CustomizationUtils.styleChromatic16NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, buttonStyle, CustomizationUtils.createNoteTextColor(blowTextColor));
+                    CustomizationUtils.styleChromatic16NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, buttonStyle, numbers16ChromaticNotation, CustomizationUtils.createNoteTextColor(blowTextColor));
                 } else {
-                    CustomizationUtils.styleChromatic16NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, buttonStyle, CustomizationUtils.createNoteTextColor(drawTextColor));
+                    CustomizationUtils.styleChromatic16NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, buttonStyle, numbers16ChromaticNotation, CustomizationUtils.createNoteTextColor(drawTextColor));
                 }
                 break;
         }
@@ -786,9 +788,9 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
                 break;
             case 2:
                 if (dbNote.isBlow()) {
-                    CustomizationUtils.styleChromatic16NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, buttonStyle, CustomizationUtils.createNoteTextColor(blowTextColor));
+                    CustomizationUtils.styleChromatic16NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), blowSign, blowStyle, buttonStyle, numbers16ChromaticNotation, CustomizationUtils.createNoteTextColor(blowTextColor));
                 } else {
-                    CustomizationUtils.styleChromatic16NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, buttonStyle, CustomizationUtils.createNoteTextColor(drawTextColor));
+                    CustomizationUtils.styleChromatic16NoteText(noteTextView, dbNote.getHole(), dbNote.getBend(), drawSign, drawStyle, buttonStyle, numbers16ChromaticNotation, CustomizationUtils.createNoteTextColor(drawTextColor));
                 }
                 break;
 

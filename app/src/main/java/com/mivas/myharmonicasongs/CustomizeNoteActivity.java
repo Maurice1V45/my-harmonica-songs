@@ -57,6 +57,7 @@ public class CustomizeNoteActivity extends AppCompatActivity implements SignPick
     private View previewView;
     private TextView previewText;
     private int harpType;
+    private boolean numbers16ChromaticNotation;
     private boolean changesMade = false;
 
     @Override
@@ -97,6 +98,9 @@ public class CustomizeNoteActivity extends AppCompatActivity implements SignPick
         if (harpType != 0) {
             buttonStyle = CustomizationUtils.getButtonStyle();
         }
+        if (harpType == 2) {
+            numbers16ChromaticNotation = CustomizationUtils.get16NumbersChromaticNotation();
+        }
     }
 
     /**
@@ -110,13 +114,21 @@ public class CustomizeNoteActivity extends AppCompatActivity implements SignPick
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         signList = findViewById(R.id.list_signs);
         signList.setLayoutManager(new LinearLayoutManager(CustomizeNoteActivity.this, LinearLayout.HORIZONTAL, false));
-        signAdapter = new SignPickerAdapter(CustomizeNoteActivity.this, CustomizeNoteActivity.this, harpType == 0 ? "4" : "5", blow ? blowSign : drawSign);
+        String noteText = "";
+        if (harpType == 0) {
+            noteText = "4";
+        } else if (harpType == 1) {
+            noteText = "5";
+        } else if (harpType == 2) {
+            noteText = numbers16ChromaticNotation ? "9" : "5";
+        }
+        signAdapter = new SignPickerAdapter(CustomizeNoteActivity.this, CustomizeNoteActivity.this, noteText , blow ? blowSign : drawSign);
         signList.setAdapter(signAdapter);
         styleList = findViewById(R.id.list_styles);
         styleList.setLayoutManager(new LinearLayoutManager(CustomizeNoteActivity.this, LinearLayout.HORIZONTAL, false));
         List<String> texts = new ArrayList<String>();
         for (int i = 0; i < 3; i++) {
-            texts.add(String.valueOf(harpType == 0 ? 4 : 5));
+            texts.add(noteText);
         }
         styleAdapter = new StylePickerAdapter(CustomizeNoteActivity.this, R.layout.list_item_note_style_picker, CustomizeNoteActivity.this, blow ? blowStyle : drawStyle, texts);
         styleList.setAdapter(styleAdapter);
@@ -269,10 +281,10 @@ public class CustomizeNoteActivity extends AppCompatActivity implements SignPick
                 break;
             case 2:
                 if (blow) {
-                    CustomizationUtils.styleChromatic16NoteText(previewText, 9, 0.5f, blowSign, blowStyle, buttonStyle, blowTextColor);
+                    CustomizationUtils.styleChromatic16NoteText(previewText, 9, 0.5f, blowSign, blowStyle, buttonStyle, numbers16ChromaticNotation, blowTextColor);
                     previewView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeNoteActivity.this, 6, blowBackgroundColor));
                 } else {
-                    CustomizationUtils.styleChromatic16NoteText(previewText, 9, -0.5f, drawSign, drawStyle, buttonStyle, drawTextColor);
+                    CustomizationUtils.styleChromatic16NoteText(previewText, 9, -0.5f, drawSign, drawStyle, buttonStyle, numbers16ChromaticNotation, drawTextColor);
                     previewView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeNoteActivity.this, 6, drawBackgroundColor));
                 }
                 break;

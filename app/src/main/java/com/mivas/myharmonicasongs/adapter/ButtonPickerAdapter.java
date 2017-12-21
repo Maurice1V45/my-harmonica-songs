@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.mivas.myharmonicasongs.R;
 import com.mivas.myharmonicasongs.listener.ButtonPickerListener;
 import com.mivas.myharmonicasongs.listener.SignPickerListener;
+import com.mivas.myharmonicasongs.util.CustomizationUtils;
 import com.mivas.myharmonicasongs.util.NoteSignUtils;
 
 public class ButtonPickerAdapter extends RecyclerView.Adapter<ButtonPickerAdapter.ButtonViewHolder> {
@@ -18,11 +19,13 @@ public class ButtonPickerAdapter extends RecyclerView.Adapter<ButtonPickerAdapte
     private Context context;
     private ButtonPickerListener listener;
     private int selectedButton;
+    private boolean numbers16Notation;
 
     public ButtonPickerAdapter(Context context, ButtonPickerListener listener, int selectedButton) {
         this.context = context;
         this.listener = listener;
         this.selectedButton = selectedButton;
+        numbers16Notation = CustomizationUtils.get16NumbersChromaticNotation();
     }
 
     @Override
@@ -36,7 +39,7 @@ public class ButtonPickerAdapter extends RecyclerView.Adapter<ButtonPickerAdapte
     public void onBindViewHolder(final ButtonViewHolder holder, final int position) {
 
         // set text
-        holder.buttonSignText.setText(String.format(NoteSignUtils.getButton(position), "5"));
+        holder.buttonSignText.setText(String.format(NoteSignUtils.getButton(position), numbers16Notation ? "9" : "5"));
 
         // set background
         if (selectedButton == position) {

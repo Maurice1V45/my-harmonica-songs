@@ -27,6 +27,7 @@ public class Chromatic16NotePickerAdapterBends extends RecyclerView.Adapter<Chro
     private int drawTextColor;
     private int drawBackgroundColor;
     private int buttonStyle;
+    private boolean numbers16Notation;
 
     public Chromatic16NotePickerAdapterBends(Context context, NotePickerAdapterListener listener, DbNote selectedNote) {
         this.context = context;
@@ -41,6 +42,7 @@ public class Chromatic16NotePickerAdapterBends extends RecyclerView.Adapter<Chro
         drawTextColor = CustomizationUtils.getDrawTextColor();
         drawBackgroundColor = CustomizationUtils.getDrawBackgroundColor();
         buttonStyle = CustomizationUtils.getButtonStyle();
+        numbers16Notation = CustomizationUtils.get16NumbersChromaticNotation();
     }
 
     @Override
@@ -54,10 +56,10 @@ public class Chromatic16NotePickerAdapterBends extends RecyclerView.Adapter<Chro
         final int note = position + 1;
 
         // set hole text
-        CustomizationUtils.styleChromatic16NoteText(holder.upperNoteButton, note, 0.5f, blowSign, blowStyle, buttonStyle, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
-        CustomizationUtils.styleChromatic16NoteText(holder.upperNote, note, 0f, blowSign, blowStyle, buttonStyle, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
-        CustomizationUtils.styleChromatic16NoteText(holder.lowerNote, note, 0f, drawSign, drawStyle, buttonStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
-        CustomizationUtils.styleChromatic16NoteText(holder.lowerNoteButton, note, -0.5f, drawSign, drawStyle, buttonStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
+        CustomizationUtils.styleChromatic16NoteText(holder.upperNoteButton, note, 0.5f, blowSign, blowStyle, buttonStyle, numbers16Notation, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
+        CustomizationUtils.styleChromatic16NoteText(holder.upperNote, note, 0f, blowSign, blowStyle, buttonStyle, numbers16Notation,CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
+        CustomizationUtils.styleChromatic16NoteText(holder.lowerNote, note, 0f, drawSign, drawStyle, buttonStyle, numbers16Notation,CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
+        CustomizationUtils.styleChromatic16NoteText(holder.lowerNoteButton, note, -0.5f, drawSign, drawStyle, buttonStyle, numbers16Notation,CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
 
         // set hole background
         holder.upperNoteButton.setBackground(CustomizationUtils.createNotePickerBackground(context, blowBackgroundColor));
@@ -75,7 +77,7 @@ public class Chromatic16NotePickerAdapterBends extends RecyclerView.Adapter<Chro
                 selectedView = holder.lowerNoteButton;
             }
             if (selectedView != null) {
-                CustomizationUtils.styleChromatic16NoteText(selectedView, note, selectedNote.getBend(), selectedNote.isBlow() ? blowSign : drawSign, selectedNote.isBlow() ? blowStyle : drawStyle, buttonStyle, Constants.DEFAULT_COLOR_WHITE);
+                CustomizationUtils.styleChromatic16NoteText(selectedView, note, selectedNote.getBend(), selectedNote.isBlow() ? blowSign : drawSign, selectedNote.isBlow() ? blowStyle : drawStyle, buttonStyle, numbers16Notation, Constants.DEFAULT_COLOR_WHITE);
                 selectedView.setBackground(CustomizationUtils.createSimpleBackground(context, 12, Constants.DEFAULT_COLOR_PRIMARY));
             }
         }

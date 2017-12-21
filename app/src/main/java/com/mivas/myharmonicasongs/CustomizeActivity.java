@@ -42,8 +42,10 @@ public class CustomizeActivity extends AppCompatActivity {
     private Switch showMediaPlayerSwitch;
     private Switch playNoteSoundSwitch;
     private Switch playClosesMediaPlayerSwitch;
+    private Switch numbers16ChromaticNotationSwitch;
     private View showBendsView;
     private View showButtonView;
+    private View numbers16ChromaticNotationView;
     private int harpType;
     private BroadcastReceiver customizationReceiver = new BroadcastReceiver() {
 
@@ -150,16 +152,13 @@ public class CustomizeActivity extends AppCompatActivity {
         showMediaPlayerSwitch = findViewById(R.id.switch_show_media_player);
         playNoteSoundSwitch = findViewById(R.id.switch_play_note_sound);
         playClosesMediaPlayerSwitch = findViewById(R.id.switch_play_closes_media_player);
+        numbers16ChromaticNotationSwitch = findViewById(R.id.switch_16_numbers_chromatic_notation);
         showBendsView = findViewById(R.id.layout_show_bends);
         showButtonView = findViewById(R.id.layout_show_button);
-        if (harpType == 0) {
-            showBendsView.setVisibility(View.VISIBLE);
-            showButtonView.setVisibility(View.GONE);
-        } else {
-            showBendsView.setVisibility(View.GONE);
-            showButtonView.setVisibility(View.VISIBLE);
-
-        }
+        numbers16ChromaticNotationView = findViewById(R.id.layout_16_numbers_chromatic_notation);
+        showBendsView.setVisibility(harpType == 0 ? View.VISIBLE : View.GONE);
+        showButtonView.setVisibility(harpType == 0 ? View.GONE : View.VISIBLE);
+        numbers16ChromaticNotationView.setVisibility(harpType == 2 ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -262,6 +261,14 @@ public class CustomizeActivity extends AppCompatActivity {
                 sendCustomizationsUpdatedBroadcast();
             }
         });
+        numbers16ChromaticNotationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                PreferencesUtils.storePreference(Constants.PREF_CURRENT_16_NUMBERS_CHROMATIC_NOTATION, isChecked);
+                sendCustomizationsUpdatedBroadcast();
+            }
+        });
     }
 
     private void startCustomizeNoteActivity(boolean blow) {
@@ -278,6 +285,7 @@ public class CustomizeActivity extends AppCompatActivity {
         showMediaPlayerSwitch.setChecked(CustomizationUtils.getShowMediaPlayer());
         playNoteSoundSwitch.setChecked(CustomizationUtils.getPlayNoteSound());
         playClosesMediaPlayerSwitch.setChecked(CustomizationUtils.getPlayClosesMediaPlayer());
+        numbers16ChromaticNotationSwitch.setChecked(CustomizationUtils.get16NumbersChromaticNotation());
     }
 
     @Override

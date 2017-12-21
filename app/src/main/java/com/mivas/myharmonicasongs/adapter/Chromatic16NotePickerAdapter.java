@@ -27,6 +27,7 @@ public class Chromatic16NotePickerAdapter extends RecyclerView.Adapter<Chromatic
     private int drawTextColor;
     private int drawBackgroundColor;
     private int buttonStyle;
+    private boolean numbers16Notation;
 
     public Chromatic16NotePickerAdapter(Context context, NotePickerAdapterListener listener, DbNote selectedNote) {
         this.context = context;
@@ -41,6 +42,7 @@ public class Chromatic16NotePickerAdapter extends RecyclerView.Adapter<Chromatic
         drawTextColor = CustomizationUtils.getDrawTextColor();
         drawBackgroundColor = CustomizationUtils.getDrawBackgroundColor();
         buttonStyle = CustomizationUtils.getButtonStyle();
+        numbers16Notation = CustomizationUtils.get16NumbersChromaticNotation();
     }
 
     @Override
@@ -54,8 +56,8 @@ public class Chromatic16NotePickerAdapter extends RecyclerView.Adapter<Chromatic
         final int note = position + 1;
 
         // set hole text
-        CustomizationUtils.styleChromatic16NoteText(holder.upperNote, note, 0f, blowSign, blowStyle, buttonStyle, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
-        CustomizationUtils.styleChromatic16NoteText(holder.lowerNote, note, 0f, drawSign, drawStyle, buttonStyle, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
+        CustomizationUtils.styleChromatic16NoteText(holder.upperNote, note, 0f, blowSign, blowStyle, buttonStyle, numbers16Notation, CustomizationUtils.createNotePickerTextColor(context, blowTextColor));
+        CustomizationUtils.styleChromatic16NoteText(holder.lowerNote, note, 0f, drawSign, drawStyle, buttonStyle, numbers16Notation, CustomizationUtils.createNotePickerTextColor(context, drawTextColor));
 
         // set hole background
         holder.upperNote.setBackground(CustomizationUtils.createNotePickerBackground(context, blowBackgroundColor));
@@ -63,7 +65,7 @@ public class Chromatic16NotePickerAdapter extends RecyclerView.Adapter<Chromatic
 
         if (selectedNote != null && selectedNote.getHole() == position + 1 && selectedNote.getBend() == 0f) {
             TextView selectedView = selectedNote.isBlow() ? holder.upperNote : holder.lowerNote;
-            CustomizationUtils.styleChromatic16NoteText(selectedView, note, selectedNote.getBend(), selectedNote.isBlow() ? blowSign : drawSign, selectedNote.isBlow() ? blowStyle : drawStyle, buttonStyle, Constants.DEFAULT_COLOR_WHITE);
+            CustomizationUtils.styleChromatic16NoteText(selectedView, note, selectedNote.getBend(), selectedNote.isBlow() ? blowSign : drawSign, selectedNote.isBlow() ? blowStyle : drawStyle, buttonStyle, numbers16Notation, Constants.DEFAULT_COLOR_WHITE);
             selectedView.setBackground(CustomizationUtils.createSimpleBackground(context, 12, Constants.DEFAULT_COLOR_PRIMARY));
         }
 

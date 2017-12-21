@@ -103,6 +103,10 @@ public class CustomizationUtils {
         return PreferencesUtils.getPreferences().getBoolean(Constants.PREF_CURRENT_PLAY_CLOSES_MEDIA_PLAYER, Constants.DEFAULT_PLAY_CLOSES_MEDIA_PLAYER);
     }
 
+    public static boolean get16NumbersChromaticNotation() {
+        return PreferencesUtils.getPreferences().getBoolean(Constants.PREF_CURRENT_16_NUMBERS_CHROMATIC_NOTATION, Constants.DEFAULT_16_NUMBERS_CHROMATIC_NOTATION);
+    }
+
     public static StateListDrawable createNoteBackground(Context context, int backgroundColor) {
         StateListDrawable stateListDrawable = new StateListDrawable();
         GradientDrawable normalShape = new GradientDrawable();
@@ -238,14 +242,14 @@ public class CustomizationUtils {
         textView.setTextColor(colorStateList);
     }
 
-    public static void styleChromatic16NoteText(TextView textView, int hole, float bending, int sign, int style, int buttonStyle, int textColor) {
-        textView.setText(getChromatic16NoteText(hole, sign, bending, buttonStyle));
+    public static void styleChromatic16NoteText(TextView textView, int hole, float bending, int sign, int style, int buttonStyle, boolean numbers16Notation, int textColor) {
+        textView.setText(getChromatic16NoteText(hole, sign, bending, buttonStyle, numbers16Notation));
         StyleUtils.setStyle(textView, style);
         textView.setTextColor(textColor);
     }
 
-    public static void styleChromatic16NoteText(TextView textView, int hole, float bending, int sign, int style, int buttonStyle, ColorStateList colorStateList) {
-        textView.setText(getChromatic16NoteText(hole, sign, bending, buttonStyle));
+    public static void styleChromatic16NoteText(TextView textView, int hole, float bending, int sign, int style, int buttonStyle, boolean numbers16Notation, ColorStateList colorStateList) {
+        textView.setText(getChromatic16NoteText(hole, sign, bending, buttonStyle, numbers16Notation));
         StyleUtils.setStyle(textView, style);
         textView.setTextColor(colorStateList);
     }
@@ -297,15 +301,19 @@ public class CustomizationUtils {
         return noteString;
     }
 
-    private static String getChromatic16NoteText(int hole, int sign, float bending, int buttonStyle) {
+    private static String getChromatic16NoteText(int hole, int sign, float bending, int buttonStyle, boolean numbers16Notation) {
         StringBuilder format = new StringBuilder();
         format.append(NoteSignUtils.getFormat(sign));
         String noteString;
-        if (hole < 5) {
-            noteString = "°" + String.format(format.toString(), hole);
-        } else {
-            hole -= 4;
+        if (numbers16Notation) {
             noteString = String.format(format.toString(), hole);
+        } else {
+            if (hole < 5) {
+                noteString = "°" + String.format(format.toString(), hole);
+            } else {
+                hole -= 4;
+                noteString = String.format(format.toString(), hole);
+            }
         }
         if (bending != 0) {
             switch (buttonStyle) {
