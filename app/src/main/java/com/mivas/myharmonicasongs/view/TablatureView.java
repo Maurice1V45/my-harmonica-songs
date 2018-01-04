@@ -76,19 +76,19 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     private int sectionTextColor;
     private int buttonStyle;
     private boolean numbers16ChromaticNotation;
+    private int cellWidth;
+    private int cellHeight;
+    private int textSize;
+    private int wordSize;
+    private int sectionSize;
 
     // measures
     private int MEASURE_SCREEN_WIDTH;
-    private int MEASURE_CELL_WIDTH;
-    private int MEASURE_CELL_HEIGHT;
     private int MEASURE_CELL_MARGIN;
-    private int MEASURE_NOTE_TEXT_SIZE;
-    private int MEASURE_NOTE_WORD_SIZE;
     private int MEASURE_PLUS_SIZE;
     private int MEASURE_SECTION_PADDING_TOP;
     private int MEASURE_SECTION_PADDING_LEFT;
     private int MEASURE_SECTION_PADDING_BOTTOM;
-    private int MEASURE_SECTION_SIZE;
     private int MEASURE_TABLATURE_PADDING;
     private int MEASURE_TABLATURE_BOTTOM_PADDING_WITH_MEDIA;
     private int MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER;
@@ -181,16 +181,11 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
 
     private void initMeasures() {
         MEASURE_SCREEN_WIDTH = getScreenWidth();
-        MEASURE_CELL_WIDTH = DimensionUtils.dpToPx(context, 48);
-        MEASURE_CELL_HEIGHT = DimensionUtils.dpToPx(context, 66);
         MEASURE_CELL_MARGIN = DimensionUtils.dpToPx(context, 3);
-        MEASURE_NOTE_TEXT_SIZE = 24;
-        MEASURE_NOTE_WORD_SIZE = 10;
         MEASURE_PLUS_SIZE = DimensionUtils.dpToPx(context, 42);
         MEASURE_SECTION_PADDING_TOP = DimensionUtils.dpToPx(context, 24);
         MEASURE_SECTION_PADDING_LEFT = DimensionUtils.dpToPx(context, 12);
         MEASURE_SECTION_PADDING_BOTTOM = DimensionUtils.dpToPx(context, 4);
-        MEASURE_SECTION_SIZE = 24;
         MEASURE_TABLATURE_PADDING = DimensionUtils.dpToPx(context, 3);
         MEASURE_TABLATURE_BOTTOM_PADDING_WITH_MEDIA = DimensionUtils.dpToPx(context, 75);
         MEASURE_VERTICAL_SCROLL_BOTTOM_PADDING_NOTEPICKER = DimensionUtils.dpToPx(context, 200);
@@ -199,6 +194,11 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
     }
 
     public void initCustomizations() {
+        cellWidth = DimensionUtils.dpToPx(context, CustomizationUtils.getNoteWidthValue(CustomizationUtils.getNoteWidth()));
+        cellHeight = DimensionUtils.dpToPx(context, CustomizationUtils.getNoteHeightValue(CustomizationUtils.getNoteHeight()));
+        textSize = CustomizationUtils.getNoteTextSizeValue(CustomizationUtils.getNoteTextSize());
+        wordSize = CustomizationUtils.getNoteWordSizeValue(CustomizationUtils.getNoteWordSize());
+        sectionSize = CustomizationUtils.getSectionSizeValue(CustomizationUtils.getSectionTextSize());
         blowSign = CustomizationUtils.getBlowSign();
         blowStyle = CustomizationUtils.getBlowStyle();
         blowTextColor = CustomizationUtils.getBlowTextColor();
@@ -755,7 +755,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
 
         // set note layout properties
         LinearLayout noteLayout = new LinearLayout(context);
-        LinearLayout.LayoutParams noteLayoutParams = new LinearLayout.LayoutParams(MEASURE_CELL_WIDTH, MEASURE_CELL_HEIGHT);
+        LinearLayout.LayoutParams noteLayoutParams = new LinearLayout.LayoutParams(cellWidth, cellHeight);
         noteLayoutParams.setMargins(MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN);
         noteLayoutParams.gravity = Gravity.CENTER_VERTICAL;
         noteLayout.setLayoutParams(noteLayoutParams);
@@ -769,7 +769,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         noteTextLayoutParams.gravity = Gravity.CENTER_HORIZONTAL;
         noteTextView.setGravity(Gravity.CENTER_HORIZONTAL);
         noteTextView.setLayoutParams(noteTextLayoutParams);
-        noteTextView.setTextSize(MEASURE_NOTE_TEXT_SIZE);
+        noteTextView.setTextSize(textSize);
         noteTextView.setMaxLines(1);
         switch (dbSong.getHarpType()) {
             case 0:
@@ -803,7 +803,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         wordTextLayoutParams.gravity = Gravity.CENTER_HORIZONTAL;
         wordText.setGravity(Gravity.CENTER_HORIZONTAL);
         wordText.setLayoutParams(wordTextLayoutParams);
-        wordText.setTextSize(MEASURE_NOTE_WORD_SIZE);
+        wordText.setTextSize(wordSize);
         wordText.setMaxLines(1);
         wordText.setText(dbNote.getWord());
         wordText.setTextColor(CustomizationUtils.createNoteTextColor(dbNote.isBlow() ? blowTextColor : drawTextColor));
@@ -837,8 +837,8 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         // play animation
         if (animate) {
             CellAnimation cellAnimation = new CellAnimation(noteLayout, SlideAnimation.EXPAND);
-            cellAnimation.setWidth(MEASURE_CELL_WIDTH);
-            cellAnimation.setHeight(MEASURE_CELL_HEIGHT);
+            cellAnimation.setWidth(cellWidth);
+            cellAnimation.setHeight(cellHeight);
             noteLayout.startAnimation(cellAnimation);
         }
 
@@ -853,7 +853,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
 
         // set add note layout properties
         final RelativeLayout plusLayout = new RelativeLayout(context);
-        LinearLayout.LayoutParams parentLayoutParams = new LinearLayout.LayoutParams(MEASURE_CELL_WIDTH, MEASURE_CELL_HEIGHT);
+        LinearLayout.LayoutParams parentLayoutParams = new LinearLayout.LayoutParams(cellWidth, cellHeight);
         parentLayoutParams.setMargins(MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN, MEASURE_CELL_MARGIN);
         plusLayout.setLayoutParams(parentLayoutParams);
         plusLayout.setClickable(true);
@@ -891,8 +891,8 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
 
     private void animateExpandCell(View layout) {
         CellAnimation cellAnimation = new CellAnimation(layout, SlideAnimation.EXPAND);
-        cellAnimation.setWidth(MEASURE_CELL_WIDTH);
-        cellAnimation.setHeight(MEASURE_CELL_HEIGHT);
+        cellAnimation.setWidth(cellWidth);
+        cellAnimation.setHeight(cellHeight);
         layout.startAnimation(cellAnimation);
     }
 
@@ -1014,7 +1014,7 @@ public class TablatureView extends RelativeLayout implements NotePickerViewListe
         RelativeLayout parent = new RelativeLayout(context);
         final TextView sectionText = new TextView(context);
         sectionText.setPadding(MEASURE_SECTION_PADDING_LEFT, MEASURE_SECTION_PADDING_TOP, 0, MEASURE_SECTION_PADDING_BOTTOM);
-        sectionText.setTextSize(MEASURE_SECTION_SIZE);
+        sectionText.setTextSize(sectionSize);
         sectionText.setText(dbSection.getName());
         CustomizationUtils.styleSectionText(sectionText, sectionStyle, sectionTextColor);
         parent.addView(sectionText);

@@ -25,6 +25,8 @@ public class SectionBarView extends LinearLayout {
     private int textStyle;
     private int textColor;
     private int textBackground;
+    private int height;
+    private int textSize;
     private int dp1;
     private int dp2;
 
@@ -68,7 +70,7 @@ public class SectionBarView extends LinearLayout {
             if (cellLine.getSectionCell() != null && cellLine.getSectionCell().getDbSection() != null) {
                 DbSection dbSection = cellLine.getSectionCell().getDbSection();
                 TextView textView = new TextView(context);
-                LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+                LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(0, DimensionUtils.dpToPx(context, CustomizationUtils.getSectionBarHeightValue(height)));
                 textLayoutParams.setMargins(dp1, 0, dp1, dp2);
                 textLayoutParams.weight = 1;
                 textView.setLayoutParams(textLayoutParams);
@@ -76,7 +78,7 @@ public class SectionBarView extends LinearLayout {
                 CustomizationUtils.styleSectionBarText(textView, textStyle, CustomizationUtils.createSectionBarTextColor(context, textColor));
                 textView.setBackground(CustomizationUtils.createSectionBarBackground(context, textBackground));
                 textView.setText(dbSection.getName());
-                textView.setTextSize(12);
+                textView.setTextSize(CustomizationUtils.getSectionBarTextSizeValue(textSize));
                 textView.setMaxLines(1);
                 textView.setGravity(Gravity.CENTER);
                 textView.setClickable(true);
@@ -105,5 +107,7 @@ public class SectionBarView extends LinearLayout {
         textStyle = CustomizationUtils.getSectionBarStyle();
         textColor = CustomizationUtils.getSectionBarTextColor();
         textBackground = CustomizationUtils.getSectionBarBackground();
+        height = CustomizationUtils.getSectionBarHeight();
+        textSize = CustomizationUtils.getSectionBarTextSize();
     }
 }

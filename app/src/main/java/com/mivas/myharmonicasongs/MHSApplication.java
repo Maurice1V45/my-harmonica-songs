@@ -3,6 +3,7 @@ package com.mivas.myharmonicasongs;
 import android.app.Application;
 
 import com.activeandroid.ActiveAndroid;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 /**
  * Application class.
@@ -10,6 +11,7 @@ import com.activeandroid.ActiveAndroid;
 public class MHSApplication extends Application {
 
     private static MHSApplication instance;
+    private FirebaseAnalytics firebaseAnalytics;
 
     @Override
     public void onCreate() {
@@ -20,6 +22,9 @@ public class MHSApplication extends Application {
 
         // initialize Active Android and database
         ActiveAndroid.initialize(this);
+
+        // initialize Firebase
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     /**
@@ -41,5 +46,9 @@ public class MHSApplication extends Application {
 
     public boolean isTablet() {
         return getResources().getBoolean(R.bool.is_tablet);
+    }
+
+    public FirebaseAnalytics getFirebaseAnalytics() {
+        return firebaseAnalytics;
     }
 }

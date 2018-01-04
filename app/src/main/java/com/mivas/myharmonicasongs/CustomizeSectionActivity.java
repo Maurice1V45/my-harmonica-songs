@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.flask.colorpicker.ColorPickerView;
@@ -35,7 +36,9 @@ public class CustomizeSectionActivity extends AppCompatActivity implements Style
     private StylePickerAdapter styleAdapter;
     private View textColorView;
     private View textColorColorView;
-    private TextView previewText;
+    private TextView textPreview;
+    private SeekBar textSizeSeekbar;
+    private int sectionTextSize;
     private boolean changesMade = false;
 
     @Override
@@ -62,17 +65,18 @@ public class CustomizeSectionActivity extends AppCompatActivity implements Style
     private void initStyles() {
         sectionStyle = CustomizationUtils.getSectionStyle();
         sectionTextColor = CustomizationUtils.getSectionTextColor();
+        sectionTextSize = CustomizationUtils.getSectionTextSize();
     }
 
     /**
      * Views initializer.
      */
     private void initViews() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        styleList = (RecyclerView) findViewById(R.id.list_styles);
+        styleList = findViewById(R.id.list_styles);
         styleList.setLayoutManager(new LinearLayoutManager(CustomizeSectionActivity.this, LinearLayout.HORIZONTAL, false));
         List<String> texts = new ArrayList<String>();
         texts.add("Normal");
@@ -83,7 +87,9 @@ public class CustomizeSectionActivity extends AppCompatActivity implements Style
         textColorView = findViewById(R.id.view_text_color);
         textColorColorView = findViewById(R.id.view_text_color_color);
         textColorColorView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeSectionActivity.this, 6, sectionTextColor));
-        previewText = (TextView) findViewById(R.id.text_preview);
+        textPreview = findViewById(R.id.preview_section);
+        textSizeSeekbar = findViewById(R.id.seekbar_text_size);
+        textSizeSeekbar.setProgress(sectionTextSize);
     }
 
     /**
@@ -115,6 +121,27 @@ public class CustomizeSectionActivity extends AppCompatActivity implements Style
                         .show();
             }
         });
+        textSizeSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    sectionTextSize = progress;
+                    refreshPreview();
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                PreferencesUtils.storePreference(Constants.PREF_CURRENT_SECTION_TEXT_SIZE, textSizeSeekbar.getProgress());
+                changesMade = true;
+            }
+        });
     }
 
     @Override
@@ -139,6 +166,7 @@ public class CustomizeSectionActivity extends AppCompatActivity implements Style
     }
 
     private void refreshPreview() {
-        CustomizationUtils.styleSectionText(previewText, sectionStyle, sectionTextColor);
+        CustomizationUtils.styleSectionText(textPreview, sectionStyle, sectionTextColor);
+        textPreview.setTextSize(CustomizationUtils.getSectionSizeValue(sectionTextSize));
     }
 }

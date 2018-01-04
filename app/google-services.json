@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "835597392709",
+    "firebase_url": "https://my-harmonica-songs.firebaseio.com",
+    "project_id": "my-harmonica-songs",
+    "storage_bucket": "my-harmonica-songs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835597392709:android:b7fa6159bed4570e",
+        "android_client_info": {
+          "package_name": "com.mivas.myharmonicasongs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "835597392709-qg1bcrqmr4116kjf4l8br2qcp5qukudk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASw5rQwhYrGhnBy8o4MUBofMtBqYfNrSE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

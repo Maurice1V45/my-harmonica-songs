@@ -38,7 +38,7 @@
         <com.mivas.myharmonicasongs.view.SectionBarView
             android:id="@+id/view_section_bar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/bu2_5" />
+            android:layout_height="wrap_content" />
 
         <com.mivas.myharmonicasongs.view.TablatureView
             android:id="@+id/view_tablature"

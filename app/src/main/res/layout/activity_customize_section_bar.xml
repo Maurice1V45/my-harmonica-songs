@@ -19,6 +19,40 @@
         app:theme="@style/ToolbarBackArrow"
         app:titleTextColor="@color/white" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bu14"
+        android:background="@color/greyEE"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/preview_bar"
+            android:layout_width="@dimen/bu12"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/bu3"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:text="@string/customize_section_activity_text_chorus"
+            android:textSize="@dimen/text_size_30px" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/preview_bar"
+            android:layout_marginTop="@dimen/bu0_25"
+            android:text="@string/customize_note_activity_text_preview"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_30px" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/greyCC" />
+    </RelativeLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,34 +60,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:scrollbars="none">
-
-            <TextView
-                android:id="@+id/text_preview"
-                android:layout_width="@dimen/bu12"
-                android:layout_height="@dimen/bu3"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/bu3"
-                android:gravity="center"
-                android:text="@string/customize_section_activity_text_chorus"
-                android:textSize="@dimen/text_size_30px" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/bu0_25"
-                android:text="@string/customize_note_activity_text_preview"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_30px" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/bu3"
-                android:background="@color/greyCC" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/view_show_section_bar"
@@ -100,7 +108,7 @@
                         android:layout_width="@dimen/bu6"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/bu1_5"
-                        android:text="@string/customize_note_activity_text_style"
+                        android:text="@string/customize_section_bar_activity_text_style"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_34px" />
 
@@ -129,7 +137,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/bu1_5"
-                        android:text="@string/customize_note_activity_text_text_color"
+                        android:text="@string/customize_section_bar_activity_text_text_color"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_34px" />
 
@@ -162,7 +170,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/bu1_5"
-                        android:text="@string/customize_note_activity_text_background_color"
+                        android:text="@string/customize_section_bar_activity_text_background_color"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_34px" />
 
@@ -180,6 +188,58 @@
                         android:layout_alignParentBottom="true"
                         android:background="@color/greyCC" />
                 </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bu5"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="@dimen/bu10"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/customize_section_bar_activity_text_height"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_34px" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar_height"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:max="6" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/greyCC" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bu5"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="@dimen/bu10"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bu1_5"
+                        android:text="@string/customize_section_bar_activity_text_text_size"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_34px" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar_text_size"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:max="6" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/greyCC" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

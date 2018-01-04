@@ -91,7 +91,7 @@ public class MediaPlayerView extends RelativeLayout {
                     mediaPlayer.start();
                     playButton.setImageResource(R.drawable.selector_pause_button);
                     if (playClosesMediaPlayer) {
-                        animate(false);
+                        listener.onMediaPlayerClose();
                     }
                 }
             }

@@ -107,6 +107,34 @@ public class CustomizationUtils {
         return PreferencesUtils.getPreferences().getBoolean(Constants.PREF_CURRENT_16_NUMBERS_CHROMATIC_NOTATION, Constants.DEFAULT_16_NUMBERS_CHROMATIC_NOTATION);
     }
 
+    public static int getNoteWidth() {
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_WIDTH, Constants.DEFAULT_NOTE_WIDTH);
+    }
+
+    public static int getNoteHeight() {
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_HEIGHT, Constants.DEFAULT_NOTE_HEIGHT);
+    }
+
+    public static int getNoteTextSize() {
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_TEXT_SIZE, Constants.DEFAULT_NOTE_TEXT_SIZE);
+    }
+
+    public static int getNoteWordSize() {
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_NOTE_WORD_SIZE, Constants.DEFAULT_NOTE_WORD_SIZE);
+    }
+
+    public static int getSectionTextSize() {
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_SECTION_TEXT_SIZE, Constants.DEFAULT_SECTION_TEXT_SIZE);
+    }
+
+    public static int getSectionBarHeight() {
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_SECTION_BAR_HEIGHT, Constants.DEFAULT_SECTION_BAR_HEIGHT);
+    }
+
+    public static int getSectionBarTextSize() {
+        return PreferencesUtils.getPreferences().getInt(Constants.PREF_CURRENT_SECTION_BAR_TEXT_SIZE, Constants.DEFAULT_SECTION_BAR_TEXT_SIZE);
+    }
+
     public static StateListDrawable createNoteBackground(Context context, int backgroundColor) {
         StateListDrawable stateListDrawable = new StateListDrawable();
         GradientDrawable normalShape = new GradientDrawable();
@@ -332,5 +360,145 @@ public class CustomizationUtils {
             }
         }
         return noteString;
+    }
+
+    public static int getNoteWidthValue(int position) {
+        switch (position) {
+            case 0:
+                return 30;
+            case 1:
+                return 36;
+            case 2:
+                return 42;
+            case 3:
+                return 48;
+            case 4:
+                return 54;
+            case 5:
+                return 60;
+            case 6:
+                return 66;
+        }
+        return 0;
+    }
+
+    public static int getNoteHeightValue(int position) {
+        switch (position) {
+            case 0:
+                return 48;
+            case 1:
+                return 54;
+            case 2:
+                return 60;
+            case 3:
+                return 66;
+            case 4:
+                return 72;
+            case 5:
+                return 78;
+            case 6:
+                return 84;
+        }
+        return 0;
+    }
+
+    public static int getNoteTextSizeValue(int position) {
+        switch (position) {
+            case 0:
+                return 15;
+            case 1:
+                return 18;
+            case 2:
+                return 21;
+            case 3:
+                return 24;
+            case 4:
+                return 27;
+            case 5:
+                return 30;
+            case 6:
+                return 33;
+        }
+        return 0;
+    }
+
+    public static int getNoteWordSizeValue(int position) {
+        switch (position) {
+            case 0:
+                return 7;
+            case 1:
+                return 8;
+            case 2:
+                return 9;
+            case 3:
+                return 10;
+            case 4:
+                return 11;
+            case 5:
+                return 12;
+            case 6:
+                return 13;
+        }
+        return 0;
+    }
+
+    public static int getSectionSizeValue(int position) {
+        switch (position) {
+            case 0:
+                return 15;
+            case 1:
+                return 18;
+            case 2:
+                return 21;
+            case 3:
+                return 24;
+            case 4:
+                return 27;
+            case 5:
+                return 30;
+            case 6:
+                return 33;
+        }
+        return 0;
+    }
+
+    public static int getSectionBarHeightValue(int position) {
+        switch (position) {
+            case 0:
+                return 21;
+            case 1:
+                return 24;
+            case 2:
+                return 27;
+            case 3:
+                return 30;
+            case 4:
+                return 33;
+            case 5:
+                return 36;
+            case 6:
+                return 39;
+        }
+        return 0;
+    }
+
+    public static int getSectionBarTextSizeValue(int position) {
+        switch (position) {
+            case 0:
+                return 6;
+            case 1:
+                return 8;
+            case 2:
+                return 10;
+            case 3:
+                return 12;
+            case 4:
+                return 14;
+            case 5:
+                return 16;
+            case 6:
+                return 18;
+        }
+        return 0;
     }
 }

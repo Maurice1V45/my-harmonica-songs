@@ -20,6 +20,37 @@
         app:title="@string/customize_section_activity_title"
         app:titleTextColor="@color/white" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bu14"
+        android:background="@color/greyEE"
+        android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/preview_section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/customize_section_activity_text_chorus" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/preview_section"
+                android:layout_marginTop="@dimen/bu0_25"
+                android:text="@string/customize_note_activity_text_preview"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_30px" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/greyCC" />
+    </RelativeLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,32 +59,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:scrollbars="none">
-
-            <TextView
-                android:id="@+id/text_preview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/bu3"
-                android:text="@string/customize_section_activity_text_chorus"
-                android:textSize="@dimen/text_size_48px" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/bu0_25"
-                android:text="@string/customize_note_activity_text_preview"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_30px" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/bu3"
-                android:background="@color/greyCC" />
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -113,6 +119,32 @@
                     android:layout_alignParentBottom="true"
                     android:background="@color/greyCC" />
             </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bu5"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="@dimen/bu10"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/bu1_5"
+                    android:text="@string/customize_section_activity_text_text_size"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_34px" />
+
+                <SeekBar
+                    android:id="@+id/seekbar_text_size"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:max="6" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/greyCC" />
 
         </LinearLayout>
     </ScrollView>

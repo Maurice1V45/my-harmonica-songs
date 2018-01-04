@@ -200,8 +200,7 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
                 if (dbSong.getAudioFile() == null) {
                     CustomToast.makeText(SongActivity.this, R.string.song_activity_toast_no_audio_file, Toast.LENGTH_SHORT).show();
                 } else {
-                    tablatureView.setMediaPadding(!mediaPlayerView.isDisplayed());
-                    mediaPlayerView.animate(!mediaPlayerView.isDisplayed());
+                    toggleMediaPlayer();
                 }
                 return true;
             case R.id.action_share:
@@ -367,5 +366,15 @@ public class SongActivity extends AppCompatActivity implements TablatureListener
     @Override
     public void onScrollToSection(long sectionId, int sectionLine) {
         tablatureView.smoothScrollToSection(sectionId, sectionLine);
+    }
+
+    private void toggleMediaPlayer() {
+        tablatureView.setMediaPadding(!mediaPlayerView.isDisplayed());
+        mediaPlayerView.animate(!mediaPlayerView.isDisplayed());
+    }
+
+    @Override
+    public void onMediaPlayerClose() {
+        toggleMediaPlayer();
     }
 }

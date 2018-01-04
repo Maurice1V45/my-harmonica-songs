@@ -39,6 +39,13 @@ public class Constants {
     public static final int DEFAULT_NOTE_DRAW_TEXT_COLOR = 0xff000000;
     public static final int DEFAULT_NOTE_DRAW_BACKGROUND_COLOR = 0xffffffff;
     public static final int DEFAULT_NOTE_BACKGROUND_COLOR_PRESSED = 0xffcccccc;
+    public static final int DEFAULT_NOTE_WIDTH = 3;
+    public static final int DEFAULT_NOTE_HEIGHT = 3;
+    public static final int DEFAULT_NOTE_TEXT_SIZE = 3;
+    public static final int DEFAULT_NOTE_WORD_SIZE = 3;
+    public static final int DEFAULT_SECTION_TEXT_SIZE = 3;
+    public static final int DEFAULT_SECTION_BAR_HEIGHT = 3;
+    public static final int DEFAULT_SECTION_BAR_TEXT_SIZE = 3;
     public static final int DEFAULT_COLOR_PRIMARY = 0xffad0556;
     public static final int DEFAULT_COLOR_BLACK = 0xff000000;
     public static final int DEFAULT_COLOR_WHITE = 0xffffffff;
@@ -68,6 +75,13 @@ public class Constants {
     public static final String PREF_CURRENT_NOTE_DRAW_STYLE = "pref_current_note_draw_style";
     public static final String PREF_CURRENT_NOTE_DRAW_TEXT_COLOR = "pref_current_note_draw_text_color";
     public static final String PREF_CURRENT_NOTE_DRAW_BACKGROUND_COLOR = "pref_current_note_draw_background_color";
+    public static final String PREF_CURRENT_NOTE_WIDTH = "pref_current_note_width";
+    public static final String PREF_CURRENT_NOTE_HEIGHT = "pref_current_note_height";
+    public static final String PREF_CURRENT_NOTE_TEXT_SIZE = "pref_current_note_text_size";
+    public static final String PREF_CURRENT_NOTE_WORD_SIZE = "pref_current_note_word_size";
+    public static final String PREF_CURRENT_SECTION_TEXT_SIZE = "pref_current_section_text_size";
+    public static final String PREF_CURRENT_SECTION_BAR_HEIGHT = "pref_current_section_bar_height";
+    public static final String PREF_CURRENT_SECTION_BAR_TEXT_SIZE = "pref_current_section_bar_text_size";
     public static final String PREF_CURRENT_BACKGROUND_COLOR = "pref_current_background_color";
     public static final String PREF_CURRENT_SECTION_STYLE = "pref_current_section_style";
     public static final String PREF_CURRENT_SECTION_TEXT_COLOR = "pref_current_section_text_color";

@@ -212,6 +212,10 @@
     <string name="customize_note_activity_text_button">Button</string>
     <string name="customize_note_activity_text_text_color">Text color</string>
     <string name="customize_note_activity_text_background_color">Background color</string>
+    <string name="customize_note_activity_text_width">Width</string>
+    <string name="customize_note_activity_text_height">Height</string>
+    <string name="customize_note_activity_text_text_size">Number size</string>
+    <string name="customize_note_activity_text_word_size">Text size</string>
 
     <!-- Customize Section Activity-->
     <string name="customize_section_activity_title">Customize Section</string>
@@ -219,6 +223,7 @@
     <string name="customize_section_activity_text_preview">(preview)</string>
     <string name="customize_section_activity_text_style">Style</string>
     <string name="customize_section_activity_text_text_color">Text color</string>
+    <string name="customize_section_activity_text_text_size">Text size</string>
     <string name="customize_section_activity_text_color_title">Choose text color</string>
 
     <!-- Customize Section Bar Activity-->
@@ -231,58 +236,7 @@
     <string name="customize_section_bar_activity_text_background_color">Background Color</string>
     <string name="customize_section_bar_activity_text_color_title">Choose text color</string>
     <string name="customize_section_bar_activity_background_color_title">Choose background color</string>
+    <string name="customize_section_bar_activity_text_height">Height</string>
+    <string name="customize_section_bar_activity_text_text_size">Text size</string>
 
-    <!-- QA Activity -->
-    <string name="qa_activity_text_title">Questions &amp; answers</string>
-    <string name="qa_activity_text_m_songs">SONGS</string>
-    <string name="qa_activity_text_q_add_song">How do I add a song?</string>
-    <string name="qa_activity_text_a_add_song">While on the songs screen, tap the + button on the top to add a new song. Then fill in the title, author (optional) and the key in which the song is played (optional).</string>
-    <string name="qa_activity_text_q_key">What if I don\'t know the key of a song?</string>
-    <string name="qa_activity_text_a_key">If you only have one harmonica, then this doesn\'t affect you very much and you can leave it in the default key of C. But this is really useful if you have more harmonicas in different keys or if you play with a band and you all have to play in the same key.</string>
-    <string name="qa_activity_text_q_search">How can I filter my songs?</string>
-    <string name="qa_activity_text_a_search">You can press the search button on the top and type in a song title or an author.</string>
-    <string name="qa_activity_text_m_notes">NOTES</string>
-    <string name="qa_activity_text_q_note">How do I add a note?</string>
-    <string name="qa_activity_text_a_note">Open a song, tap any white plus button, then pick a note from the harmonica.</string>
-    <string name="qa_activity_text_q_bend_note">How do I add a bend note?</string>
-    <string name="qa_activity_text_a_bend_note">After you tap the plus button, press the Show bends button. Bend notes will show up indicated by one or more \' signs. Each \' represents half a tone.</string>
-    <string name="qa_activity_text_q_note_words">How can I add a word under a note?</string>
-    <string name="qa_activity_text_a_note_words">After you tap the plus button, type in a word in the Syllable text field. Then select a note number and the note will be added with a word under it.</string>
-    <string name="qa_activity_text_q_delete_row">How can I delete a row of notes?</string>
-    <string name="qa_activity_text_a_delete_row">Press and hold the plus button at the end of the row you want to delete. When the menu shows up, select Delete row.</string>
-    <string name="qa_activity_text_q_insert_row">How can I insert a row between 2 other rows?</string>
-    <string name="qa_activity_text_a_insert_row">Press and hold the plus button at the end of the first row, then select the Insert row option. Then add a note. This will insert the note between the 2 rows.</string>
-    <string name="qa_activity_text_q_copy_paste_notes">How can I copy/paste notes?</string>
-    <string name="qa_activity_text_a_copy_paste_notes">Press and hold the plus button at the end of the row you want to copy, then select the Copy row option. Then press and hold another plus button and select Paste row.</string>
-    <string name="qa_activity_text_q_note_shifting">What is note shifting?</string>
-    <string name="qa_activity_text_a_note_shifting">By shifting a note, you increase or decrease its pitch by 1 octave. For example, shifting up a 4 will turn it into a 7. This is useful when you want to play a song at a lower/higher pitch into the same key.</string>
-    <string name="qa_activity_text_q_shift_notes">How do I shift my notes?</string>
-    <string name="qa_activity_text_a_shift_notes">On the tablature screen tap options, then select Shift notes.</string>
-    <string name="qa_activity_text_m_sections">SECTIONS</string>
-    <string name="qa_activity_text_q_sections">What are sections?</string>
-    <string name="qa_activity_text_a_sections">Sections are a group of notes that compose a song. Some common sections would be Verse, Chorus, Bridge, etc.</string>
-    <string name="qa_activity_text_q_add_section">How can I add a section?</string>
-    <string name="qa_activity_text_a_add_section">Press and hold the plus button at the end of the first row of the section, then select Add section. Then type in a section name. This will add a section text marker above the row you selected.</string>
-    <string name="qa_activity_text_m_customizations">CUSTOMIZATIONS</string>
-    <string name="qa_activity_text_q_customize_notes">How can I customize my notes?</string>
-    <string name="qa_activity_text_a_customize_notes">On the tablature screen tap options, then select Customize. Here you can customize notes, text colors, background colors, etc.</string>
-    <string name="qa_activity_text_q_reset_customizations">How can I reset my customizations to default settings?</string>
-    <string name="qa_activity_text_a_reset_customizations">On the customize screen tap options, then select Reset.</string>
-    <string name="qa_activity_text_m_audio_files">AUDIO FILES</string>
-    <string name="qa_activity_text_q_add_audio_file">How can I add an audio file to a song?</string>
-    <string name="qa_activity_text_a_add_audio_file">On the tablature screen tap options, then select Add audio file. You can add the file using other apps like File Manager or Google Drive.</string>
-    <string name="qa_activity_text_q_play_song">How do I play a song file that I added?</string>
-    <string name="qa_activity_text_a_play_song">If you added an audio file, on the tablature screen tap the musical note. When the audio panel shows up tap the play button.</string>
-    <string name="qa_activity_text_m_backup_restore">BACKUP / RESTORE</string>
-    <string name="qa_activity_text_q_backup">How do I make a backup file?</string>
-    <string name="qa_activity_text_a_backup">On the settings screen, tap the backup option. This will create a file named songs.mhs in the destination you choose.</string>
-    <string name="qa_activity_text_q_backup_data">Will it backup everything?</string>
-    <string name="qa_activity_text_a_backup_data">Almost, it will save all your songs, notes, sections, but not your audio files and customizations. These have to be added manually.</string>
-    <string name="qa_activity_text_q_restore">How do I restore my data from a backup file?</string>
-    <string name="qa_activity_text_a_restore">On the settings screen, tap the restore option. Then select the mhs file you want to restore the data from.</string>
-    <string name="qa_activity_text_m_sharing">SHARING</string>
-    <string name="qa_activity_text_q_share">How do I share a song?</string>
-    <string name="qa_activity_text_a_share">On the tablature screen tap options, then select Share.</string>
-    <string name="qa_activity_text_q_import">How do I import a shared song?</string>
-    <string name="qa_activity_text_a_import">On the settings screen under Sharing select Import song. Then select the mhs file you want to import the song from.</string>
 </resources>

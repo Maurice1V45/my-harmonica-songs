@@ -25,4 +25,7 @@ dependencies {
     implementation 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
     implementation 'com.google.guava:guava:22.0-android'
     implementation 'com.github.QuadFlask:colorpicker:0.0.13'
+    implementation 'com.google.firebase:firebase-core:11.8.0'
 }
+
+apply plugin: 'com.google.gms.google-services'

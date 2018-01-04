@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ import com.mivas.myharmonicasongs.adapter.StylePickerAdapter;
 import com.mivas.myharmonicasongs.listener.StylePickerListener;
 import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomizationUtils;
+import com.mivas.myharmonicasongs.util.DimensionUtils;
 import com.mivas.myharmonicasongs.util.PreferencesUtils;
 
 import java.util.ArrayList;
@@ -44,6 +47,10 @@ public class CustomizeSectionBarActivity extends AppCompatActivity implements St
     private View backgroundColorColorView;
     private TextView previewText;
     private Switch showSectionBarSwitch;
+    private SeekBar heightSeekbar;
+    private SeekBar textSizeSeekbar;
+    private int height;
+    private int textSize;
     private boolean changesMade = false;
 
     @Override
@@ -72,6 +79,8 @@ public class CustomizeSectionBarActivity extends AppCompatActivity implements St
         style = CustomizationUtils.getSectionBarStyle();
         textColor = CustomizationUtils.getSectionBarTextColor();
         backgroundcolor = CustomizationUtils.getSectionBarBackground();
+        height = CustomizationUtils.getSectionBarHeight();
+        textSize = CustomizationUtils.getSectionBarTextSize();
     }
 
     /**
@@ -100,8 +109,12 @@ public class CustomizeSectionBarActivity extends AppCompatActivity implements St
         backgroundColorView = findViewById(R.id.view_background_color);
         backgroundColorColorView = findViewById(R.id.view_background_color_color);
         backgroundColorColorView.setBackground(CustomizationUtils.createSimpleBackground(CustomizeSectionBarActivity.this, 6, backgroundcolor));
-        previewText = findViewById(R.id.text_preview);
+        previewText = findViewById(R.id.preview_bar);
         customizationsLayout.setVisibility(showSectionBar ? View.VISIBLE : View.GONE);
+        heightSeekbar = findViewById(R.id.seekbar_height);
+        heightSeekbar.setProgress(height);
+        textSizeSeekbar = findViewById(R.id.seekbar_text_size);
+        textSizeSeekbar.setProgress(textSize);
     }
 
     /**
@@ -167,6 +180,48 @@ public class CustomizeSectionBarActivity extends AppCompatActivity implements St
                         .show();
             }
         });
+        heightSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    height = progress;
+                    refreshPreview();
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                PreferencesUtils.storePreference(Constants.PREF_CURRENT_SECTION_BAR_HEIGHT, heightSeekbar.getProgress());
+                changesMade = true;
+            }
+        });
+        textSizeSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    textSize = progress;
+                    refreshPreview();
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                PreferencesUtils.storePreference(Constants.PREF_CURRENT_SECTION_BAR_TEXT_SIZE, textSizeSeekbar.getProgress());
+                changesMade = true;
+            }
+        });
     }
 
     @Override
@@ -191,6 +246,12 @@ public class CustomizeSectionBarActivity extends AppCompatActivity implements St
     }
 
     private void refreshPreview() {
+        int width = DimensionUtils.dpToPx(CustomizeSectionBarActivity.this, 144);
+        int height = DimensionUtils.dpToPx(CustomizeSectionBarActivity.this, CustomizationUtils.getSectionBarHeightValue(this.height));
+        RelativeLayout.LayoutParams barLayoutParams = new RelativeLayout.LayoutParams(width, height);
+        barLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        previewText.setLayoutParams(barLayoutParams);
+        previewText.setTextSize(CustomizationUtils.getSectionBarTextSizeValue(textSize));
         CustomizationUtils.styleSectionBarText(previewText, style, textColor);
         previewText.setBackground(CustomizationUtils.createSectionBarSimpleBackground(CustomizeSectionBarActivity.this, backgroundcolor));
     }
