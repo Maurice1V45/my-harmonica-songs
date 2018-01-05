@@ -46,13 +46,6 @@ public class CustomizeActivity extends AppCompatActivity {
     private View showButtonView;
     private View numbers16ChromaticNotationView;
     private int harpType;
-    private BroadcastReceiver customizationReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            refreshPreviews();
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +56,6 @@ public class CustomizeActivity extends AppCompatActivity {
         initViews();
         initListeners();
         refreshPreviews();
-        registerReceiver(customizationReceiver, new IntentFilter(Constants.INTENT_CUSTOMIZATIONS_UPDATED));
     }
 
     @Override
@@ -88,6 +80,7 @@ public class CustomizeActivity extends AppCompatActivity {
 
                         // reset prefs
                         resetPreferences();
+                        refreshPreviews();
 
                         // show toast
                         CustomToast.makeText(CustomizeActivity.this, R.string.customize_activity_toast_customizations_reset, Toast.LENGTH_SHORT).show();
@@ -125,12 +118,15 @@ public class CustomizeActivity extends AppCompatActivity {
         PreferencesUtils.storePreference(Constants.PREF_CURRENT_NOTE_DRAW_STYLE, Constants.DEFAULT_NOTE_DRAW_STYLE);
         PreferencesUtils.storePreference(Constants.PREF_CURRENT_NOTE_DRAW_TEXT_COLOR, Constants.DEFAULT_NOTE_DRAW_TEXT_COLOR);
         PreferencesUtils.storePreference(Constants.PREF_CURRENT_NOTE_DRAW_BACKGROUND_COLOR, Constants.DEFAULT_NOTE_DRAW_BACKGROUND_COLOR);
+        PreferencesUtils.storePreference(Constants.PREF_CURRENT_BUTTON_STYLE, Constants.DEFAULT_BUTTON_STYLE);
         PreferencesUtils.storePreference(Constants.PREF_CURRENT_SECTION_STYLE, Constants.DEFAULT_SECTION_STYLE);
         PreferencesUtils.storePreference(Constants.PREF_CURRENT_SECTION_TEXT_COLOR, Constants.DEFAULT_SECTION_TEXT_COLOR);
         PreferencesUtils.storePreference(Constants.PREF_CURRENT_BACKGROUND_COLOR, Constants.DEFAULT_BACKGROUND_COLOR);
         PreferencesUtils.storePreference(Constants.PREF_CURRENT_SHOW_BENDS, Constants.DEFAULT_SHOW_BENDS);
         PreferencesUtils.storePreference(Constants.PREF_CURRENT_SHOW_BUTTON, Constants.DEFAULT_SHOW_BUTTON);
         PreferencesUtils.storePreference(Constants.PREF_CURRENT_SHOW_MEDIA_PLAYER, Constants.DEFAULT_SHOW_MEDIA_PLAYER);
+        PreferencesUtils.storePreference(Constants.PREF_CURRENT_PLAY_CLOSES_MEDIA_PLAYER, Constants.DEFAULT_PLAY_CLOSES_MEDIA_PLAYER);
+        PreferencesUtils.storePreference(Constants.PREF_CURRENT_16_NUMBERS_CHROMATIC_NOTATION, Constants.DEFAULT_16_NUMBERS_CHROMATIC_NOTATION);
         PreferencesUtils.storePreference(Constants.PREF_CURRENT_SHOW_SECTION_BAR, Constants.DEFAULT_SHOW_SECTION_BAR);
         PreferencesUtils.storePreference(Constants.PREF_CURRENT_SECTION_BAR_STYLE, Constants.DEFAULT_SECTION_BAR_STYLE);
         PreferencesUtils.storePreference(Constants.PREF_CURRENT_SECTION_BAR_TEXT_COLOR, Constants.DEFAULT_SECTION_BAR_TEXT_COLOR);
@@ -298,12 +294,6 @@ public class CustomizeActivity extends AppCompatActivity {
         playNoteSoundSwitch.setChecked(CustomizationUtils.getPlayNoteSound());
         playClosesMediaPlayerSwitch.setChecked(CustomizationUtils.getPlayClosesMediaPlayer());
         numbers16ChromaticNotationSwitch.setChecked(CustomizationUtils.get16NumbersChromaticNotation());
-    }
-
-    @Override
-    protected void onDestroy() {
-        unregisterReceiver(customizationReceiver);
-        super.onDestroy();
     }
 
     private void sendCustomizationsUpdatedBroadcast() {

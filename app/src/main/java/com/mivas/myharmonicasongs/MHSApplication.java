@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.activeandroid.ActiveAndroid;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.mivas.myharmonicasongs.util.AnalyticUtils;
 
 /**
  * Application class.
@@ -25,6 +26,7 @@ public class MHSApplication extends Application {
 
         // initialize Firebase
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        AnalyticUtils.setUserProperties();
     }
 
     /**

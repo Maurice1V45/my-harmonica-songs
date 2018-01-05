@@ -43,6 +43,13 @@ public class SongDbHandler {
                 .execute();
     }
 
+    public static List<DbSong> getSongsWithInstrumentals() {
+        return new Select()
+                .from(DbSong.class)
+                .where("audio_file is NOT NULL")
+                .execute();
+    }
+
     /**
      * Retrieves a songs by the id.
      *
