@@ -101,4 +101,7 @@ public class Constants {
 
     /* Misc */
     public static final String SEPARATOR_AUDIO_FILE = "%&#";
+
+    /* URL */
+    public static final String URL_PRIVACY_POLICY = "https://www.freeprivacypolicy.com/privacy/view/b48dfdc570071efa8ae1b06173454a80";
 }

@@ -23,6 +23,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import com.mivas.myharmonicasongs.database.handler.SongDbHandler;
 import com.mivas.myharmonicasongs.database.model.DbSong;
+import com.mivas.myharmonicasongs.util.Constants;
 import com.mivas.myharmonicasongs.util.CustomToast;
 import com.mivas.myharmonicasongs.util.ExportHelper;
 
@@ -42,6 +43,7 @@ public class SettingsActivity extends AppCompatActivity {
     private View creditsView;
     private View rateAppView;
     private View feedbackView;
+    private View privacyPolicyView;
     private TextView versionText;
     private ProgressDialog progressDialog;
 
@@ -80,7 +82,8 @@ public class SettingsActivity extends AppCompatActivity {
         creditsView = findViewById(R.id.view_credits);
         rateAppView = findViewById(R.id.view_rate_app);
         feedbackView = findViewById(R.id.view_feedback);
-        versionText = (TextView) findViewById(R.id.text_version);
+        privacyPolicyView = findViewById(R.id.view_privacy_policy);
+        versionText = findViewById(R.id.text_version);
         versionText.setText(BuildConfig.VERSION_NAME);
     }
 
@@ -183,6 +186,14 @@ public class SettingsActivity extends AppCompatActivity {
                     CustomToast.makeText(SettingsActivity.this, R.string.settings_activity_toast_error_no_email_app, Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+        privacyPolicyView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.URL_PRIVACY_POLICY));
+                startActivity(browserIntent);
             }
         });
     }

@@ -132,6 +132,7 @@
     <string name="settings_activity_text_rate_app">Rate the app</string>
     <string name="settings_activity_text_qa">Questions &amp; answers</string>
     <string name="settings_activity_text_feedback">Feedback</string>
+    <string name="settings_activity_text_privacy_policy">Privacy policy</string>
     <string name="settings_activity_text_export_to">Export to…</string>
     <string name="settings_activity_toast_backup_error">Backup error</string>
     <string name="settings_activity_toast_restore_error">Restore error</string>
